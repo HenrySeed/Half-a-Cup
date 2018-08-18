@@ -1,7 +1,5 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
-import Grid from '@material-ui/core/Grid';
-import { Theme } from "@material-ui/core/styles";
 import './RecipeTile.css';
 
 
@@ -15,9 +13,9 @@ interface recipe {
 
 
 export interface Props {
-    index: number
-    thisRecipe: recipe,
-    onOpen: Function
+    recipeKey: string;
+    thisRecipe: recipe | undefined;
+    onOpen: Function;
 }
 
 export default class RecipeTile extends React.Component<Props, object> {
@@ -25,15 +23,20 @@ export default class RecipeTile extends React.Component<Props, object> {
     constructor(props: Props) {
         super(props)
         this.handleClick = this.handleClick.bind(this)
+        console.log(this.props.recipeKey)
     }
 
     handleClick(e: any): void {
+        console.log(`Opeing recipe ${this.props.recipeKey}`)
         if(this.props.onOpen){
-            this.props.onOpen(this.props.index)
+            this.props.onOpen(this.props.recipeKey)
         }
     }
 
     render(): JSX.Element {
+        if(this.props.thisRecipe === undefined){
+            return <span/>
+        }
         return (
             <Paper className="recipeTile" onClick={this.handleClick}>
                 <p>{this.props.thisRecipe.title}</p>

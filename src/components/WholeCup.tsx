@@ -2,6 +2,8 @@ import * as React from "react";
 import "./WholeCup.css";
 import RecipeTile from "./RecipeTile";
 import OpenRecipe from "./OpenRecipe";
+import SearchBar from "./SearchBar";
+
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
@@ -40,9 +42,11 @@ export interface Props {
 }
 
 export interface State {
-    recipes: recipe[]
-    selectedRecipe: number
+    recipes: Map<string, recipe>
+    selectedRecipe: recipe | undefined
     recipeOpen: boolean
+    searchResult: string[]
+    searchOpen: boolean
 }
 
 
@@ -53,9 +57,11 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
     constructor(props: Props & PropsWithStyles) {
         super(props);
         this.state = {
-            recipes: [],
-            selectedRecipe: 0,
+            recipes: new Map<string, recipe>(),
+            selectedRecipe: undefined,
             recipeOpen: false,
+            searchResult: [],
+            searchOpen: false
         };
 
         const config = {
@@ -78,11 +84,11 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
     componentDidMount(): void {
         var db = firebase.firestore();
 
-        const allRecipesTemp: recipe[] = []
+        const allRecipesTemp: Map<string, recipe> = new Map<string, recipe>();
 
         db.collection("recipes").get().then((querySnapshot: any): any => {
             querySnapshot.forEach((doc: any): any => {
-                allRecipesTemp.push(doc.data());
+                allRecipesTemp.set(doc.id, doc.data());
             });
 
             this.setState({
@@ -94,22 +100,63 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
 
         this.handleOpenRecipe = this.handleOpenRecipe.bind(this)
         this.handleCloseRecipe = this.handleCloseRecipe.bind(this)
+        this.searchRecipes = this.searchRecipes.bind(this)
         
     }
 
-    handleOpenRecipe(index: number): void {
+    handleOpenRecipe(key: string): void {
+        console.log(`Opening recipe ${key}`)
         this.setState({
-            selectedRecipe: index,
+            selectedRecipe: this.state.recipes.get(key),
             recipeOpen: true
         });
     };
 
+
     handleCloseRecipe(index: number): void {
         this.setState({
+            selectedRecipe: undefined,
             recipeOpen: false
         });
     };
 
+
+    searchRecipes(str: string): void{
+        console.log(str)
+
+        if(str.trim() !== ""){
+            this.setState({
+                searchOpen: true
+            })
+        } else{
+            this.setState({
+                searchOpen: false
+            })
+        }
+
+        
+        const tags: string[] = str.split(' ');
+        const foundRecipes: string[] = []
+
+        for(const recipeKey of Array.from(this.state.recipes.keys())){
+            let allTagsFound: boolean = true;
+            const recipe: recipe | undefined = this.state.recipes.get(recipeKey);
+            if(recipe === undefined){continue}
+
+            for(const tag of tags){
+                if(!recipe.title.toLowerCase().includes(tag.toLowerCase())){
+                    allTagsFound = false
+                }
+            }
+            if(allTagsFound){
+                foundRecipes.push(recipeKey)
+            }
+        }
+
+        this.setState({
+            searchResult: foundRecipes
+        })
+    }
 
 
     render(): JSX.Element[] {
@@ -123,44 +170,78 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                     <Typography variant="title" color="inherit" className={this.props.classes.flex}>
                         Whole Cup
                     </Typography>
+                    <SearchBar onSearch={this.searchRecipes}/>
                 </Toolbar>
             </AppBar>
         ];
 
-        if(this.state.recipeOpen === false){
-            let recipeTable: JSX.Element[] = [];
-            let index: number = 0
-            for (const recipe of this.state.recipes) {
-                recipeTable.push(
-                    <Grid item xs={12} className="recipeTile">
-                        <RecipeTile
-                            index={index}
-                            onOpen={this.handleOpenRecipe}
-                            thisRecipe={recipe}
-                        />
-                    </Grid>
+    
+
+        if (this.state.recipeOpen === false){
+            if(this.state.searchOpen){
+                let recipeTable: JSX.Element[] = [];
+                for (const recipeKey of this.state.searchResult) {
+                    recipeTable.push(
+                        <Grid item xs={12} className="recipeTile">
+                            <RecipeTile
+                                recipeKey={recipeKey}
+                                onOpen={this.handleOpenRecipe}
+                                thisRecipe={this.state.recipes.get(recipeKey)}
+                            />
+                        </Grid>
+                    );
+                }
+    
+    
+                toRender.push(
+                    <div>
+                        <Grid
+                            className="recipeTable"
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            {recipeTable}
+                        </Grid>
+                    </div>
                 );
-                index++;
+
+            } else{
+                let recipeTable: JSX.Element[] = [];
+                for (const recipeKey of Array.from(this.state.recipes.keys())) {
+                    console.log(`Rendering key ${recipeKey}`)
+                    recipeTable.push(
+                        <Grid item xs={12} className="recipeTile">
+                            <RecipeTile
+                                recipeKey={recipeKey}
+                                onOpen={this.handleOpenRecipe}
+                                thisRecipe={this.state.recipes.get(recipeKey)}
+                            />
+                        </Grid>
+                    );
+                }
+
+
+                toRender.push(
+                    <div>
+                        <Grid
+                            className="recipeTable"
+                            container
+                            direction="column"
+                            justify="flex-start"
+                            alignItems="flex-start"
+                        >
+                            {recipeTable}
+                        </Grid>
+                    </div>
+                );
             }
-
-
-            toRender.push(
-                <div>
-                    <Grid
-                        className="recipeTable"
-                        container
-                        direction="column"
-                        justify="flex-start"
-                        alignItems="flex-start"
-                    >
-                        {recipeTable}
-                    </Grid>
-                </div>
-            );
-        } else{
+            
+        } else if(this.state.selectedRecipe !== undefined) {
             toRender.push(
                 <OpenRecipe 
-                    thisRecipe={this.state.recipes[this.state.selectedRecipe]}
+                    thisRecipe={this.state.selectedRecipe}
                     onClose={this.handleCloseRecipe}
                 />
             );

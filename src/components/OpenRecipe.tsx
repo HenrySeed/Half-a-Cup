@@ -15,8 +15,8 @@ interface recipe {
 
 
 export interface Props {
-    thisRecipe: recipe,
-    onClose: Function
+    thisRecipe: recipe;
+    onClose: Function;
 }
 
 export default class OpenRecipe extends React.Component<Props, object> {
