@@ -3,6 +3,9 @@ import Paper from "@material-ui/core/Paper"
 import Grid from '@material-ui/core/Grid';
 import { Theme } from "@material-ui/core/styles";
 import './RecipeTile.css';
+import Close from '@material-ui/icons/Close'
+import "./OpenRecipe"
+import { IconButton } from "../../node_modules/@material-ui/core";
 
 
 interface recipe {
@@ -55,7 +58,11 @@ export default class OpenRecipe extends React.Component<Props, object> {
         }
 
         return (
-            <Paper className="recipeTile" onClick={this.handleClick}>
+            <Paper className="recipeTile">
+                <IconButton  onClick={this.handleClick} className="close">
+                    <Close/>
+                </IconButton>
+                
                 <p>{this.props.thisRecipe.title}</p>
                 <p>{this.props.thisRecipe.subtitle}</p>
                 <p>{this.props.thisRecipe.tags}</p>
