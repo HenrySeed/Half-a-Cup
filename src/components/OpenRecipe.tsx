@@ -66,7 +66,12 @@ export default class OpenRecipe extends React.Component<Props, object> {
 
         for(const tag of this.props.thisRecipe.tags){
             tags.push(
-                <Button onClick={(e) => {this.handleTagClick(e, tag)}}>
+                <Button 
+                    className="tagButton"
+                    onClick={(e) => {this.handleTagClick(e, tag)}} 
+                    color="primary" 
+                    variant="contained"
+                >
                     {tag}
                 </Button>
             )
@@ -78,15 +83,23 @@ export default class OpenRecipe extends React.Component<Props, object> {
                     <Close/>
                 </IconButton>
                 
-                <p>{this.props.thisRecipe.title}</p>
-                <p>{this.props.thisRecipe.subtitle}</p>
-                {tags}
+                <h3>{this.props.thisRecipe.title}</h3>
+                <em>{this.props.thisRecipe.subtitle}</em>
 
-                <p>Ingredients</p>
+                <h4>Ingredients</h4>
                 <ul>{ingredients}</ul>
 
-                <p>Steps</p>
+                <h4>Steps</h4>
                 <ul>{steps}</ul>
+                <br/><br/><br/>
+                <hr/>
+                <br/><br/>
+                Tags for this Recipe 
+                <br/>
+                <br/>
+                {tags}
+                <br/><br/>
+
             </Paper>
             
         );
