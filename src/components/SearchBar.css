@@ -4,3 +4,19 @@
     margin-top: -3px;
     margin-right: 6px;
 }
+
+.searchBar {
+    background-color: #d43c31;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.searchField{
+    width: 140px;
+    transition: width .20s ease-in-out;
+}
+
+.MuiInput-focused-93{
+    width: 180px;
+    transition: width .20s ease-in-out;
+}

@@ -1,3 +1,13 @@
 .close {
-    float: right
+    float: right;
+}
+
+.recipeTile{
+    padding: 10px;
+    min-width: 600px;
+    padding-left: 30px;
+}
+
+ul{
+    list-style: none;
 }

@@ -19,13 +19,12 @@ interface recipe {
 
 export interface Props {
     onSearch: Function;
+    value: string;
 }
 
-export interface State {
-    searchValue: string
-}
+ 
 
-export default class SearchBar extends React.Component<Props, State, object> {
+export default class SearchBar extends React.Component<Props, object> {
 
     constructor(props: Props) {
         super(props)
@@ -39,39 +38,35 @@ export default class SearchBar extends React.Component<Props, State, object> {
     }
 
     handleSearch(event: any): void {
-        this.setState({
-            searchValue: event.target.value
-        })
-
         this.props.onSearch(event.target.value);
     }
 
     handleClearSearch(event: any): void {
-        this.setState({
-            searchValue: ""
-        })
-
         this.props.onSearch("");
     }
 
 
     render(): JSX.Element {
         return (
-            <div>
+            <div className="searchBar">
                 <Search className="searchicon"/>
                 <Input 
+                    className="searchField"
                     disableUnderline 
                     placeholder="Search" 
                     onChange={this.handleSearch} 
-                    value={this.state.searchValue}
+                    value={this.props.value}
                     endAdornment={
                         <InputAdornment position="end">
-                          <IconButton
-                            aria-label="Clear Search"
-                            onClick={this.handleClearSearch}
-                          >
-                          {this.state.searchValue !== "" ? <Cancel /> : <span/>}
-                          </IconButton>
+                        {this.props.value !== "" ?
+                            <IconButton
+                                aria-label="Clear Search"
+                                onClick={this.handleClearSearch}
+                            >
+                                <Cancel />
+                            </IconButton> 
+                            : <span/>}
+                          
                         </InputAdornment>
                       }
                 />

@@ -46,7 +46,8 @@ export interface State {
     selectedRecipe: recipe | undefined
     recipeOpen: boolean
     searchResult: string[]
-    searchOpen: boolean
+    searchOpen: boolean,
+    SearchVal: string
 }
 
 
@@ -61,7 +62,8 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
             selectedRecipe: undefined,
             recipeOpen: false,
             searchResult: [],
-            searchOpen: false
+            searchOpen: false,
+            SearchVal: ""
         };
 
         const config = {
@@ -101,11 +103,11 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
         this.handleOpenRecipe = this.handleOpenRecipe.bind(this)
         this.handleCloseRecipe = this.handleCloseRecipe.bind(this)
         this.searchRecipes = this.searchRecipes.bind(this)
+        this.handleTagClick = this.handleTagClick.bind(this)
         
     }
 
     handleOpenRecipe(key: string): void {
-        console.log(`Opening recipe ${key}`)
         this.setState({
             selectedRecipe: this.state.recipes.get(key),
             recipeOpen: true
@@ -120,9 +122,21 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
         });
     };
 
+    handleTagClick(str: string): void {
+        this.searchRecipes(str)
+        this.setState({
+            SearchVal: str
+        })
+    }
+
 
     searchRecipes(str: string): void{
         console.log(str)
+
+        this.setState({
+            recipeOpen: false,
+            SearchVal: str
+        })
 
         if(str.trim() !== ""){
             this.setState({
@@ -135,7 +149,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
         }
 
         
-        const tags: string[] = str.split(' ');
+        const words: string[] = str.split(' ');
         const foundRecipes: string[] = []
 
         for(const recipeKey of Array.from(this.state.recipes.keys())){
@@ -143,9 +157,18 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
             const recipe: recipe | undefined = this.state.recipes.get(recipeKey);
             if(recipe === undefined){continue}
 
-            for(const tag of tags){
-                if(!recipe.title.toLowerCase().includes(tag.toLowerCase())){
-                    allTagsFound = false
+            for(const word of words){
+                if(!recipe.title.toLowerCase().includes(word.toLowerCase())){
+                    let foundInTags: boolean = false;
+                    for(const tag of recipe.tags){
+                        if(tag.toLowerCase().includes(word.toLowerCase())){
+                            foundInTags = true;
+                            break;
+                        }
+                    }
+                    if(!foundInTags){
+                        allTagsFound = false
+                    }
                 }
             }
             if(allTagsFound){
@@ -170,7 +193,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                     <Typography variant="title" color="inherit" className={this.props.classes.flex}>
                         Whole Cup
                     </Typography>
-                    <SearchBar onSearch={this.searchRecipes}/>
+                    <SearchBar onSearch={this.searchRecipes} value={this.state.SearchVal}/>
                 </Toolbar>
             </AppBar>
         ];
@@ -210,7 +233,6 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
             } else{
                 let recipeTable: JSX.Element[] = [];
                 for (const recipeKey of Array.from(this.state.recipes.keys())) {
-                    console.log(`Rendering key ${recipeKey}`)
                     recipeTable.push(
                         <Grid item xs={12} className="recipeTile">
                             <RecipeTile
@@ -243,6 +265,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                 <OpenRecipe 
                     thisRecipe={this.state.selectedRecipe}
                     onClose={this.handleCloseRecipe}
+                    onTagClick={this.handleTagClick}
                 />
             );
         }

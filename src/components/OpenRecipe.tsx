@@ -1,11 +1,8 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
-import Grid from '@material-ui/core/Grid';
-import { Theme } from "@material-ui/core/styles";
-import './RecipeTile.css';
 import Close from '@material-ui/icons/Close'
-import "./OpenRecipe"
-import { IconButton } from "../../node_modules/@material-ui/core";
+import "./OpenRecipe.css"
+import { IconButton, Button } from "@material-ui/core";
 
 
 interface recipe {
@@ -20,6 +17,7 @@ interface recipe {
 export interface Props {
     thisRecipe: recipe;
     onClose: Function;
+    onTagClick: Function
 }
 
 export default class OpenRecipe extends React.Component<Props, object> {
@@ -27,11 +25,18 @@ export default class OpenRecipe extends React.Component<Props, object> {
     constructor(props: Props) {
         super(props)
         this.handleClick = this.handleClick.bind(this)
+        this.handleTagClick = this.handleTagClick.bind(this)
     }
 
     handleClick(e: any): void {
         if(this.props.onClose){
             this.props.onClose()
+        }
+    }
+
+    handleTagClick(e: any, str: string): void {
+        if(this.props.onTagClick){
+            this.props.onTagClick(str.trim())
         }
     }
 
@@ -57,15 +62,25 @@ export default class OpenRecipe extends React.Component<Props, object> {
             )
         }
 
+        let tags: JSX.Element[] = []
+
+        for(const tag of this.props.thisRecipe.tags){
+            tags.push(
+                <Button onClick={(e) => {this.handleTagClick(e, tag)}}>
+                    {tag}
+                </Button>
+            )
+        }
+
         return (
             <Paper className="recipeTile">
-                <IconButton  onClick={this.handleClick} className="close">
+                <IconButton className="close" onClick={this.handleClick}>
                     <Close/>
                 </IconButton>
                 
                 <p>{this.props.thisRecipe.title}</p>
                 <p>{this.props.thisRecipe.subtitle}</p>
-                <p>{this.props.thisRecipe.tags}</p>
+                {tags}
 
                 <p>Ingredients</p>
                 <ul>{ingredients}</ul>
