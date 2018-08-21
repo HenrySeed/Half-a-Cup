@@ -2,14 +2,15 @@
     float: right;
 }
 
-.recipeTile{
+.openRecipeTile{
     padding: 10px;
-    min-width: 600px;
     padding-left: 30px;
+    margin: 30px;
 }
 
 ul{
     list-style: none;
+    padding-left: 5px;
 }
 
 ul > li{
@@ -18,4 +19,15 @@ ul > li{
 
 .tagButton{
     margin-right: 10px !important;
+}
+
+.tagIcon{
+    margin-right: 5px;
+}
+
+.recipeTitle {
+    font-family: 'Pacifico', cursive;
+    font-size: 26pt;
+    margin-top: 10px;
+    color: #f44336;
 }

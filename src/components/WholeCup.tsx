@@ -51,8 +51,6 @@ export interface State {
 }
 
 
-
-
 class WholeCup extends React.Component<Props & PropsWithStyles, State> {
 
     constructor(props: Props & PropsWithStyles) {
@@ -187,9 +185,9 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
         let toRender: JSX.Element[] = [
             <AppBar position="static">
                 <Toolbar>
-                    <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
-                        {/* <MenuIcon /> */}
-                    </IconButton>
+                    {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+                        {/* <MenuIcon />
+                    </IconButton> */}
                     <Typography variant="title" color="inherit" className={this.props.classes.flex}>
                         Whole Cup
                     </Typography>
@@ -198,14 +196,14 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
             </AppBar>
         ];
 
-    
-
+        // If there is no recipe open
         if (this.state.recipeOpen === false){
+            // Search open
             if(this.state.searchOpen){
                 let recipeTable: JSX.Element[] = [];
                 for (const recipeKey of this.state.searchResult) {
                     recipeTable.push(
-                        <Grid item xs={12} className="recipeTile">
+                        <Grid className="recipeGridTile">
                             <RecipeTile
                                 recipeKey={recipeKey}
                                 onOpen={this.handleOpenRecipe}
@@ -214,8 +212,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                         </Grid>
                     );
                 }
-    
-    
+
                 toRender.push(
                     <div>
                         <Grid
@@ -223,18 +220,20 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                             container
                             direction="column"
                             justify="flex-start"
-                            alignItems="flex-start"
+                            alignItems="stretch"
                         >
                             {recipeTable}
                         </Grid>
                     </div>
                 );
 
-            } else{
+            } 
+            // No Search
+            else{
                 let recipeTable: JSX.Element[] = [];
                 for (const recipeKey of Array.from(this.state.recipes.keys())) {
                     recipeTable.push(
-                        <Grid item xs={12} className="recipeTile">
+                        <Grid item xs={12} className="recipeGridTile">
                             <RecipeTile
                                 recipeKey={recipeKey}
                                 onOpen={this.handleOpenRecipe}
@@ -244,7 +243,6 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                     );
                 }
 
-
                 toRender.push(
                     <div>
                         <Grid
@@ -252,7 +250,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                             container
                             direction="column"
                             justify="flex-start"
-                            alignItems="flex-start"
+                            alignItems="stretch"
                         >
                             {recipeTable}
                         </Grid>

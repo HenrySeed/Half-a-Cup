@@ -1,12 +1,14 @@
-.hello {
-    
-}
+
 
 .recipeTable {
-    padding: 40px;
+    padding: 5%;
 }
 
 
-.recipeTile{
-    margin: 10px;
+.recipeGridTile{
+    padding: 10px !important;
 }
+
+html, body, #app, #app>div {
+    height: 100%
+  }

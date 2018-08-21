@@ -23,11 +23,9 @@ export default class RecipeTile extends React.Component<Props, object> {
     constructor(props: Props) {
         super(props)
         this.handleClick = this.handleClick.bind(this)
-        console.log(this.props.recipeKey)
     }
 
     handleClick(e: any): void {
-        console.log(`Opeing recipe ${this.props.recipeKey}`)
         if(this.props.onOpen){
             this.props.onOpen(this.props.recipeKey)
         }
