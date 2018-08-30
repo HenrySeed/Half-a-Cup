@@ -20,6 +20,7 @@ const style = (theme: Theme) => ({
     },
     flex: {
         flex: 1,
+        fontFamily: 'Chivo'
     },
     menuButton: {
         marginLeft: -12,

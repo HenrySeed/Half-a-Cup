@@ -4,8 +4,13 @@
 
 .openRecipeTile{
     padding: 10px;
-    padding-left: 30px;
-    margin: 30px;
+    padding-left: 20px;
+    width: calc(100% - 20px);
+    padding-right: 20px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 4%;
 }
 
 ul{
@@ -19,6 +24,7 @@ ul > li{
 
 .tagButton{
     margin-right: 10px !important;
+    margin-bottom: 10px !important;
 }
 
 .tagIcon{
@@ -26,7 +32,7 @@ ul > li{
 }
 
 .recipeTitle {
-    font-family: 'Pacifico', cursive;
+    font-family: 'Chivo', sans-serif;
     font-size: 26pt;
     margin-top: 10px;
     color: #f44336;

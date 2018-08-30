@@ -89,6 +89,11 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
         this.setState({
             currentPageNum: this.reactSwipe.getPos()
         })
+        // reset the vertical scroll position on page change
+        const myDiv = document.getElementById('swipeCarousel');
+        if(myDiv !== null){
+            myDiv.scrollTop = 0;
+        }
     }
 
     render(): JSX.Element {
@@ -110,6 +115,7 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
                 <ReactSwipe 
                     ref={reactSwipe => this.reactSwipe = reactSwipe} 
                     className="carousel" 
+                    id="swipeCarousel"
                     key={this.state.pages.length}
                     swipeOptions={swipeOptions}>
                     {this.state.pages.map(function(page: any, i: any): any{
