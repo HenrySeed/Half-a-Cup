@@ -184,7 +184,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
     render(): JSX.Element[] {
 
         let toRender: JSX.Element[] = [
-            <AppBar position="static">
+            <AppBar position="sticky">
                 <Toolbar>
                     {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
                         {/* <MenuIcon />
