@@ -1,5 +1,5 @@
 import * as React from "react";
-import "./WholeCup.css";
+import "./HalfACup.css";
 import OpenRecipe from "./OpenRecipe";
 import SearchBar from "./SearchBar";
 import RecipeBrowser from "./RecipeBrowser";
@@ -51,7 +51,7 @@ export interface State {
 }
 
 
-class WholeCup extends React.Component<Props & PropsWithStyles, State> {
+class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     constructor(props: Props & PropsWithStyles) {
         super(props);
@@ -189,7 +189,7 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
                         </IconButton> */}
                         <Typography variant="title" color="inherit" className={this.props.classes.flex}>
                             <Link to="/">
-                                Whole Cup
+                                Half a Cup
                             </Link>
                         </Typography>
                         <SearchBar onSearch={this.searchRecipes} value={this.state.SearchVal}/>
@@ -244,4 +244,4 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
 
 
 
-export default withStyles(style)<Props>(WholeCup);
+export default withStyles(style)<Props>(HalfACup);
