@@ -119,7 +119,6 @@ export default class SearchBar extends React.Component<Props, State, object> {
         })
     }
 
-
     render(): JSX.Element[] {
 
         const searchDropdown: JSX.Element[] = [];

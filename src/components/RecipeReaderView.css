@@ -1,10 +1,14 @@
 
 .readerBackground {
     width: 100%;
-    height: calc(100% - 64px);
+    height: auto;
+    min-height: calc(100% - 50px);
+    top: 50px;
+    padding-top: 20px;
     margin: 0;
-    background-color:#f44336;
+    background-color: #f44336;
     position: absolute;
+    padding-bottom: 20px;
 }
 
 .stepText {
@@ -29,6 +33,7 @@
     margin-top: 55px;
     height: 70%;
     margin-bottom: 20px;
+    overflow-y: scroll !important;
 }
 
 .stepContainer {
