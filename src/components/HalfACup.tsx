@@ -10,6 +10,8 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
 import { Switch, Route, Link } from "react-router-dom"
 
+import { detect } from "detect-browser"
+
 const firebase = require("firebase");
 require("firebase/firestore");
 
@@ -43,9 +45,6 @@ export interface Props {
 
 export interface State {
     recipes: Map<string, recipe>
-    selectedRecipe: recipe | undefined
-    recipeOpen: boolean
-    searchResult: string[]
     searchOpen: boolean,
     SearchVal: string
 }
@@ -57,9 +56,6 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         super(props);
         this.state = {
             recipes: new Map<string, recipe>(),
-            selectedRecipe: undefined,
-            recipeOpen: false,
-            searchResult: [],
             searchOpen: false,
             SearchVal: ""
         };
@@ -98,90 +94,34 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             
         });
 
-        this.handleCloseRecipe = this.handleCloseRecipe.bind(this)
-        this.handleOpenRecipe = this.handleOpenRecipe.bind(this)
-
-        this.searchRecipes = this.searchRecipes.bind(this)
-        this.handleTagClick = this.handleTagClick.bind(this)
+        // this.handleTagClick = this.handleTagClick.bind(this)
 
         
     }
 
-    handleOpenRecipe(key: string): void {
-        console.log("recipe opened");
-    };
-
-    handleCloseRecipe(index: number): void {
-        this.setState({
-            selectedRecipe: undefined,
-            recipeOpen: false
-        });
-    };
-
-    handleTagClick(str: string): void {
-        this.searchRecipes(str)
-        this.setState({
-            SearchVal: str
-        })
-    }
-
-
-    searchRecipes(str: string): void{
-        console.log(str)
-
-        this.setState({
-            recipeOpen: false,
-            SearchVal: str
-        })
-
-        if(str.trim() !== ""){
-            this.setState({
-                searchOpen: true
-            })
-        } else{
-            this.setState({
-                searchOpen: false
-            })
-        }
-
-        
-        const words: string[] = str.split(' ');
-        const foundRecipes: string[] = []
-
-        for(const recipeKey of Array.from(this.state.recipes.keys())){
-            let allTagsFound: boolean = true;
-            const recipe: recipe | undefined = this.state.recipes.get(recipeKey);
-            if(recipe === undefined){continue}
-
-            for(const word of words){
-                if(!recipe.title.toLowerCase().includes(word.toLowerCase())){
-                    let foundInTags: boolean = false;
-                    for(const tag of recipe.tags){
-                        if(tag.toLowerCase().includes(word.toLowerCase())){
-                            foundInTags = true;
-                            break;
-                        }
-                    }
-                    if(!foundInTags){
-                        allTagsFound = false
-                    }
-                }
-            }
-            if(allTagsFound){
-                foundRecipes.push(recipeKey)
-            }
-        }
-
-        this.setState({
-            searchResult: foundRecipes
-        })
-    }
+    // handleTagClick(str: string): void {
+    //     this.searchRecipes(str)
+    //     this.setState({
+    //         SearchVal: str
+    //     })
+    // }
 
 
     render(): JSX.Element {
+        // should make nice status bar on safari ios
+        const browser = detect();
+        const statusBar: JSX.Element[] = [];
+        if (browser) {
+            if(browser.os === "iOS" && browser.name === "ios"){
+                statusBar.push(<div id="statusbar"> </div>)
+            } else{
+                statusBar.push(<span></span>)
+            }
+        }
 
         return (
             <div>
+                {statusBar}
                 <AppBar position="sticky">
                     <Toolbar>
                         {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
@@ -192,13 +132,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 Half a Cup
                             </Link>
                         </Typography>
-                        <SearchBar onSearch={this.searchRecipes} value={this.state.SearchVal}/>
+                        <SearchBar value={this.state.SearchVal} recipes={this.state.recipes}/>
                     </Toolbar>
                 </AppBar>
 
                 <Switch>
-                    <Route path='/' render={()=><RecipeBrowser recipes={this.state.recipes} onOpenRecipe={this.handleOpenRecipe}/>}/>
-                    <Route path='/recipes' render={()=><RecipeBrowser recipes={this.state.recipes} onOpenRecipe={this.handleOpenRecipe}/>}/>
+                    <Route path='/' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
+                    <Route path='/recipes' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
                 </Switch>
             </div>
         );

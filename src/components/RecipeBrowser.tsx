@@ -20,7 +20,6 @@ interface State {
 
 export interface Props {
     recipes: Map<string, recipe>,
-    onOpenRecipe: Function
 }
 
 export default class RecipeBrowser extends React.Component<Props, State, object> {

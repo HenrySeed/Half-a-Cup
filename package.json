@@ -5,8 +5,10 @@
   "dependencies": {
     "@material-ui/core": "^1.5.0",
     "@material-ui/icons": "^2.0.2",
+    "@types/detect-browser": "^2.0.1",
     "@types/react-router-dom": "^4.3.0",
     "@types/react-swipe": "^5.0.3",
+    "detect-browser": "^3.0.0",
     "file-system": "^2.2.2",
     "firebase": "^5.4.0",
     "firebase-admin": "^6.0.0",
@@ -21,7 +23,8 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "deploy": "clear && echo '----  Building and Deploying Half a Cup  ---' && tsc && react-scripts-ts build && firebase deploy && osascript -e 'display notification \"Half a Cup is now updated\" with title \"Deployment Finished\"'"
   },
   "devDependencies": {
     "@types/jest": "^22.1.0",

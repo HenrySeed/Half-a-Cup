@@ -22,3 +22,16 @@ a{
     text-decoration: none;
     color: inherit;
 }
+
+#statusbar{ 
+    background: red; 
+    width:100%; 
+    position: fixed; 
+    top:0; 
+    opacity: 0.95; 
+    z-index: 1030;
+} 
+    
+.navbar {
+    margin-top: 15pt;
+}
