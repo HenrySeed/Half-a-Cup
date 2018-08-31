@@ -20,7 +20,6 @@ interface State {
 
 export interface Props {
     recipe: recipe,
-    onClose: Function;
 }
 
 export default class RecipeReaderView extends React.Component<Props, State, object> {
@@ -33,7 +32,6 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
             pages: [],
             currentPageNum: 0,
         }
-        this.handleClose = this.handleClose.bind(this)
         this.handleNextButton = this.handleNextButton.bind(this)
         this.handlePrevButton = this.handlePrevButton.bind(this)
         this.handlePageChange = this.handlePageChange.bind(this)
@@ -41,6 +39,7 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
 
     componentDidMount(): void {
         this.genPages();
+        console.log("reader view mounted")
     }
 
     genPages(): void {
@@ -60,13 +59,6 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
         this.setState({
             pages: tempPages
         })
-    }
-
-    // handles the press of the close button
-    handleClose(e: any): void {
-        if(this.props.onClose){
-            this.props.onClose()
-        }
     }
 
     // handles the press of the next button
@@ -109,7 +101,7 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
 
         return (
             <div className="readerBackground">
-                <IconButton className="close" onClick={this.handleClose}>
+                <IconButton className="close" onClick={() => window.history.back()}>
                     <Close/>
                 </IconButton>
                 <ReactSwipe 

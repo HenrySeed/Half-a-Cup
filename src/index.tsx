@@ -6,8 +6,7 @@ import WholeCup from './components/WholeCup';
 import { MuiThemeProvider, createMuiTheme, Theme } from '@material-ui/core/styles';
 import { red } from '@material-ui/core/colors';
 import CssBaseline from '@material-ui/core/CssBaseline';
-
-
+import { BrowserRouter } from 'react-router-dom'
 
 // Create a theme instance.
 const theme: Theme = createMuiTheme({
@@ -19,7 +18,9 @@ const theme: Theme = createMuiTheme({
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <CssBaseline/>
-    <WholeCup />
+    <BrowserRouter>
+      <WholeCup />
+    </BrowserRouter>
   </MuiThemeProvider>,
   document.getElementById('root') as HTMLElement
 );

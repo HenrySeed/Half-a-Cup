@@ -4,6 +4,8 @@ import { Close, Search, ImportContacts } from '@material-ui/icons/'
 import "./OpenRecipe.css"
 import { IconButton, Button } from "@material-ui/core";
 import RecipeReaderView from "./RecipeReaderView"
+import { Switch, Route, Link } from "react-router-dom"
+
 
 
 interface recipe {
@@ -16,36 +18,22 @@ interface recipe {
 
 
 export interface Props {
-    thisRecipe: recipe;
-    onClose: Function;
     onTagClick: Function;
+    recipeKey: string,
+    thisRecipe: recipe,
+    match?: any
 }
 
-export interface State {
-    readerView: boolean
-}
-
-export default class OpenRecipe extends React.Component<Props, State, object> {
+export default class OpenRecipe extends React.Component<Props, object> {
 
     constructor(props: Props) {
         super(props)
-        this.state = {
-            readerView: false
-        }
-        this.handleClose = this.handleClose.bind(this)
         this.handleTagClick = this.handleTagClick.bind(this)
         this.handleReaderViewClose = this.handleReaderViewClose.bind(this)
-        this.handleReaderViewOpen = this.handleReaderViewOpen.bind(this)
     }
 
     componentDidMount(): void {
         window.scrollTo(0, 0)
-    }
-
-    handleClose(e: any): void {
-        if(this.props.onClose){
-            this.props.onClose()
-        }
     }
 
     handleTagClick(e: any, str: string): void {
@@ -61,21 +49,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         })
     }
 
-    handleReaderViewOpen(): void {
-        
-        this.setState({
-            readerView: true
-        })
-    }
-
     render(): JSX.Element {
-
-        if(this.state.readerView){
-            return <RecipeReaderView 
-                onClose={this.handleReaderViewClose}
-                recipe={this.props.thisRecipe}
-            />
-        }
 
         let ingredients: JSX.Element[] = []
 
@@ -113,34 +87,46 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             )
         }
 
-        return (
-            <Paper className="openRecipeTile">
-                <IconButton className="close" onClick={this.handleClose}>
-                    <Close/>
-                </IconButton>
-                <IconButton className="close" onClick={this.handleReaderViewOpen}>
+        const recipeView: JSX.Element = <Paper className="openRecipeTile">
+            <IconButton className="close" onClick={() => window.history.back()}>
+                <Close/>
+            </IconButton>
+            <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
+                <IconButton className="close">
                     <ImportContacts/>
                 </IconButton>
-                
-                <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>
-                <em>{this.props.thisRecipe.subtitle}</em>
-
-                <h4>Ingredients</h4>
-                <ul>{ingredients}</ul>
-
-                <h4>Steps</h4>
-                <ul>{steps}</ul>
-                <br/><br/><br/>
-                <hr/>
-                <br/>
-                Tags for this Recipe 
-                <br/>
-                <br/>
-                {tags}
-                <br/><br/>
-
-            </Paper>
+            </Link>
             
+            
+            <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>
+            <em>{this.props.thisRecipe.subtitle}</em>
+
+            <h4>Ingredients</h4>
+            <ul>{ingredients}</ul>
+
+            <h4>Steps</h4>
+            <ul>{steps}</ul>
+            <br/><br/><br/>
+            <hr/>
+            <br/>
+            Tags for this Recipe 
+            <br/>
+            <br/>
+            {tags}
+            <br/><br/>
+
+        </Paper>
+    
+
+        return (
+            <Switch>
+                <Route exact path='/recipes/:key' render={() => recipeView}/>
+                <Route exact path='/recipes/:key/readerView' render={() => 
+                    <RecipeReaderView 
+                    recipe={this.props.thisRecipe}
+                    />
+                }/>
+            </Switch>
         );
     }
 }

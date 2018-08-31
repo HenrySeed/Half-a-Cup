@@ -11,4 +11,14 @@
 
 html, body, #app, #app>div {
     height: 100%
-  }
+}
+
+.recipeTile{
+    padding: 10px;
+    padding-left: 20px;
+}
+
+a{
+    text-decoration: none;
+    color: inherit;
+}

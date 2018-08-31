@@ -1,15 +1,14 @@
 import * as React from "react";
 import "./WholeCup.css";
-import RecipeTile from "./RecipeTile";
 import OpenRecipe from "./OpenRecipe";
 import SearchBar from "./SearchBar";
-
+import RecipeBrowser from "./RecipeBrowser";
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
-import {Paper, Grid, IconButton} from "@material-ui/core"
+import { Switch, Route, Link } from "react-router-dom"
 
 const firebase = require("firebase");
 require("firebase/firestore");
@@ -99,20 +98,18 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
             
         });
 
-        this.handleOpenRecipe = this.handleOpenRecipe.bind(this)
         this.handleCloseRecipe = this.handleCloseRecipe.bind(this)
+        this.handleOpenRecipe = this.handleOpenRecipe.bind(this)
+
         this.searchRecipes = this.searchRecipes.bind(this)
         this.handleTagClick = this.handleTagClick.bind(this)
+
         
     }
 
     handleOpenRecipe(key: string): void {
-        this.setState({
-            selectedRecipe: this.state.recipes.get(key),
-            recipeOpen: true
-        });
+        console.log("recipe opened");
     };
-
 
     handleCloseRecipe(index: number): void {
         this.setState({
@@ -181,96 +178,64 @@ class WholeCup extends React.Component<Props & PropsWithStyles, State> {
     }
 
 
-    render(): JSX.Element[] {
+    render(): JSX.Element {
 
-        let toRender: JSX.Element[] = [
-            <AppBar position="sticky">
-                <Toolbar>
-                    {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
-                        {/* <MenuIcon />
-                    </IconButton> */}
-                    <Typography variant="title" color="inherit" className={this.props.classes.flex}>
-                        Whole Cup
-                    </Typography>
-                    <SearchBar onSearch={this.searchRecipes} value={this.state.SearchVal}/>
-                </Toolbar>
-            </AppBar>
-        ];
+        return (
+            <div>
+                <AppBar position="sticky">
+                    <Toolbar>
+                        {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+                            {/* <MenuIcon />
+                        </IconButton> */}
+                        <Typography variant="title" color="inherit" className={this.props.classes.flex}>
+                            <Link to="/">
+                                Whole Cup
+                            </Link>
+                        </Typography>
+                        <SearchBar onSearch={this.searchRecipes} value={this.state.SearchVal}/>
+                    </Toolbar>
+                </AppBar>
 
-        // If there is no recipe open
-        if (this.state.recipeOpen === false){
-            // Search open
-            if(this.state.searchOpen){
-                let recipeTable: JSX.Element[] = [];
-                for (const recipeKey of this.state.searchResult) {
-                    recipeTable.push(
-                        <Grid className="recipeGridTile">
-                            <RecipeTile
-                                recipeKey={recipeKey}
-                                onOpen={this.handleOpenRecipe}
-                                thisRecipe={this.state.recipes.get(recipeKey)}
-                            />
-                        </Grid>
-                    );
-                }
+                <Switch>
+                    <Route path='/' render={()=><RecipeBrowser recipes={this.state.recipes} onOpenRecipe={this.handleOpenRecipe}/>}/>
+                    <Route path='/recipes' render={()=><RecipeBrowser recipes={this.state.recipes} onOpenRecipe={this.handleOpenRecipe}/>}/>
+                </Switch>
+            </div>
+        );
 
-                toRender.push(
-                    <div>
-                        <Grid
-                            className="recipeTable"
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="stretch"
-                        >
-                            {recipeTable}
-                        </Grid>
-                    </div>
-                );
+        // // If there is no recipe open
+        // if (this.state.recipeOpen === false){
+        //     // Search open
+        //     if(this.state.searchOpen){
+        //         let recipeTable: JSX.Element[] = [];
+        //         for (const recipeKey of this.state.searchResult) {
+        //             recipeTable.push(
+        //                 <Grid className="recipeGridTile">
+        //                     <RecipeTile
+        //                         recipeKey={recipeKey}
+        //                         onOpen={this.handleOpenRecipe}
+        //                         thisRecipe={this.state.recipes.get(recipeKey)}
+        //                     />
+        //                 </Grid>
+        //             );
+        //         }
 
-            } 
-            // No Search
-            else{
-                let recipeTable: JSX.Element[] = [];
-                for (const recipeKey of Array.from(this.state.recipes.keys())) {
-                    recipeTable.push(
-                        <Grid item xs={12} className="recipeGridTile">
-                            <RecipeTile
-                                recipeKey={recipeKey}
-                                onOpen={this.handleOpenRecipe}
-                                thisRecipe={this.state.recipes.get(recipeKey)}
-                            />
-                        </Grid>
-                    );
-                }
+        //         toRender.push(
+        //             <div>
+        //                 <Grid
+        //                     className="recipeTable"
+        //                     container
+        //                     direction="column"
+        //                     justify="flex-start"
+        //                     alignItems="stretch"
+        //                 >
+        //                     {recipeTable}
+        //                 </Grid>
+        //             </div>
+        //         );
 
-                toRender.push(
-                    <div>
-                        <Grid
-                            className="recipeTable"
-                            container
-                            direction="column"
-                            justify="flex-start"
-                            alignItems="stretch"
-                        >
-                            {recipeTable}
-                        </Grid>
-                    </div>
-                );
-            }
-            
-        } else if(this.state.selectedRecipe !== undefined) {
-            toRender.push(
-                <OpenRecipe 
-                    thisRecipe={this.state.selectedRecipe}
-                    onClose={this.handleCloseRecipe}
-                    onTagClick={this.handleTagClick}
-                />
-            );
-        }
-
-        return toRender;
-
+        //     } 
+              
         
     }
 }
