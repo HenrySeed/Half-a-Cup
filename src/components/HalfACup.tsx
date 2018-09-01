@@ -1,13 +1,16 @@
 import * as React from "react";
 import "./HalfACup.css";
-import OpenRecipe from "./OpenRecipe";
 import SearchBar from "./SearchBar";
 import RecipeBrowser from "./RecipeBrowser";
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
+import { AppBar, IconButton, Toolbar, SwipeableDrawer, Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
+
+import MenuIcon from '@material-ui/icons/Menu';
+import ListIcon from '@material-ui/icons/List';
+import { Favorite } from '@material-ui/icons/'
+
 import { Switch, Route, Link } from "react-router-dom"
 
 import { detect } from "detect-browser"
@@ -25,7 +28,7 @@ const style = (theme: Theme) => ({
     },
     menuButton: {
         marginLeft: -12,
-        marginRight: 20,
+        // marginRight: 20,
     },
 });
 
@@ -46,6 +49,7 @@ export interface Props {
 export interface State {
     recipes: Map<string, recipe>
     searchOpen: boolean,
+    drawerOpen: boolean,
     SearchVal: string
 }
 
@@ -57,6 +61,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.state = {
             recipes: new Map<string, recipe>(),
             searchOpen: false,
+            drawerOpen: false,
             SearchVal: ""
         };
 
@@ -79,7 +84,6 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
      */
     componentDidMount(): void {
         var db = firebase.firestore();
-
         const allRecipesTemp: Map<string, recipe> = new Map<string, recipe>();
 
         db.collection("recipes").get().then((querySnapshot: any): any => {
@@ -91,21 +95,14 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 recipes: allRecipesTemp
             })
             console.log("Recipes Loaded");
-            
         });
-
-        // this.handleTagClick = this.handleTagClick.bind(this)
-
-        
     }
 
-    // handleTagClick(str: string): void {
-    //     this.searchRecipes(str)
-    //     this.setState({
-    //         SearchVal: str
-    //     })
-    // }
-
+    toggleDrawer(status: boolean): void {
+        this.setState({
+          drawerOpen: status,
+        });
+      };
 
     render(): JSX.Element {
         // should make nice status bar on safari ios
@@ -119,14 +116,50 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             }
         }
 
+        const sideList = (
+            <div>
+                <List>
+                    <ListItem>
+                        <Typography variant="title" color="inherit" className={this.props.classes.flex}>
+                            Half a Cup
+                        </Typography>
+                    </ListItem>
+                </List>
+                <Divider/>
+                <List>
+                    <Link to="/recipes">
+                        <ListItem>
+                            <ListItemIcon className="whiteText">
+                                <ListIcon />
+                            </ListItemIcon>
+                            <ListItemText 
+                                disableTypography
+                                primary={<Typography style={{ color: '#FFFFFF' }}>Browse all Recipes</Typography>}/> 
+                        </ListItem>
+                    </Link>
+                    <Link to="/recipes">
+                        <ListItem>
+                            <ListItemIcon className="whiteText">
+                                <Favorite />
+                            </ListItemIcon>
+                            <ListItemText 
+                                disableTypography
+                                primary={<Typography style={{ color: '#FFFFFF'}}>Saved Recipes</Typography>}
+                            /> 
+                        </ListItem>
+                    </Link>
+                </List>
+            </div>
+        );
+
         return (
             <div>
                 {statusBar}
                 <AppBar position="sticky">
                     <Toolbar>
-                        {/* <IconButton className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
-                            {/* <MenuIcon />
-                        </IconButton> */}
+                        <IconButton onClick={() => this.toggleDrawer(true)} className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+                            <MenuIcon />
+                        </IconButton> 
                         <Typography variant="title" color="inherit" className={this.props.classes.flex}>
                             <Link to="/">
                                 Half a Cup
@@ -136,47 +169,28 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     </Toolbar>
                 </AppBar>
 
+                <SwipeableDrawer
+                    open={this.state.drawerOpen}
+                    onClose={() => this.toggleDrawer(false)}
+                    onOpen={() => this.toggleDrawer(true)}
+                >
+                <div
+                    className="sideBar"
+                    tabIndex={0}
+                    role="button"
+                    onClick={() => this.toggleDrawer(false)}
+                    onKeyDown={() => this.toggleDrawer(false)}
+                >
+                    {sideList}
+                </div>
+                </SwipeableDrawer>
+
                 <Switch>
                     <Route path='/' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
                     <Route path='/recipes' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
                 </Switch>
             </div>
         );
-
-        // // If there is no recipe open
-        // if (this.state.recipeOpen === false){
-        //     // Search open
-        //     if(this.state.searchOpen){
-        //         let recipeTable: JSX.Element[] = [];
-        //         for (const recipeKey of this.state.searchResult) {
-        //             recipeTable.push(
-        //                 <Grid className="recipeGridTile">
-        //                     <RecipeTile
-        //                         recipeKey={recipeKey}
-        //                         onOpen={this.handleOpenRecipe}
-        //                         thisRecipe={this.state.recipes.get(recipeKey)}
-        //                     />
-        //                 </Grid>
-        //             );
-        //         }
-
-        //         toRender.push(
-        //             <div>
-        //                 <Grid
-        //                     className="recipeTable"
-        //                     container
-        //                     direction="column"
-        //                     justify="flex-start"
-        //                     alignItems="stretch"
-        //                 >
-        //                     {recipeTable}
-        //                 </Grid>
-        //             </div>
-        //         );
-
-        //     } 
-              
-        
     }
 }
 

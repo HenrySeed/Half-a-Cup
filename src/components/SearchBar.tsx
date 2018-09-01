@@ -10,6 +10,8 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
+import {Link} from "react-router-dom"
+
 import "./SearchBar.css"
 import { InputAdornment, IconButton } from '@material-ui/core'
 
@@ -128,7 +130,12 @@ export default class SearchBar extends React.Component<Props, State, object> {
             if(recipe === undefined){continue}
 
             searchDropdown.push(
-                <MenuItem onClick={this.handleClose}>{recipe.title}</MenuItem>
+                <Link to={`/recipes/${key}`} onClick={this.handleClearSearch}>
+                    <MenuItem onClick={this.handleClose}>
+                        {recipe.title}
+                    </MenuItem>
+                </Link>
+                
             )
         }
 
@@ -169,9 +176,9 @@ export default class SearchBar extends React.Component<Props, State, object> {
               <Grow
                 {...TransitionProps}
                 // id="menu-list-grow"
-                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
               >
-                <Paper>
+                <Paper  className="searchResultsMenu">
                   <ClickAwayListener onClickAway={this.handleClose}>
                     <MenuList>
                       {searchDropdown}

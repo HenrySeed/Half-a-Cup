@@ -1,6 +1,6 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
-import { Close, Search, ImportContacts } from '@material-ui/icons/'
+import { Close, Search, ImportContacts, Favorite } from '@material-ui/icons/'
 import "./OpenRecipe.css"
 import { IconButton, Button } from "@material-ui/core";
 import RecipeReaderView from "./RecipeReaderView"
@@ -88,12 +88,22 @@ export default class OpenRecipe extends React.Component<Props, object> {
         }
 
         const recipeView: JSX.Element = <Paper className="openRecipeTile">
-            <IconButton className="close" onClick={() => window.history.back()}>
-                <Close/>
-            </IconButton>
+
+            <Link to='/recipes'>
+                <IconButton className="close">
+                    <Close/>
+                </IconButton>
+            </Link>
+
             <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
                 <IconButton className="close">
                     <ImportContacts/>
+                </IconButton>
+            </Link>
+
+            <Link to="/">
+                <IconButton className="close">
+                    <Favorite/>
                 </IconButton>
             </Link>
             
@@ -107,13 +117,13 @@ export default class OpenRecipe extends React.Component<Props, object> {
             <h4>Steps</h4>
             <ul>{steps}</ul>
             <br/><br/><br/>
-            <hr/>
-            <br/>
-            Tags for this Recipe 
+            {/* <hr/>
+            <br/> */}
+            {/* Tags for this Recipe 
             <br/>
             <br/>
             {tags}
-            <br/><br/>
+            <br/><br/> */}
 
         </Paper>
     

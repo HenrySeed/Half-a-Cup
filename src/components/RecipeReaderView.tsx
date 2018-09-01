@@ -138,7 +138,6 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
                         ? 
                         <Button 
                             variant="fab" 
-                            color="default" 
                             aria-label="Next" 
                             className="nextButton" 
                             onClick={this.handleNextButton}>

@@ -1,9 +1,7 @@
 
-
 .recipeTable {
     padding: 5%;
 }
-
 
 .recipeGridTile{
     padding: 10px !important;
@@ -31,7 +29,18 @@ a{
     opacity: 0.95; 
     z-index: 1030;
 } 
-    
+
 .navbar {
     margin-top: 15pt;
+}
+
+.sideBar {
+    width: 250px;
+    color: #FFFFFF !important;
+    background-color: #272727;
+    height: 100%;
+}
+
+.whiteText {
+    color: #FFFFFF !important;
 }
