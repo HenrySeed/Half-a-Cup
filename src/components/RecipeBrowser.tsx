@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Grid, Paper } from "@material-ui/core"
+import { Grid, Paper, Typography } from "@material-ui/core"
 import { Switch, Route, Link } from "react-router-dom"
 import OpenRecipe from "./OpenRecipe";
 
@@ -20,6 +20,8 @@ interface State {
 
 export interface Props {
     recipes: Map<string, recipe>,
+    onToggleFavourite: Function,
+    saved: string[]
 }
 
 export default class RecipeBrowser extends React.Component<Props, State, object> {
@@ -43,9 +45,10 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
     render(): JSX.Element {
 
         let recipeTable: JSX.Element[] = [];
+        let count: number = 0;
         for (const [key, value] of Array.from(this.props.recipes)) {
             recipeTable.push(
-                <Grid item xs={12} className="recipeGridTile">
+                <Grid item xs={12} className="recipeGridTile" key={count}>
                     <Link to={'/recipes/' + key}>
                         <Paper className="recipeTile">
                             <p>{value.title}</p>
@@ -53,6 +56,7 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
                     </Link>
                 </Grid>
             );
+            count++;
         }
 
         return(
@@ -66,6 +70,9 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
                             justify="flex-start"
                             alignItems="stretch"
                         >
+                            <Typography variant="title" color="inherit" style={{marginLeft: "10px", marginBottom: "10px"}}>
+                                All Recipes
+                            </Typography>
                             {recipeTable}
                         </Grid>
                 }/>
@@ -78,6 +85,9 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
                             justify="flex-start"
                             alignItems="stretch"
                         >
+                            <Typography variant="title" color="inherit" style={{marginLeft: "10px", marginBottom: "10px"}}>
+                                All Recipes
+                            </Typography>
                             {recipeTable}
                         </Grid>
                 }/>
@@ -86,10 +96,12 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
                         const recipe: recipe | undefined = this.props.recipes.get(match.params.key)
                         if(recipe !== undefined){
                             return <OpenRecipe
-                                recipeKey={match.params.key}
-                                thisRecipe={recipe}
-                                onTagClick={this.handleTagClick}
-                            />
+                                    onToggleFavourite={this.props.onToggleFavourite}
+                                    recipeKey={match.params.key}
+                                    thisRecipe={recipe}
+                                    favRecipes={this.props.saved}
+                                    // onTagClick={this.handleTagClick}
+                                />
                         } else{
                             return <span></span>
                         }

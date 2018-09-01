@@ -59,7 +59,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
     }
 
     handleSearch(str: string): void {
-        console.log(`Searching for: ${str}`);
+        // console.log(`Searching for: ${str}`);
 
         this.setState({
             searchVal: str
@@ -121,73 +121,76 @@ export default class SearchBar extends React.Component<Props, State, object> {
         })
     }
 
-    render(): JSX.Element[] {
+    render(): JSX.Element {
 
         const searchDropdown: JSX.Element[] = [];
 
+        let count: number = 0;
         for(const key of this.state.searchResult){
             const recipe: recipe | undefined = this.props.recipes.get(key);
             if(recipe === undefined){continue}
 
             searchDropdown.push(
-                <Link to={`/recipes/${key}`} onClick={this.handleClearSearch}>
+                <Link to={`/recipes/${key}`} onClick={this.handleClearSearch} key={count}>
                     <MenuItem onClick={this.handleClose}>
                         {recipe.title}
                     </MenuItem>
                 </Link>
                 
             )
+
+            count++;
         }
 
-        return [
-            <div 
-                className="searchBar"
-                ref={(node: any) => {
-                    this.anchorEl = node;
-                }}
-                aria-owns={open ? 'menu-list-grow' : undefined}
-                aria-haspopup="true"
-            >
-                <Search className="searchicon"/>
-                <Input 
-                    className="searchField"
-                    disableUnderline 
-                    placeholder="Search" 
-                    onChange={(event) => this.handleSearch(event.target.value)} 
-                    value={this.state.searchVal}
-                    endAdornment={
-                        <InputAdornment position="end">
-                        {this.state.searchVal !== "" ?
-                            <IconButton
-                                aria-label="Clear Search"
-                                onClick={this.handleClearSearch}
-                            >
-                                <Cancel />
-                            </IconButton> 
-                            : <span/>}
-                          
-                        </InputAdornment>
-                      }
-                />
-            </div>,
-
-            <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                // id="menu-list-grow"
-                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
-              >
-                <Paper  className="searchResultsMenu">
-                  <ClickAwayListener onClickAway={this.handleClose}>
-                    <MenuList>
-                      {searchDropdown}
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>]
+        return <span>
+                <div 
+                    className="searchBar"
+                    ref={(node: any) => {
+                        this.anchorEl = node;
+                    }}
+                    aria-owns={open ? 'menu-list-grow' : undefined}
+                    aria-haspopup="true"
+                >
+                    <Search className="searchicon"/>
+                    <Input 
+                        className="searchField"
+                        disableUnderline 
+                        placeholder="Search" 
+                        onChange={(event) => this.handleSearch(event.target.value)} 
+                        value={this.state.searchVal}
+                        endAdornment={
+                            <InputAdornment position="end">
+                            {this.state.searchVal !== "" ?
+                                <IconButton
+                                    aria-label="Clear Search"
+                                    onClick={this.handleClearSearch}
+                                >
+                                    <Cancel />
+                                </IconButton> 
+                                : <span/>}
+                            
+                            </InputAdornment>
+                        }
+                    />
+                </div>
+                <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
+                {({ TransitionProps, placement }) => (
+                <Grow
+                    {...TransitionProps}
+                    // id="menu-list-grow"
+                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
+                >
+                    <Paper  className="searchResultsMenu">
+                    <ClickAwayListener onClickAway={this.handleClose}>
+                        <MenuList>
+                        {searchDropdown}
+                        </MenuList>
+                    </ClickAwayListener>
+                    </Paper>
+                </Grow>
+                )}
+            </Popper>
+        </span>
     }
 }
 

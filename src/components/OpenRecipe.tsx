@@ -18,74 +18,93 @@ interface recipe {
 
 
 export interface Props {
-    onTagClick: Function;
+    // onTagClick: Function;
     recipeKey: string,
     thisRecipe: recipe,
+    favRecipes: string[],
+    onToggleFavourite: Function,
     match?: any
 }
 
-export default class OpenRecipe extends React.Component<Props, object> {
+export interface State {
+    isFavourite: boolean
+}
+
+export default class OpenRecipe extends React.Component<Props, State, object> {
 
     constructor(props: Props) {
         super(props)
-        this.handleTagClick = this.handleTagClick.bind(this)
-        this.handleReaderViewClose = this.handleReaderViewClose.bind(this)
+        // this.handleTagClick = this.handleTagClick.bind(this)
+        this.state = {
+            isFavourite: this.props.favRecipes.indexOf(this.props.recipeKey) > -1
+        }
+
+        this.toggleFavourite = this.toggleFavourite.bind(this)
     }
 
     componentDidMount(): void {
         window.scrollTo(0, 0)
     }
 
-    handleTagClick(e: any, str: string): void {
-        if(this.props.onTagClick){
-            this.props.onTagClick(str.trim())
-        }
-    }
+    // handleTagClick(e: any, str: string): void {
+    //     if(this.props.onTagClick){
+    //         this.props.onTagClick(str.trim())
+    //     }
+    // }
 
-    handleReaderViewClose(): void {
-        console.log("closing reader");
+    toggleFavourite(): void {
         this.setState({
-            readerView: false
+            isFavourite: this.state.isFavourite === false
         })
+        
+        // if this recipe is currently favourited
+        if(this.state.isFavourite){
+            this.props.onToggleFavourite(this.props.recipeKey, false)
+        } else{
+            this.props.onToggleFavourite(this.props.recipeKey, true)
+        }
     }
 
     render(): JSX.Element {
 
         let ingredients: JSX.Element[] = []
 
+        let count: number = 0;
         for(const ingredient of this.props.thisRecipe.ingredients){
             ingredients.push(
-                <li>
+                <li key={count}>
                     {ingredient}
                 </li>
             )
+            count++;
         }
 
         let steps: JSX.Element[] = []
 
         for(const step of this.props.thisRecipe.steps){
             steps.push(
-                <li>
+                <li key={count}>
                     {step}
                 </li>
             )
+            count++;
         }
 
-        let tags: JSX.Element[] = []
+        // let tags: JSX.Element[] = []
 
-        for(const tag of this.props.thisRecipe.tags){
-            tags.push(
-                <Button 
-                    className="tagButton"
-                    onClick={(e) => {this.handleTagClick(e, tag)}} 
-                    color="primary" 
-                    variant="outlined"
-                >
-                    <Search className="tagIcon"/>
-                    {tag}
-                </Button>
-            )
-        }
+        // for(const tag of this.props.thisRecipe.tags){
+        //     tags.push(
+        //         <Button 
+        //             className="tagButton"
+        //             onClick={(e) => {this.handleTagClick(e, tag)}} 
+        //             color="primary" 
+        //             variant="outlined"
+        //         >
+        //             <Search className="tagIcon"/>
+        //             {tag}
+        //         </Button>
+        //     )
+        // }
 
         const recipeView: JSX.Element = <Paper className="openRecipeTile">
 
@@ -101,11 +120,25 @@ export default class OpenRecipe extends React.Component<Props, object> {
                 </IconButton>
             </Link>
 
-            <Link to="/">
-                <IconButton className="close">
-                    <Favorite/>
-                </IconButton>
-            </Link>
+            {
+                this.state.isFavourite 
+                ?
+                    <IconButton 
+                        className="close" 
+                        onClick={() => this.toggleFavourite()} 
+                        style={{color: (this.state.isFavourite ? "#f44336" : "unset")}}
+                    >
+                        <Favorite/>
+                    </IconButton> 
+                :
+                    <IconButton 
+                        className="close" 
+                        onClick={() => this.toggleFavourite()} 
+                    >
+                        <Favorite/>
+                    </IconButton>
+            }
+            
             
             
             <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>

@@ -39,14 +39,16 @@ export default class RecipeReaderView extends React.Component<Props, State, obje
 
     componentDidMount(): void {
         this.genPages();
-        console.log("reader view mounted")
+        // console.log("reader view mounted")
     }
 
     genPages(): void {
         const tempPages: JSX.Element[] = [];
+        let count: number = 0;
         const ingredients: JSX.Element[] = this.props.recipe.ingredients.map(
             function(ingredient: any, i: any): any{
-                return <ul>{ingredient}</ul>
+                count++;
+                return <ul key={count}>{ingredient}</ul>
             }
         )
 

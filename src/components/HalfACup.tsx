@@ -2,6 +2,7 @@ import * as React from "react";
 import "./HalfACup.css";
 import SearchBar from "./SearchBar";
 import RecipeBrowser from "./RecipeBrowser";
+import SavedRecipes from "./SavedRecipes";
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import { AppBar, IconButton, Toolbar, SwipeableDrawer, Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
@@ -50,7 +51,8 @@ export interface State {
     recipes: Map<string, recipe>
     searchOpen: boolean,
     drawerOpen: boolean,
-    SearchVal: string
+    SearchVal: string,
+    savedRecipes: string[]
 }
 
 
@@ -62,7 +64,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             recipes: new Map<string, recipe>(),
             searchOpen: false,
             drawerOpen: false,
-            SearchVal: ""
+            SearchVal: "",
+            savedRecipes: []
         };
 
         const config = {
@@ -71,10 +74,14 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             databaseURL: "https://wholecup-72a6b.firebaseio.com",
             projectId: "wholecup-72a6b",
             storageBucket: "wholecup-72a6b.appspot.com",
-            messagingSenderId: "51118699872"
+            messagingSenderId: "51118699872",
         };
-
         firebase.initializeApp(config);
+
+        const firestore = firebase.firestore();
+        firestore.settings({timestampsInSnapshots: true});
+
+        this.onToggleFavourite = this.onToggleFavourite.bind(this)
     }
 
     /**
@@ -94,7 +101,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             this.setState({
                 recipes: allRecipesTemp
             })
-            console.log("Recipes Loaded");
+            // console.log("Recipes Loaded");
         });
     }
 
@@ -104,16 +111,33 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         });
       };
 
+    onToggleFavourite(key: string, val: boolean): void {
+        console.log(`Toggling ${key} to ${val}`);
+        if(val === true){
+            this.setState({
+                savedRecipes: this.state.savedRecipes.concat([key])
+            })
+        } else {
+            const saved: string[] = this.state.savedRecipes;
+            saved.splice(saved.indexOf(key));
+            this.setState({
+                savedRecipes: saved
+            })
+        }
+    }
+
     render(): JSX.Element {
         // should make nice status bar on safari ios
         const browser = detect();
         const statusBar: JSX.Element[] = [];
+        let count: number = 0;
         if (browser) {
             if(browser.os === "iOS" && browser.name === "ios"){
-                statusBar.push(<div id="statusbar"> </div>)
+                statusBar.push(<div id="statusbar" key={count}> </div>)
             } else{
-                statusBar.push(<span></span>)
+                statusBar.push(<span key={count}></span>)
             }
+            count++;
         }
 
         const sideList = (
@@ -137,7 +161,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 primary={<Typography style={{ color: '#FFFFFF' }}>Browse all Recipes</Typography>}/> 
                         </ListItem>
                     </Link>
-                    <Link to="/recipes">
+                    <Link to="/saved">
                         <ListItem>
                             <ListItemIcon className="whiteText">
                                 <Favorite />
@@ -186,8 +210,9 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 </SwipeableDrawer>
 
                 <Switch>
-                    <Route path='/' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
-                    <Route path='/recipes' render={()=><RecipeBrowser recipes={this.state.recipes}/>}/>
+                    <Route exact path='/' render={()=><RecipeBrowser onToggleFavourite={this.onToggleFavourite} saved={this.state.savedRecipes} recipes={this.state.recipes}/>}/>
+                    <Route path='/recipes' render={()=><RecipeBrowser onToggleFavourite={this.onToggleFavourite} saved={this.state.savedRecipes} recipes={this.state.recipes}/>}/>
+                    <Route path='/saved' render={()=><SavedRecipes savedRecipeKeys={this.state.savedRecipes} allRecipes={this.state.recipes}/>}/>
                 </Switch>
             </div>
         );
