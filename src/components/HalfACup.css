@@ -28,7 +28,7 @@ a{
     top:0; 
     opacity: 0.95; 
     z-index: 1030;
-} 
+}
 
 .navbar {
     margin-top: 15pt;
@@ -43,4 +43,8 @@ a{
 
 .whiteText {
     color: #FFFFFF !important;
+}
+
+.null {
+    color: unset
 }

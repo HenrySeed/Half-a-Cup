@@ -3,3 +3,5 @@ keys/*
 
 *node_modules/
 build/dist
+
+/build/*
