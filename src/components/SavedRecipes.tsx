@@ -84,7 +84,7 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
         }
 
         if(recipeTable.length === 0){
-            recipeTable.push(<p className="noneSavedMessage">You havent saved any recipes yet, Save some so you can remember the ones you love!</p>)
+            recipeTable.push(<p className="noneSavedMessage" key="no_results">You havent saved any recipes yet, Save some so you can remember the ones you love!</p>)
         }
 
         return(

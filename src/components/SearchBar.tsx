@@ -190,19 +190,19 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
         return (
             <ClickAwayListener onClickAway={this.handleClose}>
-                <div 
-                    ref={(node: any) => {
-                        this.anchorEl = node;
-                    }}
-                    
-                    aria-owns={open ? 'menu-list-grow' : undefined}
-                    aria-haspopup="true"
-                >
-                    {searchBar}
-                </div>
-                {dropdown}
-
-            
+                <span>
+                    <div 
+                        ref={(node: any) => {
+                            this.anchorEl = node;
+                        }}
+                        
+                        aria-owns={open ? 'menu-list-grow' : undefined}
+                        aria-haspopup="true"
+                    >
+                        {searchBar}
+                    </div>
+                    {dropdown}
+                </span>
             </ClickAwayListener>
         );
 

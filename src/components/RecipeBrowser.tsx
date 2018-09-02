@@ -84,7 +84,7 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
                                     e.stopPropagation(); 
                                     this.props.onToggleFavourite(key, isFav === false)} 
                                 }
-                                style={{color: (isFav ? "#f44336" : "default")}}
+                                style={{color: (isFav ? "#f44336" : "#777777")}}
                             >
                                 <Favorite/>
                             </IconButton> 

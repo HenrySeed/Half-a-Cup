@@ -21,9 +21,7 @@ import Typography, { TypographyProps } from "@material-ui/core/Typography";
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
 import { Favorite } from '@material-ui/icons/'
-
 import { Switch, Route, Link } from "react-router-dom"
-
 import { detect } from "detect-browser"
 
 const firebase = require("firebase");
@@ -128,12 +126,14 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             savedRecipes = this.state.savedRecipes.concat([key]);
         } else {
             savedRecipes = this.state.savedRecipes;
-            savedRecipes.splice(savedRecipes.indexOf(key));
+            savedRecipes.splice(savedRecipes.indexOf(key), 1);
         }
 
         this.setState({
             savedRecipes: savedRecipes
         })
+
+        console.log(`Fav Recipes: ${savedRecipes}`)
     }
 
     render(): JSX.Element {
