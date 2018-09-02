@@ -1,8 +1,6 @@
 .searchicon {
-    /* vertical-align: middle;
-    margin-top: -3px;
-    margin-right: 6px; */
-    color: #FFFFFF;
+    color: #FFFFFF !important;
+    float: right;
 }
 
 .searchField{
@@ -29,8 +27,27 @@
     font-size: 11pt;
 }
 
-/* #long-menu{
-    right: 24px !important;
-    width: 300px !important;
-    top: 60px !important;
-} */
+
+@media only screen and (max-width: 500px){
+    .searchWrapper{
+        position: absolute;
+        
+    }
+
+    .searchField{
+        position: absolute !important;
+        width: 94%;
+        z-index: 1023;
+        left: 3%;
+        top: 7px;
+    }
+
+    .searchResultsMenu {
+        margin-top: 24px;
+        width:95vw;
+        will-change: transform;
+        max-height: 417px;
+        overflow-y: scroll;
+        margin-left: -2.5%;
+    }
+}

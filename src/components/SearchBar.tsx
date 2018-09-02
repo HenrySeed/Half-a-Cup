@@ -143,24 +143,24 @@ export default class SearchBar extends React.Component<Props, State, object> {
         }
 
         const dropdown: JSX.Element = <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
-            {({ TransitionProps, placement }) => (
-            <Grow
-                {...TransitionProps}
-                // id="menu-list-grow"
-                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
-            >
-                <Paper  className="searchResultsMenu">
-                    <MenuList>
-                    {searchResults}
-                    </MenuList>
-                </Paper>
-            </Grow>
-            )}
+            {({ TransitionProps, placement }) => {
+                return (
+                    <Grow
+                    {...TransitionProps}
+                >
+                    <Paper  className="searchResultsMenu">
+                        <MenuList>
+                        {searchResults}
+                        </MenuList>
+                    </Paper>
+                </Grow>
+                )
+            }}
         </Popper>;
 
         let searchBar: JSX.Element = (
-            <IconButton onClick={() => {this.setState({searchOpen: true})}}>
-                <Search className="searchicon"/>
+            <IconButton onClick={() => {this.setState({searchOpen: true})}} className="searchicon">
+                <Search/>
             </IconButton>
         )
 
@@ -194,6 +194,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
                     ref={(node: any) => {
                         this.anchorEl = node;
                     }}
+                    
                     aria-owns={open ? 'menu-list-grow' : undefined}
                     aria-haspopup="true"
                 >
