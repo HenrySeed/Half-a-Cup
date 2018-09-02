@@ -7,7 +7,6 @@ import RecipeReaderView from "./RecipeReaderView"
 import { Switch, Route, Link } from "react-router-dom"
 
 
-
 interface recipe {
     title: string,
     subtitle: string,
@@ -26,9 +25,11 @@ export interface Props {
     match?: any
 }
 
+
 export interface State {
     isFavourite: boolean
 }
+
 
 export default class OpenRecipe extends React.Component<Props, State, object> {
 
@@ -38,7 +39,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         this.state = {
             isFavourite: this.props.favRecipes.indexOf(this.props.recipeKey) > -1
         }
-
         this.toggleFavourite = this.toggleFavourite.bind(this)
     }
 
@@ -56,7 +56,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         this.setState({
             isFavourite: this.state.isFavourite === false
         })
-        
         // if this recipe is currently favourited
         if(this.state.isFavourite){
             this.props.onToggleFavourite(this.props.recipeKey, false)
@@ -66,9 +65,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
     }
 
     render(): JSX.Element {
-
         let ingredients: JSX.Element[] = []
-
         let count: number = 0;
         for(const ingredient of this.props.thisRecipe.ingredients){
             ingredients.push(
@@ -80,7 +77,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         }
 
         let steps: JSX.Element[] = []
-
         for(const step of this.props.thisRecipe.steps){
             steps.push(
                 <li key={count}>
@@ -107,19 +103,16 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         // }
 
         const recipeView: JSX.Element = <Paper className="openRecipeTile">
-
             <Link to='/recipes'>
                 <IconButton className="close">
                     <Close/>
                 </IconButton>
             </Link>
-
             <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
                 <IconButton className="close">
                     <ImportContacts/>
                 </IconButton>
             </Link>
-
             {
                 this.state.isFavourite 
                 ?
@@ -138,8 +131,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                         <Favorite/>
                     </IconButton>
             }
-            
-            
             
             <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>
             <em>{this.props.thisRecipe.subtitle}</em>
@@ -160,7 +151,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
 
         </Paper>
     
-
         return (
             <Switch>
                 <Route exact path='/recipes/:key' render={() => recipeView}/>

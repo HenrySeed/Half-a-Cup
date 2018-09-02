@@ -14,6 +14,17 @@ html, body, #app, #app>div {
 .recipeTile{
     padding: 10px;
     padding-left: 20px;
+    cursor: pointer;
+}
+
+.recipeTile > p {
+    display: inline-block;
+    width: calc(100% - 48px);
+}
+
+.recipeTile > .favButton {
+    display: inline-block;
+    vertical-align: top;
 }
 
 a{
@@ -47,4 +58,13 @@ a{
 
 .null {
     color: unset
+}
+
+.noneSavedMessage{
+    text-align: center;
+    color: grey;
+    margin-right: auto;
+    margin-left: auto;
+    width: 70%;
+    min-width: 300px;
 }

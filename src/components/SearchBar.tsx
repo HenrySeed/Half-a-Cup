@@ -65,14 +65,11 @@ export default class SearchBar extends React.Component<Props, State, object> {
             searchVal: str
         })
 
-        if(str.trim() !== ""){
+        if(str.trim() === ""){
             this.setState({
-                searchOpen: true
+                searchResult: []
             })
-        } else{
-            this.setState({
-                searchOpen: false
-            })
+            return;
         }
 
         
@@ -123,74 +120,91 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
     render(): JSX.Element {
 
-        const searchDropdown: JSX.Element[] = [];
-
+        const searchResults: JSX.Element[] = [];
         let count: number = 0;
         for(const key of this.state.searchResult){
             const recipe: recipe | undefined = this.props.recipes.get(key);
             if(recipe === undefined){continue}
 
-            searchDropdown.push(
+            searchResults.push(
                 <Link to={`/recipes/${key}`} onClick={this.handleClearSearch} key={count}>
                     <MenuItem onClick={this.handleClose}>
                         {recipe.title}
                     </MenuItem>
                 </Link>
-                
             )
-
             count++;
         }
 
-        return <span>
+        if(searchResults.length === 0){
+            searchResults.push(
+                <p className="subText">No Results</p>
+            )
+        }
+
+        const dropdown: JSX.Element = <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
+            {({ TransitionProps, placement }) => (
+            <Grow
+                {...TransitionProps}
+                // id="menu-list-grow"
+                style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
+            >
+                <Paper  className="searchResultsMenu">
+                    <MenuList>
+                    {searchResults}
+                    </MenuList>
+                </Paper>
+            </Grow>
+            )}
+        </Popper>;
+
+        let searchBar: JSX.Element = (
+            <IconButton onClick={() => {this.setState({searchOpen: true})}}>
+                <Search className="searchicon"/>
+            </IconButton>
+        )
+
+        if(this.state.searchOpen){
+            searchBar = (
+                <Input 
+                    className="searchField"
+                    disableUnderline 
+                    placeholder="Search" 
+                    onChange={(event) => this.handleSearch(event.target.value)} 
+                    value={this.state.searchVal}
+                    autoFocus
+                    endAdornment={
+                        <InputAdornment position="end">
+                            <IconButton
+                                aria-label="Clear Search"
+                                onClick={this.handleClearSearch}
+                            >
+                                <Cancel />
+                            </IconButton> 
+                        </InputAdornment>
+                    }
+                />
+            )
+
+        }
+
+        return (
+            <ClickAwayListener onClickAway={this.handleClose}>
                 <div 
-                    className="searchBar"
                     ref={(node: any) => {
                         this.anchorEl = node;
                     }}
                     aria-owns={open ? 'menu-list-grow' : undefined}
                     aria-haspopup="true"
                 >
-                    <Search className="searchicon"/>
-                    <Input 
-                        className="searchField"
-                        disableUnderline 
-                        placeholder="Search" 
-                        onChange={(event) => this.handleSearch(event.target.value)} 
-                        value={this.state.searchVal}
-                        endAdornment={
-                            <InputAdornment position="end">
-                            {this.state.searchVal !== "" ?
-                                <IconButton
-                                    aria-label="Clear Search"
-                                    onClick={this.handleClearSearch}
-                                >
-                                    <Cancel />
-                                </IconButton> 
-                                : <span/>}
-                            
-                            </InputAdornment>
-                        }
-                    />
+                    {searchBar}
                 </div>
-                <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
-                {({ TransitionProps, placement }) => (
-                <Grow
-                    {...TransitionProps}
-                    // id="menu-list-grow"
-                    style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'}}
-                >
-                    <Paper  className="searchResultsMenu">
-                    <ClickAwayListener onClickAway={this.handleClose}>
-                        <MenuList>
-                        {searchDropdown}
-                        </MenuList>
-                    </ClickAwayListener>
-                    </Paper>
-                </Grow>
-                )}
-            </Popper>
-        </span>
+                {dropdown}
+
+            
+            </ClickAwayListener>
+        );
+
     }
 }
 

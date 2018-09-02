@@ -5,7 +5,17 @@ import RecipeBrowser from "./RecipeBrowser";
 import SavedRecipes from "./SavedRecipes";
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
-import { AppBar, IconButton, Toolbar, SwipeableDrawer, Divider, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import { 
+    AppBar, 
+    IconButton, 
+    Toolbar, 
+    SwipeableDrawer, 
+    Divider, 
+    List, 
+    ListItem, 
+    ListItemIcon, 
+    ListItemText 
+} from "@material-ui/core";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -109,21 +119,21 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.setState({
           drawerOpen: status,
         });
-      };
+    };
 
     onToggleFavourite(key: string, val: boolean): void {
         console.log(`Toggling ${key} to ${val}`);
+        let savedRecipes: string[] = [];
         if(val === true){
-            this.setState({
-                savedRecipes: this.state.savedRecipes.concat([key])
-            })
+            savedRecipes = this.state.savedRecipes.concat([key]);
         } else {
-            const saved: string[] = this.state.savedRecipes;
-            saved.splice(saved.indexOf(key));
-            this.setState({
-                savedRecipes: saved
-            })
+            savedRecipes = this.state.savedRecipes;
+            savedRecipes.splice(savedRecipes.indexOf(key));
         }
+
+        this.setState({
+            savedRecipes: savedRecipes
+        })
     }
 
     render(): JSX.Element {
@@ -144,7 +154,11 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             <div>
                 <List>
                     <ListItem>
-                        <Typography variant="title" color="inherit" className={this.props.classes.flex}>
+                        <Typography 
+                            variant="title" 
+                            color="inherit" 
+                            className={this.props.classes.flex}
+                        >
                             Half a Cup
                         </Typography>
                     </ListItem>
@@ -158,7 +172,11 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             </ListItemIcon>
                             <ListItemText 
                                 disableTypography
-                                primary={<Typography style={{ color: '#FFFFFF' }}>Browse all Recipes</Typography>}/> 
+                                primary={
+                                    <Typography style={{ color: '#FFFFFF' }}>
+                                        Browse all Recipes
+                                    </Typography>
+                                }/> 
                         </ListItem>
                     </Link>
                     <Link to="/saved">
@@ -168,8 +186,11 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             </ListItemIcon>
                             <ListItemText 
                                 disableTypography
-                                primary={<Typography style={{ color: '#FFFFFF'}}>Saved Recipes</Typography>}
-                            /> 
+                                primary={
+                                    <Typography style={{ color: '#FFFFFF'}}>
+                                        Saved Recipes
+                                    </Typography>
+                                }/> 
                         </ListItem>
                     </Link>
                 </List>
@@ -181,7 +202,11 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 {statusBar}
                 <AppBar position="sticky">
                     <Toolbar>
-                        <IconButton onClick={() => this.toggleDrawer(true)} className={this.props.classes.menuButton} color="inherit" aria-label="Menu">
+                        <IconButton 
+                            onClick={() => this.toggleDrawer(true)} 
+                            className={this.props.classes.menuButton} 
+                            color="inherit" aria-label="Menu"
+                        >
                             <MenuIcon />
                         </IconButton> 
                         <Typography variant="title" color="inherit" className={this.props.classes.flex}>
@@ -210,9 +235,23 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 </SwipeableDrawer>
 
                 <Switch>
-                    <Route exact path='/' render={()=><RecipeBrowser onToggleFavourite={this.onToggleFavourite} saved={this.state.savedRecipes} recipes={this.state.recipes}/>}/>
-                    <Route path='/recipes' render={()=><RecipeBrowser onToggleFavourite={this.onToggleFavourite} saved={this.state.savedRecipes} recipes={this.state.recipes}/>}/>
-                    <Route path='/saved' render={()=><SavedRecipes savedRecipeKeys={this.state.savedRecipes} allRecipes={this.state.recipes}/>}/>
+                    <Route 
+                        path='/recipes' 
+                        render={()=><RecipeBrowser 
+                            onToggleFavourite={this.onToggleFavourite} 
+                            saved={this.state.savedRecipes} 
+                            recipes={this.state.recipes}
+                            favRecipes={this.state.savedRecipes}
+                            />}
+                    />
+                    <Route 
+                        path='/saved' 
+                        render={()=><SavedRecipes 
+                            savedRecipeKeys={this.state.savedRecipes} 
+                            allRecipes={this.state.recipes}
+                            onToggleFavourite={this.onToggleFavourite} 
+                        />}
+                    />
                 </Switch>
             </div>
         );
