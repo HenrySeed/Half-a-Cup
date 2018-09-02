@@ -145,9 +145,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
         const dropdown: JSX.Element = <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
             {({ TransitionProps, placement }) => {
                 return (
-                    <Grow
-                    {...TransitionProps}
-                >
+                    <Grow {...TransitionProps}>
                     <Paper  className="searchResultsMenu">
                         <MenuList>
                         {searchResults}

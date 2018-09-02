@@ -44,10 +44,10 @@
 
     .searchResultsMenu {
         margin-top: 24px;
-        width:95vw;
+        width: 94vw;
         will-change: transform;
         max-height: 417px;
         overflow-y: scroll;
-        margin-left: -2.5%;
+        margin-left: -91vw;
     }
 }
