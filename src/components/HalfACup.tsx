@@ -14,18 +14,23 @@ import {
     List, 
     ListItem, 
     ListItemIcon, 
-    ListItemText 
+    ListItemText,
+    Modal,
+    Button,
+    Paper
 } from "@material-ui/core";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
-import { Favorite } from '@material-ui/icons/'
-import { Switch, Route, Link } from "react-router-dom"
-import { detect } from "detect-browser"
+import { Favorite } from '@material-ui/icons/';
+import { Switch, Route, Link } from "react-router-dom";
+import { detect } from "detect-browser";
 
-const firebase = require("firebase");
-require("firebase/firestore");
+import * as firebase from 'firebase';
+import "firebase/firestore";
+import * as firebaseui from 'firebaseui';
+
 
 const style = (theme: Theme) => ({
     root: {
@@ -41,6 +46,7 @@ const style = (theme: Theme) => ({
     },
 });
 
+
 type PropsWithStyles = Props & WithStyles<"root" | "flex" | "menuButton">;
 
 interface recipe {
@@ -49,6 +55,13 @@ interface recipe {
     tags: string[],
     ingredients: string[],
     steps: string[],
+}
+
+interface User {
+    displayName: string,
+    email: string,
+    profileImgUrl: string,
+    uid: string
 }
 
 export interface Props {
@@ -60,11 +73,15 @@ export interface State {
     searchOpen: boolean,
     drawerOpen: boolean,
     SearchVal: string,
-    savedRecipes: string[]
+    savedRecipes: string[],
+    loginOpen: boolean,
+    user: User | undefined
 }
 
 
 class HalfACup extends React.Component<Props & PropsWithStyles, State> {
+
+    ui: firebaseui.auth.AuthUI;
 
     constructor(props: Props & PropsWithStyles) {
         super(props);
@@ -73,9 +90,16 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             searchOpen: false,
             drawerOpen: false,
             SearchVal: "",
-            savedRecipes: []
+            savedRecipes: [],
+            loginOpen: false,
+            user: undefined
         };
 
+        this.onToggleFavourite = this.onToggleFavourite.bind(this)
+        this.toggleLoginModal = this.toggleLoginModal.bind(this)
+        this.onLogout = this.onLogout.bind(this);
+
+        // Firestpre congif
         const config = {
             apiKey: "AIzaSyAnlTaJufGESWh80ttA3C5s9ouyIw1J-1E",
             authDomain: "wholecup-72a6b.firebaseapp.com",
@@ -88,8 +112,60 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
         const firestore = firebase.firestore();
         firestore.settings({timestampsInSnapshots: true});
+        
+    }
 
-        this.onToggleFavourite = this.onToggleFavourite.bind(this)
+    initApp(): void {
+        
+        firebase.auth().onAuthStateChanged((user) => {
+            if (user) {
+                const _tempUser: User = {
+                    displayName: "",
+                    email: "",
+                    profileImgUrl: "",
+                    uid: ""
+                }
+
+                if(user.displayName !== null) {_tempUser.displayName = user.displayName} 
+                else{ _tempUser.displayName = "USER" }
+
+                if(user.email !== null) {_tempUser.email = user.email} 
+
+                if(user.photoURL !== null) {_tempUser.profileImgUrl = user.photoURL} 
+
+                if(user.uid !== null) {_tempUser.uid = user.uid} 
+
+                this.setState({
+                    user: _tempUser
+                })
+
+                firebase.firestore().collection("Users")
+                    .doc(_tempUser.uid)
+                    .get()
+                    .then((doc) => {
+                        const data = doc.data()
+                        if (data !== undefined) {
+                            console.log("Document data:", );
+                            this.setState({
+                                savedRecipes: JSON.parse(data.savedRecipes)
+                            })
+                        } else {
+                            console.log("No such document!");
+                        }
+    
+                }).catch((e: any) => {
+                    console.log("Error getting document:", e);
+                });
+
+            } else {
+                // User is signed out.
+                this.setState({
+                    user: undefined
+                });
+            }
+        }, function(error: any): void {
+            console.log(error);
+        });
     }
 
     /**
@@ -98,6 +174,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
      * @memberof WholeCup
      */
     componentDidMount(): void {
+        
         var db = firebase.firestore();
         const allRecipesTemp: Map<string, recipe> = new Map<string, recipe>();
 
@@ -111,13 +188,49 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             })
             // console.log("Recipes Loaded");
         });
+
+        this.initApp();
+
+        var uiConfig = {
+            // signInSuccessUrl: '/',
+            signInOptions: [
+              firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+              firebase.auth.EmailAuthProvider.PROVIDER_ID,
+            ],
+        };
+        
+        var ui: any;
+        
+        // Initialize the FirebaseUI Widget using Firebase.
+        ui = new firebaseui.auth.AuthUI(firebase.auth());
+        ui.start('#firebaseui-auth-container', uiConfig);
+
     }
+
+    // componentDidUpdate(): void {
+    //     if(this.refs.loginModalRef){
+    //         // The start method will wait until the DOM is loaded.
+    //     }
+    // }
 
     toggleDrawer(status: boolean): void {
         this.setState({
           drawerOpen: status,
         });
-    };
+    }
+
+    toggleLoginModal(status: boolean): void {
+        this.setState({
+            loginOpen: status,
+        });
+    }
+
+    onLogout(): void {
+        window.location.reload(false); 
+
+        firebase.auth().signOut()
+
+    }
 
     onToggleFavourite(key: string, val: boolean): void {
         console.log(`Toggling ${key} to ${val}`);
@@ -133,22 +246,44 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             savedRecipes: savedRecipes
         })
 
-        console.log(`Fav Recipes: ${savedRecipes}`)
+        if(this.state.user !== undefined){
+             // save to firestore
+            firebase.firestore().collection("Users").doc(this.state.user.uid).set({
+                savedRecipes: JSON.stringify(savedRecipes),
+            })
+        } else{
+            console.log("You need to be logged in to save recipes")
+        }
     }
 
     render(): JSX.Element {
-        // should make nice status bar on safari ios
-        const browser = detect();
-        const statusBar: JSX.Element[] = [];
-        let count: number = 0;
-        if (browser) {
-            if(browser.os === "iOS" && browser.name === "ios"){
-                statusBar.push(<div id="statusbar" key={count}> </div>)
-            } else{
-                statusBar.push(<span key={count}></span>)
-            }
-            count++;
+
+        let loginPanel: JSX.Element = <Button onClick={() => this.toggleLoginModal(true)} style={{color: "#FFFFFF"}}>
+                Login
+            </Button>;
+
+        if(this.state.user !== undefined){
+            loginPanel = <Button onClick={this.onLogout} style={{color: "#FFFFFF"}}>
+                Log out
+            </Button>;
         }
+
+        // the login window
+        const loginModal: JSX.Element = (
+            <Modal
+                disablePortal   
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+                open={this.state.loginOpen}
+                onClose={() => this.toggleLoginModal(false)}
+            >
+                <Paper className="loginModal">
+                    <Typography variant="title" id="modal-title">
+                    Login
+                    </Typography>
+                </Paper>
+            </Modal>
+        );
 
         const sideList = (
             <div>
@@ -199,7 +334,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
         return (
             <div>
-                {statusBar}
+                {loginModal}
                 <AppBar position="sticky">
                     <Toolbar>
                         <IconButton 
@@ -215,8 +350,11 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             </Link>
                         </Typography>
                         <SearchBar value={this.state.SearchVal} recipes={this.state.recipes}/>
+                        {loginPanel}
                     </Toolbar>
                 </AppBar>
+
+                {this.state.user === undefined ? <div id="firebaseui-auth-container"  ref="loginModalRef"></div> : <span></span>}
 
                 <SwipeableDrawer
                     open={this.state.drawerOpen}

@@ -68,3 +68,14 @@ a{
     width: 70%;
     min-width: 300px;
 }
+
+.loginModal{
+    position: 'absolute';
+    width: 50%;
+    min-width: 300px;
+    padding: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
+    outline: none;
+}

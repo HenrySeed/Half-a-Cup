@@ -138,20 +138,23 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
         if(searchResults.length === 0){
             searchResults.push(
-                <p className="subText">No Results</p>
+                <p className="subText" key="No_Result">No Results</p>
             )
         }
 
         const dropdown: JSX.Element = <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
             {({ TransitionProps, placement }) => {
                 return (
-                    <Grow {...TransitionProps}>
-                    <Paper  className="searchResultsMenu">
-                        <MenuList>
-                        {searchResults}
-                        </MenuList>
-                    </Paper>
-                </Grow>
+                    <Grow 
+                        {...TransitionProps} 
+                        style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
+                    >
+                        <Paper  className="searchResultsMenu">
+                            <MenuList>
+                            {searchResults}
+                            </MenuList>
+                        </Paper>
+                    </Grow>
                 )
             }}
         </Popper>;

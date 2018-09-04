@@ -42,7 +42,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         this.toggleFavourite = this.toggleFavourite.bind(this)
     }
 
-    componentDidMount(): void {
+    componentWillMount(): void {
         window.scrollTo(0, 0)
     }
 
