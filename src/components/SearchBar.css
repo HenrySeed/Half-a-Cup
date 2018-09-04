@@ -4,7 +4,7 @@
 }
 
 .searchField{
-    background-color: #d43c31;
+    background-color: #FFFFFF;
     padding: 5px;
     border-radius: 5px;
     width: 289px;
@@ -12,13 +12,11 @@
 }
 
 .searchResultsMenu{
-    right: -149px;
-    margin-top: 3px;
-    float: right;
-    width: 298px;
-    will-change: transform;
+    margin-top: 5px;
+    width: 289px;
     max-height: 417px;
     overflow-y: scroll;
+    position: absolute;
 }
 
 .subText{
@@ -43,13 +41,8 @@
     }
 
     .searchResultsMenu {
-        margin-top: 24px;
+        margin-top: 27px;
         width: 94vw;
-        position: absolute;
-        left: -97vw;
-        margin-left: 90px;
-        will-change: transform;
-        max-height: 417px;
-        overflow-y: scroll;
+        left: 3vw;
     }
 }

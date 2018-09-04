@@ -142,22 +142,17 @@ export default class SearchBar extends React.Component<Props, State, object> {
             )
         }
 
-        const dropdown: JSX.Element = <Popper open={this.state.searchOpen} anchorEl={this.anchorEl} transition disablePortal>
-            {({ TransitionProps, placement }) => {
-                return (
-                    <Grow 
-                        {...TransitionProps} 
-                        style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-                    >
-                        <Paper  className="searchResultsMenu">
-                            <MenuList>
-                            {searchResults}
-                            </MenuList>
-                        </Paper>
-                    </Grow>
-                )
-            }}
-        </Popper>;
+        let dropdown: JSX.Element = <span></span>
+
+        if(this.state.searchOpen){
+            dropdown = (
+                <Paper className="searchResultsMenu">
+                    <MenuList>
+                        {searchResults}
+                    </MenuList>
+                </Paper>
+            );
+        }
 
         let searchBar: JSX.Element = (
             <IconButton onClick={() => {this.setState({searchOpen: true})}} className="searchicon">
@@ -191,7 +186,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
         return (
             <ClickAwayListener onClickAway={this.handleClose}>
-                <span>
+                <div>
                     <div 
                         ref={(node: any) => {
                             this.anchorEl = node;
@@ -203,7 +198,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
                         {searchBar}
                     </div>
                     {dropdown}
-                </span>
+                </div>
             </ClickAwayListener>
         );
 

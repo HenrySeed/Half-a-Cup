@@ -23,7 +23,7 @@ import Typography, { TypographyProps } from "@material-ui/core/Typography";
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
-import { Favorite } from '@material-ui/icons/';
+import { Favorite, Close, AccountCircle } from '@material-ui/icons/';
 import { Switch, Route, Link } from "react-router-dom";
 import { detect } from "detect-browser";
 
@@ -258,14 +258,16 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     render(): JSX.Element {
 
-        let loginPanel: JSX.Element = <Button onClick={() => this.toggleLoginModal(true)} style={{color: "#FFFFFF"}}>
+        let loginPanel: JSX.Element = 
+            <Button onClick={() => this.toggleLoginModal(true)} style={{color: "#FFFFFF"}}>
                 Login
             </Button>;
 
         if(this.state.user !== undefined){
-            loginPanel = <Button onClick={this.onLogout} style={{color: "#FFFFFF"}}>
-                Log out
-            </Button>;
+            loginPanel = 
+                <Button onClick={this.onLogout} style={{color: "#FFFFFF"}}>
+                    Log out
+                </Button>;
         }
 
         // the login window
@@ -296,6 +298,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         >
                             Half a Cup
                         </Typography>
+                        <IconButton 
+                            onClick={() => this.setState({drawerOpen: false})} 
+                            className={this.props.classes.menuButton} 
+                            color="inherit" aria-label="Menu"
+                        >
+                            <Close />
+                        </IconButton> 
                     </ListItem>
                 </List>
                 <Divider/>
@@ -329,12 +338,20 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         </ListItem>
                     </Link>
                 </List>
+                <Divider/>
+                <List>
+                    <ListItem>
+                        <ListItemIcon className="whiteText">
+                            <AccountCircle />
+                        </ListItemIcon>
+                        {loginPanel}
+                    </ListItem>
+                </List>
             </div>
         );
 
         return (
             <div>
-                {loginModal}
                 <AppBar position="sticky">
                     <Toolbar>
                         <IconButton 
@@ -350,9 +367,9 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             </Link>
                         </Typography>
                         <SearchBar value={this.state.SearchVal} recipes={this.state.recipes}/>
-                        {loginPanel}
                     </Toolbar>
                 </AppBar>
+                {loginModal}
 
                 {this.state.user === undefined ? <div id="firebaseui-auth-container"  ref="loginModalRef"></div> : <span></span>}
 
@@ -361,15 +378,15 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     onClose={() => this.toggleDrawer(false)}
                     onOpen={() => this.toggleDrawer(true)}
                 >
-                <div
-                    className="sideBar"
-                    tabIndex={0}
-                    role="button"
-                    onClick={() => this.toggleDrawer(false)}
-                    onKeyDown={() => this.toggleDrawer(false)}
-                >
-                    {sideList}
-                </div>
+                    <div
+                        className="sideBar"
+                        tabIndex={0}
+                        role="button"
+                        onClick={() => this.toggleDrawer(false)}
+                        onKeyDown={() => this.toggleDrawer(false)}
+                    >
+                        {sideList}
+                    </div>
                 </SwipeableDrawer>
 
                 <Switch>

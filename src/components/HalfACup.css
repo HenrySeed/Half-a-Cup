@@ -46,7 +46,7 @@ a{
 }
 
 .sideBar {
-    width: 250px;
+    width: 300px;
     color: #FFFFFF !important;
     background-color: #272727;
     height: 100%;
@@ -66,7 +66,7 @@ a{
     margin-right: auto;
     margin-left: auto;
     width: 70%;
-    min-width: 300px;
+    min-width: 250px;
 }
 
 .loginModal{
@@ -78,4 +78,10 @@ a{
     margin-right: auto;
     margin-top: 20%;
     outline: none;
+}
+
+@media only screen and (max-width: 550px){
+    .sideBar {
+        width: 250px;
+    }
 }
