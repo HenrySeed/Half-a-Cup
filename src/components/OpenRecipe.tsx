@@ -1,6 +1,6 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
-import { Close, Search, ImportContacts, Favorite } from '@material-ui/icons/'
+import { Close, Search, ImportContacts, Favorite, Edit } from '@material-ui/icons/'
 import "./OpenRecipe.css"
 import { IconButton, Button } from "@material-ui/core";
 import RecipeReaderView from "./RecipeReaderView"
@@ -17,7 +17,7 @@ interface recipe {
 
 
 export interface Props {
-    // onTagClick: Function;
+    onTagClick: Function;
     recipeKey: string,
     thisRecipe: recipe,
     favRecipes: string[],
@@ -27,30 +27,33 @@ export interface Props {
 
 
 export interface State {
-    isFavourite: boolean
+    isFavourite: boolean,
+    editMode: boolean
 }
 
 
 export default class OpenRecipe extends React.Component<Props, State, object> {
 
     constructor(props: Props) {
-        super(props)
+        super(props);
         // this.handleTagClick = this.handleTagClick.bind(this)
         this.state = {
-            isFavourite: this.props.favRecipes.indexOf(this.props.recipeKey) > -1
+            isFavourite: this.props.favRecipes.indexOf(this.props.recipeKey) > -1,
+            editMode: false
         }
-        this.toggleFavourite = this.toggleFavourite.bind(this)
+        this.toggleFavourite = this.toggleFavourite.bind(this);
+        this.toggleEdit = this.toggleEdit.bind(this);
     }
 
     componentWillMount(): void {
         window.scrollTo(0, 0)
     }
 
-    // handleTagClick(e: any, str: string): void {
-    //     if(this.props.onTagClick){
-    //         this.props.onTagClick(str.trim())
-    //     }
-    // }
+    handleTagClick(e: any, str: string): void {
+        if(this.props.onTagClick){
+            this.props.onTagClick(str.trim())
+        }
+    }
 
     toggleFavourite(): void {
         this.setState({
@@ -62,6 +65,13 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         } else{
             this.props.onToggleFavourite(this.props.recipeKey, true)
         }
+    }
+
+    toggleEdit(): void {
+        console.log(`Toggle edit to ${this.state.editMode === false}`)
+        this.setState({
+            editMode: this.state.editMode === false
+        })
     }
 
     render(): JSX.Element {
@@ -86,70 +96,79 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             count++;
         }
 
-        // let tags: JSX.Element[] = []
+        let tags: JSX.Element[] = []
+        let i: number = 0;
+        for(const tag of this.props.thisRecipe.tags){
+            tags.push(
+                <Button 
+                    className="tagButton"
+                    onClick={(e) => {this.handleTagClick(e, tag)}} 
+                    color="primary" 
+                    variant="outlined"
+                    key={i}
+                >
+                    <Search className="tagIcon"/>
+                    {tag}
+                </Button>
+            )
+            i++;
+        }
 
-        // for(const tag of this.props.thisRecipe.tags){
-        //     tags.push(
-        //         <Button 
-        //             className="tagButton"
-        //             onClick={(e) => {this.handleTagClick(e, tag)}} 
-        //             color="primary" 
-        //             variant="outlined"
-        //         >
-        //             <Search className="tagIcon"/>
-        //             {tag}
-        //         </Button>
-        //     )
-        // }
-
-        const recipeView: JSX.Element = <Paper className="openRecipeTile">
-            <Link to='/recipes'>
-                <IconButton className="close">
-                    <Close/>
-                </IconButton>
-            </Link>
-            <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
-                <IconButton className="close">
-                    <ImportContacts/>
-                </IconButton>
-            </Link>
-            {
-                this.state.isFavourite 
-                ?
-                    <IconButton 
-                        className="close" 
-                        onClick={() => this.toggleFavourite()} 
-                        style={{color: (this.state.isFavourite ? "#f44336" : "unset")}}
-                    >
-                        <Favorite/>
-                    </IconButton> 
-                :
-                    <IconButton 
-                        className="close" 
-                        onClick={() => this.toggleFavourite()} 
-                    >
-                        <Favorite/>
+        const recipeView: JSX.Element = 
+            <Paper className="openRecipeTile">
+                <Link to='/recipes'>
+                    <IconButton className="close">
+                        <Close/>
                     </IconButton>
-            }
-            
-            <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>
-            <em>{this.props.thisRecipe.subtitle}</em>
+                </Link>
+                <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
+                    <IconButton className="close">
+                        <ImportContacts/>
+                    </IconButton>
+                </Link>
+                {
+                    this.state.isFavourite 
+                    ?
+                        <IconButton 
+                            className="close" 
+                            onClick={() => this.toggleFavourite()} 
+                            style={{color: (this.state.isFavourite ? "#f44336" : "unset")}}
+                        >
+                            <Favorite/>
+                        </IconButton> 
+                    :
+                        <IconButton 
+                            className="close" 
+                            onClick={() => this.toggleEdit()} 
+                        >
+                            <Favorite/>
+                        </IconButton>
+                }
+                <IconButton 
+                    className="close" 
+                    onClick={() => this.toggleEdit()} 
+                >
+                    <Edit/>
+                </IconButton>
+                
+                <h3 className="recipeTitle">{this.props.thisRecipe.title}</h3>
+                <em>{this.props.thisRecipe.subtitle}</em>
 
-            <h4>Ingredients</h4>
-            <ul>{ingredients}</ul>
+                <h4>Ingredients</h4>
+                <ul>{ingredients}</ul>
 
-            <h4>Steps</h4>
-            <ul>{steps}</ul>
-            <br/><br/><br/>
-            {/* <hr/>
-            <br/> */}
-            {/* Tags for this Recipe 
-            <br/>
-            <br/>
-            {tags}
-            <br/><br/> */}
+                <h4>Steps</h4>
+                <ul>{steps}</ul>
+                <br/><br/><br/>
+                <hr/>
+                <br/> 
+                Tags for this Recipe 
+                <br/>
+                <br/>
+                {tags}
+                <br/><br/>
 
-        </Paper>
+            </Paper>
     
         return (
             <Switch>

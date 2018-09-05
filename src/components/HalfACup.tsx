@@ -3,6 +3,7 @@ import "./HalfACup.css";
 import SearchBar from "./SearchBar";
 import RecipeBrowser from "./RecipeBrowser";
 import SavedRecipes from "./SavedRecipes";
+import OpenRecipe from "./OpenRecipe";
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import { 
@@ -70,7 +71,6 @@ export interface Props {
 
 export interface State {
     recipes: Map<string, recipe>
-    searchOpen: boolean,
     drawerOpen: boolean,
     SearchVal: string,
     savedRecipes: string[],
@@ -87,7 +87,6 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         super(props);
         this.state = {
             recipes: new Map<string, recipe>(),
-            searchOpen: false,
             drawerOpen: false,
             SearchVal: "",
             savedRecipes: [],
@@ -98,6 +97,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.onToggleFavourite = this.onToggleFavourite.bind(this)
         this.toggleLoginModal = this.toggleLoginModal.bind(this)
         this.onLogout = this.onLogout.bind(this);
+        this.handleTagClick = this.handleTagClick.bind(this)
+        this.onSearchClear = this.onSearchClear.bind(this)
 
         // Firestpre congif
         const config = {
@@ -207,11 +208,17 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     }
 
-    // componentDidUpdate(): void {
-    //     if(this.refs.loginModalRef){
-    //         // The start method will wait until the DOM is loaded.
-    //     }
-    // }
+    handleTagClick(tag: string): void {
+        this.setState({
+            SearchVal: tag
+        })
+    }
+
+    onSearchClear(): void {
+        this.setState({
+            SearchVal: ""
+        })
+    }
 
     toggleDrawer(status: boolean): void {
         this.setState({
@@ -227,9 +234,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     onLogout(): void {
         window.location.reload(false); 
-
         firebase.auth().signOut()
-
     }
 
     onToggleFavourite(key: string, val: boolean): void {
@@ -366,7 +371,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 Half a Cup
                             </Link>
                         </Typography>
-                        <SearchBar value={this.state.SearchVal} recipes={this.state.recipes}/>
+                        <SearchBar value={this.state.SearchVal} onSearchClear={this.onSearchClear} recipes={this.state.recipes}/>
                     </Toolbar>
                 </AppBar>
                 {loginModal}
@@ -391,15 +396,16 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
                 <Switch>
                     <Route 
+                        exact
                         path='/recipes' 
                         render={()=><RecipeBrowser 
                             onToggleFavourite={this.onToggleFavourite} 
-                            saved={this.state.savedRecipes} 
                             recipes={this.state.recipes}
                             favRecipes={this.state.savedRecipes}
                             />}
                     />
                     <Route 
+                        exact
                         path='/saved' 
                         render={()=><SavedRecipes 
                             savedRecipeKeys={this.state.savedRecipes} 
@@ -407,6 +413,22 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             onToggleFavourite={this.onToggleFavourite} 
                         />}
                     />
+                    <Route path='/recipes/:key' render={
+                        ({match}) => {
+                            const recipe: recipe | undefined = this.state.recipes.get(match.params.key)
+                            if(recipe !== undefined){
+                                return <OpenRecipe
+                                        onToggleFavourite={this.onToggleFavourite}
+                                        recipeKey={match.params.key}
+                                        thisRecipe={recipe}
+                                        favRecipes={this.state.savedRecipes}
+                                        onTagClick={this.handleTagClick}
+                                    />
+                            } else{
+                                return <span></span>
+                            }
+                        }
+                    }/>
                 </Switch>
             </div>
         );

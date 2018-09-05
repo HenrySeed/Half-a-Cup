@@ -2,11 +2,10 @@ import * as React from "react";
 import Paper from "@material-ui/core/Paper"
 import "./OpenRecipe.css"
 import { Grid, Typography } from "@material-ui/core";
-import OpenRecipe from "./OpenRecipe"
-import { Switch, Route, Link } from "react-router-dom"
 import { IconButton } from "@material-ui/core";
 import { Favorite } from '@material-ui/icons/'
 import { Redirect } from 'react-router';
+import RecipeList from "../elements/RecipeList";
 
 
 interface recipe {
@@ -55,52 +54,32 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
             return <Redirect push to={"/recipes/" + key} />;
         }
 
-        let recipeTable: JSX.Element[] = [];
-        for (const [key, value] of Array.from(this.props.allRecipes)) {
-
-            const isFav: boolean = this.props.savedRecipeKeys.indexOf(key) > -1;
-
-            if(this.props.savedRecipeKeys.indexOf(key) > -1){
-                recipeTable.push(
-                    <Grid item xs={12} className="recipeGridTile" key={key}>
-                    {/* We cant use Link here because the onClick needs to be handled to avoid clicking the fav button opening the recipe */}
-                        <Paper className="recipeTile" onClick={() => this.handleRecipeClick(key)}>
-                            <p>{value.title}</p>
-                                <IconButton 
-                                    className="favButton" 
-                                    onClick={(e) => {
-                                        // This stops the fav button triggering the recipe onClick
-                                        e.stopPropagation(); 
-                                        this.props.onToggleFavourite(key, isFav === false)} 
-                                    }
-                                    style={{color: (isFav ? "#f44336" : "default")}}
-                                >
-                                    <Favorite/>
-                                </IconButton> 
-                        </Paper>
-                    </Grid>
-                );
+        const savedRecipes: Map<string, recipe> = new Map<string, recipe>();
+        for (const [key, recipe] of Array.from(this.props.allRecipes)) {
+            if (this.props.savedRecipeKeys.indexOf(key) > -1) {
+                savedRecipes.set(key, recipe);
             }
         }
 
-        if(recipeTable.length === 0){
-            recipeTable.push(<p className="noneSavedMessage" key="no_results">You havent saved any recipes yet, Save some so you can remember the ones you love!</p>)
+        let table: JSX.Element;
+        if (this.props.savedRecipeKeys.length === 0) {
+            table = <p className="noneSavedMessage" key="no_results">You havent saved any recipes yet, Save some so you can remember the ones you love!</p>;
+        } else {
+            table = 
+                <RecipeList
+                    recipes={savedRecipes}
+                    favRecipes={this.props.savedRecipeKeys}
+                    onToggleFavourite={this.props.onToggleFavourite}
+                    onOpenRecipe={this.handleRecipeClick}
+                />
         }
 
-        return(
-            <div>
-                <Grid
-                    className="recipeTable"
-                    container
-                    direction="column"
-                    justify="flex-start"
-                    alignItems="stretch"
-                >
-                    <Typography variant="title" color="inherit" style={{marginLeft: "10px", marginBottom: "10px"}}>
-                        Saved Recipes
-                    </Typography>
-                    {recipeTable}
-                </Grid>
+        return (
+            <div  style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
+                <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
+                    Saved Recipes
+                </Typography>
+                {table}
             </div>
         );
     }

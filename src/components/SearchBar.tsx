@@ -27,7 +27,8 @@ interface recipe {
 
 export interface Props {
     value: string;
-    recipes: Map<string, recipe>
+    recipes: Map<string, recipe>;
+    onSearchClear: Function
 }
 
 export interface State {
@@ -36,7 +37,7 @@ export interface State {
     searchOpen: boolean
 }
 
- 
+
 
 export default class SearchBar extends React.Component<Props, State, object> {
 
@@ -105,16 +106,30 @@ export default class SearchBar extends React.Component<Props, State, object> {
         })
     }
 
+    componentDidUpdate(): void {
+        if(this.props.value !== "" && this.props.value !== this.state.searchVal) {
+            this.setState({
+                searchVal: this.props.value,
+                searchOpen: true
+            })
+
+            this.handleSearch(this.props.value);
+        }
+    }
+
     handleClearSearch(event: any): void {
         this.handleSearch("");
         this.setState({
-            searchOpen: false
-        })
+            searchVal: ""
+        });
+        this.props.onSearchClear();
+
+        this.handleClose()
     }
 
     handleClose(): void {
         this.setState({
-            searchOpen: false
+            searchOpen: false,
         })
     }
 
@@ -143,7 +158,6 @@ export default class SearchBar extends React.Component<Props, State, object> {
         }
 
         let dropdown: JSX.Element = <span></span>
-
         if(this.state.searchOpen){
             dropdown = (
                 <Paper className="searchResultsMenu">
@@ -181,11 +195,10 @@ export default class SearchBar extends React.Component<Props, State, object> {
                     }
                 />
             )
-
         }
 
         return (
-            <ClickAwayListener onClickAway={this.handleClose}>
+            <ClickAwayListener onClickAway={this.handleClearSearch}>
                 <div>
                     <div 
                         ref={(node: any) => {

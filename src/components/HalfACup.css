@@ -1,13 +1,11 @@
 
-.recipeTable {
-    padding: 5%;
-}
+
 
 .recipeGridTile{
     padding: 10px !important;
 }
 
-html, body, #app, #app>div {
+html, body, #app, #app > div {
     height: 100%
 }
 
