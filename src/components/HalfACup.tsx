@@ -99,6 +99,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.onLogout = this.onLogout.bind(this);
         this.handleTagClick = this.handleTagClick.bind(this)
         this.onSearchClear = this.onSearchClear.bind(this)
+        this.handleRecipeUpdate = this.handleRecipeUpdate.bind(this)
 
         // Firestpre congif
         const config = {
@@ -261,6 +262,27 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         }
     }
 
+    handleRecipeUpdate(newRecipe: recipe, key: string): void{
+        console.log(`Saving Recipe: ${key} with data:`);
+        console.log(newRecipe);
+
+        if(this.state.user !== undefined){
+            if(this.state.user.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2"){
+                 // save to firestore
+                firebase.firestore().collection("recipes").doc(key).set({
+                    ingredients: newRecipe.ingredients,
+                    steps: newRecipe.steps,
+                    tags: newRecipe.tags,
+                    title: newRecipe.title,
+                })
+            } else{
+                console.log("You shouldnt be able to do that ...")
+            }
+       } else{
+           console.log("You need to be logged in to edit recipes")
+       }
+    }
+
     render(): JSX.Element {
 
         let loginPanel: JSX.Element = 
@@ -418,6 +440,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             const recipe: recipe | undefined = this.state.recipes.get(match.params.key)
                             if(recipe !== undefined){
                                 return <OpenRecipe
+                                        user={this.state.user}
+                                        onRecipeSave={this.handleRecipeUpdate}
                                         onToggleFavourite={this.onToggleFavourite}
                                         recipeKey={match.params.key}
                                         thisRecipe={recipe}

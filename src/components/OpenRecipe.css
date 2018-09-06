@@ -2,6 +2,19 @@
     float: right;
 }
 
+.saveButton{
+    float: right;
+    margin-left: 10px !important;
+    margin-bottom: 15px !important;
+}
+
+.titleField {
+    font-family: 'Chivo', sans-serif;
+    font-size: 26pt;
+    color: #f44336;
+    width: calc(100% - 200px)
+}
+
 .openRecipeTile{
     padding: 10px;
     padding-left: 20px;
@@ -36,4 +49,15 @@ ul > li{
     font-size: 26pt;
     margin-top: 10px;
     color: #f44336;
+}
+
+.stepField {
+    width: 95%;
+    margin-bottom: 20px !important;
+}
+
+.ingredientField{
+    width: 90%;
+    max-width: 400px;
+    margin-bottom: 10px;
 }
