@@ -194,7 +194,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.initApp();
 
         var uiConfig = {
-            // signInSuccessUrl: '/',
+            signInSuccessUrl: '/recipes',
             signInOptions: [
               firebase.auth.GoogleAuthProvider.PROVIDER_ID,
               firebase.auth.EmailAuthProvider.PROVIDER_ID,
