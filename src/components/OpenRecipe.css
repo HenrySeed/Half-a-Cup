@@ -61,3 +61,11 @@ ul > li{
     max-width: 400px;
     margin-bottom: 10px;
 }
+
+.activeStar {
+    color: #f44336;
+}
+
+.star {
+    color: #666;
+}

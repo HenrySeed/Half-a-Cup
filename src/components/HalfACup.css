@@ -68,7 +68,8 @@ a{
 }
 
 .modalContainer{
-    position: absolute;
+    position: fixed;
+    overflow: hidden;
     top:0;
     bottom: 0;
     left:0;
@@ -78,7 +79,6 @@ a{
 }
 
 .loginModal{
-    position: 'absolute';
     width: 50%;
     min-width: 300px;
     padding: 20px;
@@ -86,6 +86,8 @@ a{
     margin-right: auto;
     margin-top: 20%;
     outline: none;
+    max-width: 400px;
+    color: #444;
 }
 
 .loginModal > #modal-title {
@@ -93,6 +95,7 @@ a{
     margin-top: 10px;
     display: inline-block
 }
+
 
 @media only screen and (max-width: 550px){
     .sideBar {

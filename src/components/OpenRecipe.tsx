@@ -1,10 +1,11 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
 import { Close, Search, ImportContacts, Favorite, Edit, Save, Delete, Add } from '@material-ui/icons/'
-import "./OpenRecipe.css"
+import "./OpenRecipe.css";
 import { IconButton, Button, TextField, Input } from "@material-ui/core";
-import RecipeReaderView from "./RecipeReaderView"
-import { Switch, Route, Link } from "react-router-dom"
+import RecipeReaderView from "./RecipeReaderView";
+import { Switch, Route, Link } from "react-router-dom";
+import StarRating from "../elements/StarRating"
 
 
 interface recipe {
@@ -13,6 +14,7 @@ interface recipe {
     tags: string[],
     ingredients: string[],
     steps: string[],
+    rating: number
 }
 
 
@@ -58,6 +60,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         this.toggleFavourite = this.toggleFavourite.bind(this);
         this.toggleEdit = this.toggleEdit.bind(this);
         this.onEditSave = this.onEditSave.bind(this)
+        this.handleRatingChange = this.handleRatingChange.bind(this)
     }
 
     componentWillMount(): void {
@@ -71,9 +74,12 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
     }
 
     toggleFavourite(): void {
-        this.setState({
-            isFavourite: this.state.isFavourite === false
-        })
+        if(this.props.user){
+            this.setState({
+                isFavourite: this.state.isFavourite === false
+            })
+        }
+
         // if this recipe is currently favourited
         if(this.state.isFavourite){
             this.props.onToggleFavourite(this.props.recipeKey, false)
@@ -103,27 +109,27 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         console.log(`Change in ${section} line: ${key} to ${value}`)
         const newRecipe: recipe = JSON.parse(JSON.stringify(this.state.editedRecipe));
 
-        if(section === 'ingredients'){
+        if(section === 'ingredients') {
             if(value === undefined){
                 newRecipe.ingredients.splice(key, 1);
             } else {
                 newRecipe.ingredients.splice(key, 1, value);
             }
-        } else if(section === 'steps'){
+        } else if(section === 'steps') {
             if(value === undefined){
                 newRecipe.steps.splice(key, 1);
             } else {
                 newRecipe.steps.splice(key, 1, value);
             }
-        } else if(section === 'tags'){
+        } else if(section === 'tags') {
             if(value === undefined){
                 newRecipe.tags.splice(key, 1);
             } else {
                 newRecipe.tags.splice(key, 1, value);
             }
-        } else if(section === 'title'){
+        } else if(section === 'title') {
             newRecipe.title = value === undefined ? "" : value;
-        } else if(section === 'subtitle'){
+        } else if(section === 'subtitle') {
             newRecipe.subtitle = value === undefined ? "" : value;
         }
 
@@ -133,6 +139,19 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
 
         console.log(newRecipe);
         console.log(this.state.editedRecipe);
+    }
+
+    handleRatingChange(newVal: number): void {
+        console.log(`Changing rating to: ${newVal}`)
+        const newRecipe = this.state.editedRecipe;
+        newRecipe.rating = newVal;
+        this.setState({
+            editedRecipe: newRecipe
+        })
+        this.props.onRecipeSave(newRecipe, this.props.recipeKey);
+
+        console.log(this.state.editedRecipe)
+
     }
 
     addInput(section: string): void {
@@ -352,11 +371,18 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             );
         }
 
+        // ---------------  Rating  ---------------- //
+        let rating: JSX.Element = <StarRating
+                value={this.state.editedRecipe.rating}
+                onChangeVal={this.handleRatingChange}
+            />
+
         const recipeView: JSX.Element = 
             <Paper className="openRecipeTile">
                 {topButtons}
                 {title}
                 {subtitle}
+                {rating}
                 
                 <h4>Ingredients</h4>
                 <ul>{ingredients}</ul>

@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn add @types/react-firebaseui
+  /usr/local/bin/node /usr/local/bin/yarn add @types/react-material-ui-rating
 
 PATH: 
   /opt/local/bin:/opt/local/sbin:/Users/HenrySeed/bin:/usr/local/bin:/Library/Frameworks/Python.framework/Versions/3.4/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/local/git/bin
@@ -14,7 +14,7 @@ Platform:
   darwin x64
 
 Trace: 
-  Error: https://registry.yarnpkg.com/@types%2freact-firebaseui: Not found
+  Error: https://registry.yarnpkg.com/@types%2freact-material-ui-rating: Not found
       at Request.params.callback [as _callback] (/usr/local/lib/node_modules/yarn/lib/cli.js:64202:18)
       at Request.self.callback (/usr/local/lib/node_modules/yarn/lib/cli.js:137468:22)
       at emitTwo (events.js:126:13)
@@ -44,7 +44,7 @@ npm manifest:
       "firebaseui": "^3.4.0",
       "react": "^16.2.0",
       "react-dom": "^16.2.0",
-      "react-firebaseui": "^3.0.7",
+      "react-material-ui-rating": "^1.2.0",
       "react-router-dom": "^4.3.1",
       "react-scripts-ts": "2.13.0",
       "react-swipe": "^5.1.1",
@@ -2760,7 +2760,7 @@ Lockfile:
       "@firebase/polyfill" "0.3.3"
       "@firebase/storage" "0.2.3"
   
-  firebaseui@^3.2.0, firebaseui@^3.4.0:
+  firebaseui@^3.4.0:
     version "3.4.0"
     resolved "https://registry.yarnpkg.com/firebaseui/-/firebaseui-3.4.0.tgz#ca9ebc708aeab5bf2e6e060c4caf12674d9db186"
     dependencies:
@@ -6128,12 +6128,6 @@ Lockfile:
       prop-types "^15.6.0"
       warning "^4.0.1"
   
-  react-firebaseui@^3.0.7:
-    version "3.0.7"
-    resolved "https://registry.yarnpkg.com/react-firebaseui/-/react-firebaseui-3.0.7.tgz#a9e5473c64e72d5ded3928c9023a0d54d2141fee"
-    dependencies:
-      firebaseui "^3.2.0"
-  
   react-jss@^8.1.0:
     version "8.6.1"
     resolved "https://registry.yarnpkg.com/react-jss/-/react-jss-8.6.1.tgz#a06e2e1d2c4d91b4d11befda865e6c07fbd75252"
@@ -6147,6 +6141,10 @@ Lockfile:
   react-lifecycles-compat@^3.0.2, react-lifecycles-compat@^3.0.4:
     version "3.0.4"
     resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
+  
+  react-material-ui-rating@^1.2.0:
+    version "1.2.0"
+    resolved "https://registry.yarnpkg.com/react-material-ui-rating/-/react-material-ui-rating-1.2.0.tgz#0959d9853cf485425aaa0b5b1e9ee67c9ef12abe"
   
   react-router-dom@^4.3.1:
     version "4.3.1"

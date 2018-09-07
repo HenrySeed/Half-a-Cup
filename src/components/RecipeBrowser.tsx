@@ -16,7 +16,8 @@ interface recipe {
 interface State {
     pages: JSX.Element[],
     currentPageNum: number,
-    redirectRecipeKey: string
+    redirectRecipeKey: string,
+    scrollPos: number
 }
 
 export interface Props {
@@ -35,6 +36,7 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
             pages: [],
             redirectRecipeKey: "",
             currentPageNum: 0,
+            scrollPos: 0
         }
 
         this.handleTagClick = this.handleTagClick.bind(this)

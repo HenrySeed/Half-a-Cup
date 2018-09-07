@@ -57,6 +57,7 @@ interface recipe {
     tags: string[],
     ingredients: string[],
     steps: string[],
+    rating: number
 }
 
 interface User {
@@ -76,13 +77,12 @@ export interface State {
     SearchVal: string,
     savedRecipes: string[],
     loginOpen: boolean,
-    user: User | undefined | null
+    user: User | undefined | null,
+    loginMessage: string,
 }
 
 
 class HalfACup extends React.Component<Props & PropsWithStyles, State> {
-
-    ui: firebaseui.auth.AuthUI;
 
     constructor(props: Props & PropsWithStyles) {
         super(props);
@@ -92,7 +92,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             SearchVal: "",
             savedRecipes: [],
             loginOpen: false,
-            user: undefined
+            user: undefined,
+            loginMessage: ""
         };
 
         this.onToggleFavourite = this.onToggleFavourite.bind(this)
@@ -115,10 +116,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
         const firestore = firebase.firestore();
         firestore.settings({timestampsInSnapshots: true});
+
+        this.setUpFirestoreAuth()
+        this.setUpRecipes();
         
     }
 
-    initApp(): void {
+    setUpFirestoreAuth(): void {
         
         firebase.auth().onAuthStateChanged((user) => {
             if (user) {
@@ -171,19 +175,18 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         });
     }
 
-    /**
-     * Once the component has fully loaded load the recipes from firestore
-     *
-     * @memberof WholeCup
-     */
-    componentDidMount(): void {
-        
+    setUpRecipes(): void {
         var db = firebase.firestore();
         const allRecipesTemp: Map<string, recipe> = new Map<string, recipe>();
 
         db.collection("recipes").get().then((querySnapshot: any): any => {
             querySnapshot.forEach((doc: any): any => {
-                allRecipesTemp.set(doc.id, doc.data());
+                const _tempRecipe = doc.data()
+                // set up ratings
+                if(_tempRecipe.rating === undefined){
+                    _tempRecipe.rating = 0
+                }
+                allRecipesTemp.set(doc.id, _tempRecipe);
             });
 
             this.setState({
@@ -191,12 +194,16 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             })
             // console.log("Recipes Loaded");
         });
+    }
 
-        this.initApp();
+    /**
+     *
+     * @memberof WholeCup
+     */
+    componentDidMount(): void {
 
         if(!this.state.user){
             var uiConfig = {
-                signInSuccessUrl: '/recipes',
                 signInOptions: [
                   firebase.auth.GoogleAuthProvider.PROVIDER_ID,
                   firebase.auth.EmailAuthProvider.PROVIDER_ID,
@@ -234,6 +241,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.setState({
             loginOpen: status,
         });
+
+        // reset login message
+        if(status === false){
+            this.setState({
+                loginMessage: ""
+            })
+        }
     }
 
     onLogout(): void {
@@ -250,26 +264,29 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 
     onToggleFavourite(key: string, val: boolean): void {
-        console.log(`Toggling ${key} to ${val}`);
-        let savedRecipes: string[] = [];
-        if(val === true){
-            savedRecipes = this.state.savedRecipes.concat([key]);
-        } else {
-            savedRecipes = this.state.savedRecipes;
-            savedRecipes.splice(savedRecipes.indexOf(key), 1);
-        }
-
-        this.setState({
-            savedRecipes: savedRecipes
-        })
-
+        
         if(this.state.user){
+            console.log(`Toggling ${key} to ${val}`);
+            let savedRecipes: string[] = [];
+            if(val === true){
+                savedRecipes = this.state.savedRecipes.concat([key]);
+            } else {
+                savedRecipes = this.state.savedRecipes;
+                savedRecipes.splice(savedRecipes.indexOf(key), 1);
+            }
+
+            this.setState({
+                savedRecipes: savedRecipes
+            })
              // save to firestore
             firebase.firestore().collection("Users").doc(this.state.user.uid).set({
                 savedRecipes: JSON.stringify(savedRecipes),
             })
         } else{
-            console.log("You need to be logged in to save recipes")
+            this.setState({
+                loginOpen: true,
+                loginMessage: "You need to be logged in to save recipes."
+            })
         }
     }
 
@@ -287,6 +304,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         tags: newRecipe.tags,
                         title: newRecipe.title,
                         subtitle: newRecipe.subtitle,
+                        rating: newRecipe.rating
                     })
                 } catch (e) {
                     console.log("Saving Recipe failed:", e)
@@ -329,8 +347,9 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         <IconButton className="close" onClick={() => this.toggleLoginModal(false)}>
                             <Close/>
                         </IconButton>
+                        {this.state.loginMessage === "" ? <span/> : <div><br/><em>{this.state.loginMessage}</em><br/><br/></div>}
                         <div id="firebaseui-auth-container"  ref="loginModalRef"></div>
-
+            
                     </Paper>
                 </ClickAwayListener>
             </div>
