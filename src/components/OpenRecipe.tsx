@@ -42,7 +42,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
     constructor(props: Props) {
         super(props);
         let canEdit: boolean = false;
-        if(props.user !== undefined){
+        if(props.user !== undefined && props.user !== null){
             if(props.user.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2" ){
                 canEdit = true
             }
@@ -181,7 +181,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             count++;
         }
         if(this.state.editMode){
-            ingredients.push(<IconButton onClick={() => this.addInput('ingredients')}><Add></Add></IconButton>);
+            ingredients.push(<IconButton key={count} onClick={() => this.addInput('ingredients')}><Add></Add></IconButton>);
         }
 
         // ----------------  Steps  ---------------- //
@@ -216,7 +216,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             count++;
         }
         if(this.state.editMode){
-            steps.push(<IconButton onClick={() => this.addInput('steps')}><Add></Add></IconButton>);
+            steps.push(<IconButton key={count} onClick={() => this.addInput('steps')}><Add></Add></IconButton>);
         }
 
         // -----------------  Tags  ---------------- //
@@ -254,7 +254,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             count++;
         }
         if(this.state.editMode){
-            tags.push(<IconButton onClick={() => this.addInput('tags')}><Add></Add></IconButton>);
+            tags.push(<IconButton key={count} onClick={() => this.addInput('tags')}><Add></Add></IconButton>);
         }
 
         // --------------  Top Buttons  ------------ //
