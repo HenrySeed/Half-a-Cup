@@ -75,7 +75,7 @@ export interface State {
     SearchVal: string,
     savedRecipes: string[],
     loginOpen: boolean,
-    user: User | undefined
+    user: User | undefined | null
 }
 
 
@@ -162,7 +162,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             } else {
                 // User is signed out.
                 this.setState({
-                    user: undefined
+                    user: null
                 });
             }
         }, function(error: any): void {
@@ -252,7 +252,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             savedRecipes: savedRecipes
         })
 
-        if(this.state.user !== undefined){
+        if(this.state.user !== undefined && this.state.user !== null){
              // save to firestore
             firebase.firestore().collection("Users").doc(this.state.user.uid).set({
                 savedRecipes: JSON.stringify(savedRecipes),
@@ -266,15 +266,21 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         console.log(`Saving Recipe: ${key} with data:`);
         console.log(newRecipe);
 
-        if(this.state.user !== undefined){
+        if(this.state.user !== undefined && this.state.user !== null){
             if(this.state.user.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2"){
-                 // save to firestore
-                firebase.firestore().collection("recipes").doc(key).set({
-                    ingredients: newRecipe.ingredients,
-                    steps: newRecipe.steps,
-                    tags: newRecipe.tags,
-                    title: newRecipe.title,
-                })
+                try{
+                     // save to firestore
+                    firebase.firestore().collection("recipes").doc(key).set({
+                        ingredients: newRecipe.ingredients,
+                        steps: newRecipe.steps,
+                        tags: newRecipe.tags,
+                        title: newRecipe.title,
+                        subtitle: newRecipe.subtitle,
+                    })
+                } catch (e) {
+                    console.log("Saving Recipe failed:", e)
+                }
+                
             } else{
                 console.log("You shouldnt be able to do that ...")
             }

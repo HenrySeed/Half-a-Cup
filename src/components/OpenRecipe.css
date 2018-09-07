@@ -52,7 +52,7 @@ ul > li{
 }
 
 .stepField {
-    width: 95%;
+    width: calc(100% - 50px);
     margin-bottom: 20px !important;
 }
 

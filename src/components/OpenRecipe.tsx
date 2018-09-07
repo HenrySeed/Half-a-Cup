@@ -1,6 +1,6 @@
 import * as React from "react";
 import Paper from "@material-ui/core/Paper"
-import { Close, Search, ImportContacts, Favorite, Edit, Save } from '@material-ui/icons/'
+import { Close, Search, ImportContacts, Favorite, Edit, Save, Delete, Add } from '@material-ui/icons/'
 import "./OpenRecipe.css"
 import { IconButton, Button, TextField, Input } from "@material-ui/core";
 import RecipeReaderView from "./RecipeReaderView"
@@ -31,7 +31,8 @@ export interface Props {
 export interface State {
     isFavourite: boolean,
     editMode: boolean,
-    thisRecipe: recipe,
+    ogRecipe: recipe,
+    editedRecipe: recipe,
     canEdit: boolean
 }
 
@@ -50,8 +51,9 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         this.state = {
             isFavourite: this.props.favRecipes.indexOf(this.props.recipeKey) > -1,
             editMode: false,
-            thisRecipe: this.props.thisRecipe,
-            canEdit: canEdit
+            ogRecipe: JSON.parse(JSON.stringify(props.thisRecipe)),
+            canEdit: canEdit,
+            editedRecipe: JSON.parse(JSON.stringify(props.thisRecipe))
         }
         this.toggleFavourite = this.toggleFavourite.bind(this);
         this.toggleEdit = this.toggleEdit.bind(this);
@@ -83,50 +85,89 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
     toggleEdit(): void {
         console.log(`Toggle edit to ${this.state.editMode === false}`)
         this.setState({
-            editMode: this.state.editMode === false
+            editMode: this.state.editMode === false,
+            editedRecipe: this.state.ogRecipe
         })
     }
 
     onEditSave(): void {
+        const recipeChanges: recipe = this.state.editedRecipe;
         this.toggleEdit();
-        this.props.onRecipeSave(this.state.thisRecipe, this.props.recipeKey);
+        this.setState({
+            editedRecipe: recipeChanges
+        })
+        this.props.onRecipeSave(this.state.editedRecipe, this.props.recipeKey);
     }
 
-    handleRecipeChange(e: any, section: string, key: number): void {
-        console.log(`Change in ${section} line: ${key} to ${e.target.value}`)
-        const newRecipe: recipe = this.state.thisRecipe;
+    handleRecipeChange(value: string | undefined, section: string, key: number): void {
+        console.log(`Change in ${section} line: ${key} to ${value}`)
+        const newRecipe: recipe = JSON.parse(JSON.stringify(this.state.editedRecipe));
 
         if(section === 'ingredients'){
-            newRecipe.ingredients.splice(key, 1, e.target.value);
+            if(value === undefined){
+                newRecipe.ingredients.splice(key, 1);
+            } else {
+                newRecipe.ingredients.splice(key, 1, value);
+            }
         } else if(section === 'steps'){
-            newRecipe.steps.splice(key, 1, e.target.value);
+            if(value === undefined){
+                newRecipe.steps.splice(key, 1);
+            } else {
+                newRecipe.steps.splice(key, 1, value);
+            }
         } else if(section === 'tags'){
-            newRecipe.tags.splice(key, 1, e.target.value);
+            if(value === undefined){
+                newRecipe.tags.splice(key, 1);
+            } else {
+                newRecipe.tags.splice(key, 1, value);
+            }
         } else if(section === 'title'){
-            newRecipe.title = e.target.value;
+            newRecipe.title = value === undefined ? "" : value;
+        } else if(section === 'subtitle'){
+            newRecipe.subtitle = value === undefined ? "" : value;
         }
 
         this.setState({
-            thisRecipe: newRecipe
+            editedRecipe: newRecipe
         })
 
-        console.log(newRecipe)
+        console.log(newRecipe);
+        console.log(this.state.editedRecipe);
+    }
+
+    addInput(section: string): void {
+        const newRecipe: recipe = JSON.parse(JSON.stringify(this.state.editedRecipe));
+        if(section === 'ingredients'){
+            newRecipe.ingredients.push("")
+        } else if(section === 'steps'){
+            newRecipe.steps.push("")
+        } else if(section === 'tags'){
+            newRecipe.tags.push("")
+        } 
+
+        this.setState({
+            editedRecipe: newRecipe
+        })
     }
 
     render(): JSX.Element {
         // -------------  Ingredients  ------------- //
         let ingredients: JSX.Element[] = []
         let count: number = 0;
-        for(const ingredient of this.state.thisRecipe.ingredients){
+        for(const ingredient of this.state.editedRecipe.ingredients){
             if(this.state.editMode){
                 const realNum: number = count;
                 ingredients.push(
                     <li key={count}>
                         <TextField 
+                            label="Ingredient"
                             value={ingredient} 
-                            onChange={(e) => this.handleRecipeChange(e, 'ingredients', realNum)}
+                            onChange={(e) => this.handleRecipeChange(e.target.value, 'ingredients', realNum)}
                             className="ingredientField"
                         />
+                        <IconButton onClick={(e) => this.handleRecipeChange(undefined, 'ingredients', realNum)}>
+                            <Delete></Delete>
+                        </IconButton>
                     </li>
                 )
             } else {
@@ -139,22 +180,29 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             
             count++;
         }
+        if(this.state.editMode){
+            ingredients.push(<IconButton onClick={() => this.addInput('ingredients')}><Add></Add></IconButton>);
+        }
 
         // ----------------  Steps  ---------------- //
         count = 0;
         let steps: JSX.Element[] = []
-        for(const step of this.state.thisRecipe.steps){
+        for(const step of this.state.editedRecipe.steps){
             if(this.state.editMode){
                 const realNum: number = count;
                 steps.push(
                     <li key={count}>
                         <TextField 
+                            label="Step"
                             value={step} 
-                            onChange={(e) => this.handleRecipeChange(e, 'steps', realNum)}
+                            onChange={(e) => this.handleRecipeChange(e.target.value, 'steps', realNum)}
                             className="stepField"
                             multiline
                             rowsMax="7"
                         />
+                        <IconButton onClick={(e) => this.handleRecipeChange(undefined, 'steps', realNum)}>
+                            <Delete></Delete>
+                        </IconButton>
                     </li>
                 )
             } else {
@@ -167,19 +215,26 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             
             count++;
         }
+        if(this.state.editMode){
+            steps.push(<IconButton onClick={() => this.addInput('steps')}><Add></Add></IconButton>);
+        }
 
         // -----------------  Tags  ---------------- //
         let tags: JSX.Element[] = []
         count = 0;
-        for(const tag of this.state.thisRecipe.tags){
+        for(const tag of this.state.editedRecipe.tags){
             if(this.state.editMode){
                 const realNum: number = count;
                 tags.push(
                     <li key={count}>
                         <TextField 
-                            onChange={(e) => this.handleRecipeChange(e, 'tags', realNum)}
+                            label="Tags"
+                            onChange={(e) => this.handleRecipeChange(e.target.value, 'tags', realNum)}
                             value={tag} 
                         />
+                        <IconButton onClick={(e) => this.handleRecipeChange(undefined, 'tags', realNum)}>
+                            <Delete></Delete>
+                        </IconButton>
                     </li>
                 )
             } else {
@@ -197,6 +252,9 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                 )
             }
             count++;
+        }
+        if(this.state.editMode){
+            tags.push(<IconButton onClick={() => this.addInput('tags')}><Add></Add></IconButton>);
         }
 
         // --------------  Top Buttons  ------------ //
@@ -268,25 +326,38 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         }
 
         // -----------------  Title  --------------- //
-        let title: JSX.Element = (<h3 className="recipeTitle">{this.state.thisRecipe.title}</h3>);
+        let title: JSX.Element = (<h3 className="recipeTitle">{this.state.editedRecipe.title}</h3>);
         if(this.state.editMode){
             title = (
                 <Input 
                     multiline
                     style={{fontSize: "26pt", color: "#f44336",fontWeight: "bold"}}
-                    onChange={(e) => this.handleRecipeChange(e, 'title', 0)}
-                    value={this.state.thisRecipe.title} 
+                    onChange={(e) => this.handleRecipeChange(e.target.value, 'title', 0)}
+                    value={this.state.editedRecipe.title} 
                 />
             )
+        }
+
+        // ---------------  SubTitle  -------------- //
+        let subtitle: JSX.Element = <em>{this.state.editedRecipe.subtitle}</em>;
+        if(this.state.editMode){
+            subtitle = (
+                <TextField 
+                    multiline
+                    label="Subtitle"
+                    className="stepField"
+                    onChange={(e) => this.handleRecipeChange(e.target.value, 'subtitle', 0)}
+                    value={this.state.editedRecipe.subtitle} 
+                />
+            );
         }
 
         const recipeView: JSX.Element = 
             <Paper className="openRecipeTile">
                 {topButtons}
-                 
                 {title}
-                <em>{this.state.thisRecipe.subtitle}</em>
-
+                {subtitle}
+                
                 <h4>Ingredients</h4>
                 <ul>{ingredients}</ul>
 
@@ -308,7 +379,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                 <Route exact path='/recipes/:key' render={() => recipeView}/>
                 <Route exact path='/recipes/:key/readerView' render={() => 
                     <RecipeReaderView 
-                    recipe={this.state.thisRecipe}
+                    recipe={this.state.editedRecipe}
                     />
                 }/>
             </Switch>
