@@ -24,7 +24,8 @@ export interface Props {
     recipes: Map<string, recipe>,
     onToggleFavourite: Function,
     favRecipes: string[],
-    title: string
+    title: string,
+    emptyMessage?: string
 }
 
 export default class RecipeBrowser extends React.Component<Props, State, object> {
@@ -67,17 +68,24 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
             return <Redirect push to={"/recipes/" + key} />;
         }
 
+        let container = (
+            <RecipeList
+                recipes={this.props.recipes}
+                favRecipes={this.props.favRecipes}
+                onToggleFavourite={this.props.onToggleFavourite}
+                onOpenRecipe={this.handleRecipeClick}
+            />);
+        if (Array.from(this.props.recipes.keys()).length === 0) {
+            container = <p className="noneSavedMessage">{this.props.emptyMessage}</p>;
+        }     
+        
+
         return(<div  style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
                 
                 <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
                     {this.props.title}
                 </Typography>
-                <RecipeList
-                    recipes={this.props.recipes}
-                    favRecipes={this.props.favRecipes}
-                    onToggleFavourite={this.props.onToggleFavourite}
-                    onOpenRecipe={this.handleRecipeClick}
-                />
+                {container}
             </div>
         );
     }

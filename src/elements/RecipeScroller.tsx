@@ -60,10 +60,10 @@ export default class RecipeScroller extends React.Component<Props,State, object>
         for(const [key, val] of Array.from(this.props.recipes)) {
             if(count === this.props.maximum){
                 recipes.push(
-                    <Link to={this.props.seeMoreLink}>
+                    <Link to={this.props.seeMoreLink} key={key}>
                         <GridListTile 
                             key={key}
-                            style={{cursor: 'pointer', minWidth: "180px", marginRight: "10px"}}
+                            style={{cursor: 'pointer', minWidth: "180px", maxWidth: "240px", marginRight: "10px"}}
                         >
                             <Button style={{marginTop: "33px"}} >
                             See More...
@@ -77,7 +77,7 @@ export default class RecipeScroller extends React.Component<Props,State, object>
                 <GridListTile 
                     key={key} 
                     onClick={() => this.handleRecipeClick(key)} 
-                    style={{cursor: 'pointer', minWidth: "180px"}}
+                    style={{cursor: 'pointer', minWidth: "180px", maxWidth: "240px"}}
                 >
                     <Paper
                         style={{padding: "20px", margin: "5px", minHeight: "100px"}}
@@ -90,7 +90,13 @@ export default class RecipeScroller extends React.Component<Props,State, object>
             count++;
         }
         
-
+        
+        let container = (
+            <GridList cols={2.5} style={{flexWrap: 'nowrap', transform: 'translateZ(0)', height: "120px"}}>
+                {recipes}
+            </GridList>
+        )
+        
         return(                
             <div style={{
                 marginLeft: "5%",
@@ -102,9 +108,7 @@ export default class RecipeScroller extends React.Component<Props,State, object>
                 <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
                     {this.props.title}
                 </Typography>
-                <GridList cols={2.5} style={{flexWrap: 'nowrap', transform: 'translateZ(0)', height: "120px"}}>
-                    {recipes}
-                </GridList>
+                {container}
             </div>
         );
     }

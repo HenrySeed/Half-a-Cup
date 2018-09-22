@@ -26,7 +26,7 @@ import Typography, { TypographyProps } from "@material-ui/core/Typography";
 
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
-import { Favorite, Close, AccountCircle } from '@material-ui/icons/';
+import { Favorite, Close, AccountCircle, Home } from '@material-ui/icons/';
 import { Switch, Route, Link } from "react-router-dom";
 import { detect } from "detect-browser";
 
@@ -286,7 +286,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         } else{
             this.setState({
                 loginOpen: true,
-                loginMessage: "You need to be logged in to save recipes."
+                loginMessage: "You need to be logged in to favourite recipes."
             })
         }
     }
@@ -379,6 +379,20 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 </List>
                 <Divider/>
                 <List>
+                    <Link to="/">
+                        <ListItem>
+                            <ListItemIcon className="whiteText">
+                                <Home />
+                            </ListItemIcon>
+                            <ListItemText 
+                                disableTypography
+                                primary={
+                                    <Typography style={{ color: '#FFFFFF' }}>
+                                        Home
+                                    </Typography>
+                                }/> 
+                        </ListItem>
+                    </Link>
                     <Link to="/recipes">
                         <ListItem>
                             <ListItemIcon className="whiteText">
@@ -393,7 +407,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 }/> 
                         </ListItem>
                     </Link>
-                    <Link to="/saved">
+                    <Link to="/favourite">
                         <ListItem>
                             <ListItemIcon className="whiteText">
                                 <Favorite />
@@ -402,7 +416,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 disableTypography
                                 primary={
                                     <Typography style={{ color: '#FFFFFF'}}>
-                                        Saved Recipes
+                                        Your Favourite Recipes
                                     </Typography>
                                 }/> 
                         </ListItem>
@@ -480,14 +494,31 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         path='/' 
                         render={() => (
                             <div>
-                                <RecipeScroller 
-                                    title="Your saved recipes"
-                                    recipes={savedRecipesObjects} 
-                                    favRecipes={this.state.savedRecipes} 
-                                    onToggleFavourite={this.onToggleFavourite} 
-                                    maximum={5}
-                                    seeMoreLink='/saved' 
-                                />
+                                {this.state.savedRecipes.length === 0 ?
+                                    <div style={{
+                                        marginLeft: "5%",
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'space-around',
+                                        overflow: 'hidden',
+                                        marginTop: "30px",
+                                    }}>
+                                        <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
+                                            Your favourite recipes
+                                        </Typography>
+                                        <div style={{marginLeft: "5%", marginTop: "20px", color: "gray"}}>Favourite some recipes to see them here.</div>
+                                    </div>
+                                    :
+                                    <RecipeScroller 
+                                        title="Your favourite recipes"
+                                        recipes={savedRecipesObjects} 
+                                        favRecipes={this.state.savedRecipes} 
+                                        onToggleFavourite={this.onToggleFavourite} 
+                                        maximum={5}
+                                        seeMoreLink='/favourite' 
+                                    />
+                                }
+                                
+                                
                                 <RecipeScroller 
                                     title="Browse all recipes"
                                     recipes={this.state.recipes} 
@@ -501,9 +532,10 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     />
                     <Route 
                         exact
-                        path='/saved' 
+                        path='/favourite' 
                         render={()=><RecipeBrowser 
-                            title="Saved Recipes"
+                            title="Your favourite Recipes"
+                            emptyMessage="You don't have any favouite recipes yet, favourite some so you can remember the ones you love!"
                             onToggleFavourite={this.onToggleFavourite} 
                             recipes={savedRecipesObjects}
                             favRecipes={this.state.savedRecipes}

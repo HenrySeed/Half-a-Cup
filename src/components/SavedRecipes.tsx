@@ -44,6 +44,8 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
     }
 
     render(): JSX.Element {
+        console.log(Array.from(this.props.allRecipes.keys()))
+
 
         // if we should redirect to the selected recipe redirect
         if(this.state.redirectRecipeKey !== ""){
@@ -61,8 +63,10 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
             }
         }
 
+        console.log(Array.from(this.props.allRecipes.keys()))
+
         let table: JSX.Element;
-        if (this.props.savedRecipeKeys.length === 0) {
+        if (Array.from(this.props.allRecipes.keys()).length === 0) {
             table = <p className="noneSavedMessage" key="no_results">You havent saved any recipes yet, Save some so you can remember the ones you love!</p>;
         } else {
             table = 
@@ -77,7 +81,7 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
         return (
             <div  style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
                 <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
-                    Saved Recipes
+                    Your Favourite Recipes
                 </Typography>
                 {table}
             </div>
