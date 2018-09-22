@@ -279,11 +279,9 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         // --------------  Top Buttons  ------------ //
         let topButtons: JSX.Element = 
             <div>
-                <Link to='/recipes'>
-                    <IconButton className="close">
-                        <Close/>
-                    </IconButton>
-                </Link>
+                <IconButton className="close" onClick={() => {window.history.back()}}>
+                    <Close/>
+                </IconButton>
                 <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
                     <IconButton className="close">
                         <ImportContacts/>

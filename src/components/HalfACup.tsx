@@ -4,7 +4,8 @@ import SearchBar from "./SearchBar";
 import RecipeBrowser from "./RecipeBrowser";
 import SavedRecipes from "./SavedRecipes";
 import OpenRecipe from "./OpenRecipe";
-import { Redirect } from 'react-router';
+import RecipeScroller from "../elements/RecipeScroller"
+
 
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import { 
@@ -93,7 +94,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             savedRecipes: [],
             loginOpen: false,
             user: undefined,
-            loginMessage: ""
+            loginMessage: "",
         };
 
         this.onToggleFavourite = this.onToggleFavourite.bind(this)
@@ -318,6 +319,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
        }
     }
 
+
     render(): JSX.Element {
 
         let loginPanel: JSX.Element = 
@@ -418,6 +420,14 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             </div>
         );
 
+        const savedRecipesObjects: Map<string, recipe> = new Map<string, recipe>();
+
+        for(const [key, val] of Array.from(this.state.recipes)){
+            if(this.state.savedRecipes.indexOf(key) > -1){
+                savedRecipesObjects.set(key, val);
+            }
+        }
+
         return (
             <div>
                 <AppBar position="sticky">
@@ -458,25 +468,45 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     <Route 
                         exact
                         path='/recipes' 
-                        render={()=><RecipeBrowser 
+                        render={() => <RecipeBrowser 
+                            title="All Recipes"
                             onToggleFavourite={this.onToggleFavourite} 
                             recipes={this.state.recipes}
                             favRecipes={this.state.savedRecipes}
-                            />}
+                        />}
                     />
                      <Route 
                         exact
                         path='/' 
-                        render={() => <Redirect push to={"/recipes"} />
-                    }
+                        render={() => (
+                            <div>
+                                <RecipeScroller 
+                                    title="Your saved recipes"
+                                    recipes={savedRecipesObjects} 
+                                    favRecipes={this.state.savedRecipes} 
+                                    onToggleFavourite={this.onToggleFavourite} 
+                                    maximum={5}
+                                    seeMoreLink='/saved' 
+                                />
+                                <RecipeScroller 
+                                    title="Browse all recipes"
+                                    recipes={this.state.recipes} 
+                                    favRecipes={this.state.savedRecipes} 
+                                    onToggleFavourite={this.onToggleFavourite} 
+                                    maximum={5}
+                                    seeMoreLink='/recipes' 
+                                />
+                            </div>
+                        )}
                     />
                     <Route 
                         exact
                         path='/saved' 
-                        render={()=><SavedRecipes 
-                            savedRecipeKeys={this.state.savedRecipes} 
-                            allRecipes={this.state.recipes}
+                        render={()=><RecipeBrowser 
+                            title="Saved Recipes"
                             onToggleFavourite={this.onToggleFavourite} 
+                            recipes={savedRecipesObjects}
+                            favRecipes={this.state.savedRecipes}
                         />}
                     />
                     <Route path='/recipes/:key' render={

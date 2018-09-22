@@ -24,6 +24,7 @@ export interface Props {
     recipes: Map<string, recipe>,
     onToggleFavourite: Function,
     favRecipes: string[],
+    title: string
 }
 
 export default class RecipeBrowser extends React.Component<Props, State, object> {
@@ -69,7 +70,7 @@ export default class RecipeBrowser extends React.Component<Props, State, object>
         return(<div  style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
                 
                 <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
-                    All Recipes
+                    {this.props.title}
                 </Typography>
                 <RecipeList
                     recipes={this.props.recipes}
