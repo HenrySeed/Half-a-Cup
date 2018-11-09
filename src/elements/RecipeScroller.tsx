@@ -25,6 +25,7 @@ export interface Props {
     title: string,
     maximum: number,
     seeMoreLink: string
+    isLoading: boolean
 }
 
 export default class RecipeScroller extends React.Component<Props,State, object> {
@@ -92,10 +93,17 @@ export default class RecipeScroller extends React.Component<Props,State, object>
         
         
         let container = (
-            <GridList cols={2.5} style={{flexWrap: 'nowrap', transform: 'translateZ(0)', height: "120px"}}>
-                {recipes}
-            </GridList>
+            <div>
+                <GridList cols={2.5} style={{flexWrap: 'nowrap', transform: 'translateZ(0)', height: "120px"}}>
+                    {recipes}
+                </GridList>
+                <div style={{width: "20px", height: "100%", backgroundColor: "#333"}}></div>
+            </div>
         )
+
+        // if(this.props.isLoading){
+        //     container =
+        // }
         
         return(                
             <div style={{

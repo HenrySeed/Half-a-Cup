@@ -26,7 +26,9 @@ export interface Props {
     favRecipes: string[],
     title: string,
     emptyMessage?: string
+    isLoading: boolean
 }
+
 
 export default class RecipeBrowser extends React.Component<Props, State, object> {
 

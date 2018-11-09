@@ -79,7 +79,7 @@ export default class SavedRecipes extends React.Component<Props, State, object> 
         }
 
         return (
-            <div  style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
+            <div style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "900px", width: "90%"}}>
                 <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
                     Your Favourite Recipes
                 </Typography>

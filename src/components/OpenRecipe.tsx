@@ -26,6 +26,7 @@ export interface Props {
     onToggleFavourite: Function,
     onRecipeSave: Function,
     user: any
+    isLoading: boolean
     match?: any
 }
 
@@ -380,7 +381,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                 {topButtons}
                 {title}
                 {subtitle}
-                {rating}
+                {/* {rating} */}
                 
                 <h4>Ingredients</h4>
                 <ul>{ingredients}</ul>

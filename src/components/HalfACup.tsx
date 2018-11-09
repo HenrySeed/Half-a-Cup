@@ -80,6 +80,7 @@ export interface State {
     loginOpen: boolean,
     user: User | undefined | null,
     loginMessage: string,
+    isLoading: boolean
 }
 
 
@@ -95,6 +96,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             loginOpen: false,
             user: undefined,
             loginMessage: "",
+            isLoading: true
         };
 
         this.onToggleFavourite = this.onToggleFavourite.bind(this)
@@ -160,6 +162,10 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         } else {
                             console.log("No such document!");
                         }
+
+                        this.setState({
+                            isLoading: false
+                        })
     
                 }).catch((e: any) => {
                     console.log("Error getting document:", e);
@@ -487,13 +493,14 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             onToggleFavourite={this.onToggleFavourite} 
                             recipes={this.state.recipes}
                             favRecipes={this.state.savedRecipes}
+                            isLoading={this.state.isLoading}
                         />}
                     />
                      <Route 
                         exact
                         path='/' 
                         render={() => (
-                            <div>
+                            <div style={{marginLeft: "auto", marginRight: "auto", marginTop: "25px", marginBottom: "30px", maxWidth: "1200px", width: "90%"}}>
                                 {this.state.savedRecipes.length === 0 ?
                                     <div style={{
                                         marginLeft: "5%",
@@ -515,6 +522,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                         onToggleFavourite={this.onToggleFavourite} 
                                         maximum={5}
                                         seeMoreLink='/favourite' 
+                                        isLoading={this.state.isLoading}
                                     />
                                 }
                                 
@@ -526,6 +534,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                     onToggleFavourite={this.onToggleFavourite} 
                                     maximum={5}
                                     seeMoreLink='/recipes' 
+                                    isLoading={this.state.isLoading}
                                 />
                             </div>
                         )}
@@ -539,6 +548,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             onToggleFavourite={this.onToggleFavourite} 
                             recipes={savedRecipesObjects}
                             favRecipes={this.state.savedRecipes}
+                            isLoading={this.state.isLoading}
                         />}
                     />
                     <Route path='/recipes/:key' render={
@@ -553,6 +563,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                         thisRecipe={recipe}
                                         favRecipes={this.state.savedRecipes}
                                         onTagClick={this.handleTagClick}
+                                        isLoading={this.state.isLoading}
                                     />
                             } else{
                                 return <span></span>

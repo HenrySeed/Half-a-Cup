@@ -15,6 +15,6 @@
 ],
     "theme_color": "#f44336",
     "background_color": "#f44336",
-    "start_url": "./recipes",
+    "start_url": "./",
     "display": "standalone"
 }
