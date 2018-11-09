@@ -7,6 +7,8 @@ admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     databaseURL: "https://wholecup-72a6b.firebaseio.com",
 });
+const firestore = admin.firestore();
+firestore.settings({timestampsInSnapshots: true});
  
 for(const recipe of Array.from(data)){
     const name = recipe.title.replace(/ /g, '_');
