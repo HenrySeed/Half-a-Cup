@@ -1,73 +1,83 @@
 import * as React from "react";
-import { Grid, Paper, Typography, GridList, GridListTile, GridListTileBar } from "@material-ui/core"
+import {
+    Grid,
+    Paper,
+    Typography,
+    GridList,
+    GridListTile,
+    GridListTileBar,
+    CircularProgress
+} from "@material-ui/core";
 import { IconButton, Button } from "@material-ui/core";
-import { Favorite } from '@material-ui/icons/'
-import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
-
+import { Favorite } from "@material-ui/icons/";
+import { Link } from "react-router-dom";
+import { Redirect } from "react-router";
 
 interface recipe {
-    title: string,
-    subtitle: string,
-    tags: string[],
-    ingredients: string[],
-    steps: string[],
+    title: string;
+    subtitle: string;
+    tags: string[];
+    ingredients: string[];
+    steps: string[];
 }
 
 interface State {
-    redirectRecipeKey: string
+    redirectRecipeKey: string;
 }
 
 export interface Props {
-    recipes: Map<string, recipe>,
-    favRecipes: string[],
-    onToggleFavourite: Function,
-    title: string,
-    maximum: number,
-    seeMoreLink: string
-    isLoading: boolean
+    recipes: Map<string, recipe>;
+    favRecipes: string[];
+    onToggleFavourite: Function;
+    title: string;
+    maximum: number;
+    seeMoreLink: string;
+    isLoading: boolean;
 }
 
-export default class RecipeScroller extends React.Component<Props,State, object> {
-
+export default class RecipeScroller extends React.Component<
+    Props,
+    State,
+    object
+> {
     constructor(props: Props) {
-        super(props)
+        super(props);
         this.state = {
             redirectRecipeKey: ""
-
-        }
+        };
     }
 
     handleRecipeClick(key: string): void {
         // location.href = '/recipes/' + key;
         this.setState({
             redirectRecipeKey: key
-        })
+        });
     }
 
     render(): JSX.Element {
-
         // if we should redirect to the selected recipe redirect
-        if(this.state.redirectRecipeKey !== ""){
+        if (this.state.redirectRecipeKey !== "") {
             const key: string = this.state.redirectRecipeKey;
-            this.setState({
-                redirectRecipeKey: ""
-            })
             return <Redirect push to={"/recipes/" + key} />;
         }
 
         const recipes: JSX.Element[] = [];
         let count: number = 0;
-        for(const [key, val] of Array.from(this.props.recipes)) {
-            if(count === this.props.maximum){
+        for (const [key, val] of Array.from(this.props.recipes)) {
+            if (count === this.props.maximum) {
                 recipes.push(
                     <Link to={this.props.seeMoreLink} key={key}>
-                        <GridListTile 
+                        <GridListTile
                             key={key}
-                            style={{cursor: 'pointer', minWidth: "180px", maxWidth: "240px", marginRight: "10px"}}
+                            style={{
+                                cursor: "pointer",
+                                minWidth: "180px",
+                                maxWidth: "240px",
+                                marginRight: "10px"
+                            }}
                         >
-                            <Button style={{marginTop: "33px"}} >
-                            See More...
+                            <Button style={{ marginTop: "33px" }}>
+                                See More...
                             </Button>
                         </GridListTile>
                     </Link>
@@ -75,50 +85,86 @@ export default class RecipeScroller extends React.Component<Props,State, object>
                 break;
             }
             recipes.push(
-                <GridListTile 
-                    key={key} 
-                    onClick={() => this.handleRecipeClick(key)} 
-                    style={{cursor: 'pointer', minWidth: "180px", maxWidth: "240px"}}
+                <GridListTile
+                    key={key}
+                    onClick={() => this.handleRecipeClick(key)}
+                    style={{
+                        cursor: "pointer",
+                        minWidth: "180px",
+                        maxWidth: "240px"
+                    }}
                 >
                     <Paper
-                        style={{padding: "20px", margin: "5px", minHeight: "100px"}}
+                        style={{
+                            padding: "20px",
+                            margin: "5px",
+                            minHeight: "100px"
+                        }}
                     >
                         {val.title}
                     </Paper>
-                    
                 </GridListTile>
-            )
+            );
             count++;
         }
-        
-        
+
         let container = (
             <div>
-                <GridList cols={2.5} style={{flexWrap: 'nowrap', transform: 'translateZ(0)', height: "120px"}}>
+                <GridList
+                    cols={2.5}
+                    style={{
+                        flexWrap: "nowrap",
+                        transform: "translateZ(0)",
+                        height: "120px"
+                    }}
+                >
                     {recipes}
                 </GridList>
-                <div style={{width: "20px", height: "100%", backgroundColor: "#333"}}></div>
+                <div
+                    style={{
+                        width: "20px",
+                        height: "100%",
+                        backgroundColor: "#333"
+                    }}
+                />
             </div>
-        )
+        );
 
         // if(this.props.isLoading){
         //     container =
         // }
-        
-        return(                
-            <div style={{
-                marginLeft: "5%",
-                flexWrap: 'wrap',
-                justifyContent: 'space-around',
-                overflow: 'hidden',
-                marginTop: "30px",
-            }}>
-                <Typography variant="title" color="inherit" style={{marginBottom: "10px"}}>
+
+        return (
+            <div
+                style={{
+                    marginLeft: "5%",
+                    flexWrap: "wrap",
+                    justifyContent: "space-around",
+                    overflow: "hidden",
+                    marginTop: "30px"
+                }}
+            >
+                <Typography
+                    variant="title"
+                    color="inherit"
+                    style={{ marginBottom: "10px" }}
+                >
                     {this.props.title}
                 </Typography>
+                {this.props.isLoading ? (
+                    <CircularProgress
+                        style={{
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            display: "block",
+                            marginTop: "20px"
+                        }}
+                    />
+                ) : (
+                    <span />
+                )}
                 {container}
             </div>
         );
     }
 }
- 
