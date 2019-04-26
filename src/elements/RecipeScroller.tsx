@@ -26,10 +26,12 @@ interface State {
 }
 
 export interface Props {
-    recipes: Map<string, recipe>;
-    favRecipes: string[];
-    onToggleFavourite: Function;
     title: string;
+
+    recipeNames: Map<string, string>;
+    favRecipes: string[];
+
+    onToggleFavourite: Function;
     maximum: number;
     seeMoreLink: string;
     isLoading: boolean;
@@ -63,7 +65,7 @@ export default class RecipeScroller extends React.Component<
 
         const recipes: JSX.Element[] = [];
         let count: number = 0;
-        for (const [key, val] of Array.from(this.props.recipes)) {
+        for (const [key, value] of Array.from(this.props.recipeNames)) {
             if (count === this.props.maximum) {
                 recipes.push(
                     <Link to={this.props.seeMoreLink} key={key}>
@@ -101,7 +103,7 @@ export default class RecipeScroller extends React.Component<
                             minHeight: "100px"
                         }}
                     >
-                        {val.title}
+                        {value}
                     </Paper>
                 </GridListTile>
             );

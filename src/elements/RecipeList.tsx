@@ -12,8 +12,9 @@ interface recipe {
 }
 
 export interface Props {
-    recipes: Map<string, recipe>;
+    recipeNames: Map<string, string>;
     favRecipes: string[];
+
     onToggleFavourite: Function;
     onOpenRecipe: Function;
 }
@@ -26,7 +27,7 @@ export default class RecipeList extends React.Component<Props, object> {
     render(): JSX.Element {
         let recipeTable: JSX.Element[] = [];
         let count: number = 0;
-        for (const [key, value] of Array.from(this.props.recipes)) {
+        for (const [key, value] of Array.from(this.props.recipeNames)) {
             const isFav: boolean = this.props.favRecipes.indexOf(key) > -1;
             recipeTable.push(
                 <Grid item xs={12} className="recipeGridTile" key={count}>
@@ -35,7 +36,7 @@ export default class RecipeList extends React.Component<Props, object> {
                         className="recipeTile"
                         onClick={() => this.props.onOpenRecipe(key)}
                     >
-                        <p>{value.title}</p>
+                        <p>{value}</p>
                         <IconButton
                             className="favButton"
                             onClick={e => {

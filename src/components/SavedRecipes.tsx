@@ -19,7 +19,7 @@ interface State {
 }
 
 export interface Props {
-    recipes: Map<string, recipe>;
+    recipeNames: Map<string, string>;
     onToggleFavourite: Function;
 }
 
@@ -62,13 +62,13 @@ export default class SavedRecipes extends React.Component<
 
         let container = (
             <RecipeList
-                recipes={this.props.recipes}
-                favRecipes={Array.from(this.props.recipes.keys())}
+                recipeNames={this.props.recipeNames}
+                favRecipes={Array.from(this.props.recipeNames.keys())}
                 onToggleFavourite={this.props.onToggleFavourite}
                 onOpenRecipe={this.handleRecipeClick}
             />
         );
-        if (Array.from(this.props.recipes.keys()).length === 0) {
+        if (Array.from(this.props.recipeNames.keys()).length === 0) {
             container = (
                 <p className="noneSavedMessage">
                     You don't have any favouite recipes yet, favourite some so

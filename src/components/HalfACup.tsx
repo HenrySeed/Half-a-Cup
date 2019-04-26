@@ -69,12 +69,10 @@ export interface Props {
 }
 
 export interface State {
-    featuredRecipes: Map<string, recipe>;
-    savedRecipes: Map<string, recipe>;
     savedRecipeIDs: string[];
+    allRecipeNames: Map<string, string>;
 
-    loadingSavedRecipes: boolean;
-    loadingFeaturedRecipes: boolean;
+    isLoading: boolean;
 
     drawerOpen: boolean;
     SearchVal: string;
@@ -84,16 +82,25 @@ export interface State {
 }
 
 class HalfACup extends React.Component<Props & PropsWithStyles, State> {
+    featuredRecipeIDs: string[] = [
+        "Refried_Beans",
+        "Pumpkin-Pie",
+        "Throw-it-together_Self-crusting_Pie",
+        "Apple_Crumble",
+        "Cannelloni",
+        "Apple_Pie",
+        "Pumpkin_Soup",
+        "Brocolli_Salad",
+        "Chocolate_Caramel_Cake"
+    ];
+
     constructor(props: Props & PropsWithStyles) {
         super(props);
         this.state = {
-            featuredRecipes: new Map<string, recipe>(),
             savedRecipeIDs: [],
-            savedRecipes: new Map<string, recipe>(),
+            allRecipeNames: new Map<string, string>(),
 
-            loadingSavedRecipes: true,
-            loadingFeaturedRecipes: true,
-
+            isLoading: true,
             drawerOpen: false,
             SearchVal: "",
             loginOpen: false,
@@ -124,8 +131,27 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 
     componentWillMount(): void {
+        this.getAllRecipeNames();
         this.setUpFirestoreAuth();
-        this.getFeaturedRecipes();
+    }
+
+    getAllRecipeNames(): void {
+        const thisClass = this;
+        firebase
+            .firestore()
+            .collection("recipes")
+            .get()
+            .then(function(querySnapshot: any): void {
+                querySnapshot.forEach(function(doc: any): void {
+                    thisClass.state.allRecipeNames.set(
+                        doc.id,
+                        doc.data().title
+                    );
+                    thisClass.setState({
+                        isLoading: false
+                    });
+                });
+            });
     }
 
     setUpFirestoreAuth(): void {
@@ -163,8 +189,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 } else {
                     // User is signed out.
                     this.setState({
-                        user: null,
-                        loadingSavedRecipes: false
+                        user: null
                     });
                 }
             },
@@ -175,9 +200,6 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 
     async getSavedRecipes(_tempUser: User): Promise<void> {
-        const thisClass = this;
-        console.log("loading saved recipes");
-
         if (_tempUser) {
             await firebase
                 .firestore()
@@ -195,74 +217,12 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         this.setState({
                             savedRecipeIDs: savedR
                         });
-
-                        for (const id of savedR) {
-                            firebase
-                                .firestore()
-                                .collection("recipes")
-                                .doc(id)
-                                .get()
-                                .then(function(doc: any): void {
-                                    const _tempRecipe: recipe = doc.data();
-                                    // set up ratings
-                                    if (_tempRecipe.rating === undefined) {
-                                        _tempRecipe.rating = 0;
-                                    }
-                                    thisClass.state.savedRecipes.set(
-                                        id,
-                                        _tempRecipe
-                                    );
-                                    thisClass.setState({
-                                        loadingSavedRecipes: false
-                                    });
-                                })
-                                .catch((e: any) => {
-                                    console.log(
-                                        "Error getting recipe document:",
-                                        id,
-                                        e
-                                    );
-                                });
-                        }
                     } else {
                         console.log("No such document!");
                     }
                 })
                 .catch((e: any) => {
                     console.log("Error getting user document:", e);
-                });
-        }
-    }
-
-    getFeaturedRecipes(): void {
-        var db = firebase.firestore();
-        const featuredRecipeIDs = [
-            "Refried_Beans",
-            "Pumpkin-Pie",
-            "Throw-it-together_Self-crusting_Pie",
-            "Apple_Crumble",
-            "Cannelloni",
-            "Apple_Pie",
-            "Pumpkin_Soup",
-            "Brocolli_Salad",
-            "Chocolate_Caramel_Cake"
-        ];
-        const thisClass = this;
-
-        for (const recipeID of featuredRecipeIDs) {
-            db.collection("recipes")
-                .doc(recipeID)
-                .get()
-                .then(function(doc: any): void {
-                    const _tempRecipe: recipe = doc.data();
-                    // set up ratings
-                    if (_tempRecipe.rating === undefined) {
-                        _tempRecipe.rating = 0;
-                    }
-                    thisClass.state.featuredRecipes.set(recipeID, _tempRecipe);
-                    thisClass.setState({
-                        loadingFeaturedRecipes: false
-                    });
                 });
         }
     }
@@ -356,33 +316,6 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                 .set({
                     savedRecipes: JSON.stringify(savedRecipeIDs)
                 });
-
-            const newSavedRecipes: Map<string, recipe> = new Map<
-                string,
-                recipe
-            >();
-
-            // update the savedRecipes array
-            for (const id of savedRecipeIDs) {
-                firebase
-                    .firestore()
-                    .collection("recipes")
-                    .doc(id)
-                    .get()
-                    .then(function(doc: any): void {
-                        if (doc.exists) {
-                            const _tempRecipe: recipe = doc.data();
-                            // set up ratings
-                            if (_tempRecipe.rating === undefined) {
-                                _tempRecipe.rating = 0;
-                            }
-                            newSavedRecipes.set(id, _tempRecipe);
-                        }
-                    });
-            }
-            this.setState({
-                savedRecipes: newSavedRecipes
-            });
         } else {
             this.setState({
                 loginOpen: true,
@@ -438,6 +371,15 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     Log out
                 </Button>
             );
+        }
+
+        const savedRecipeNames = new Map<string, string>();
+
+        for (const key of this.state.savedRecipeIDs) {
+            const name = this.state.allRecipeNames.get(key);
+            if (name !== undefined) {
+                savedRecipeNames.set(key, name);
+            }
         }
 
         // the login window
@@ -613,8 +555,10 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         render={() => (
                             <RecipeBrowser
                                 title="All Recipes"
-                                onToggleFavourite={this.onToggleFavourite}
                                 favRecipes={this.state.savedRecipeIDs}
+                                allRecipeNames={this.state.allRecipeNames}
+                                onToggleFavourite={this.onToggleFavourite}
+                                isLoading={this.state.isLoading}
                             />
                         )}
                     />
@@ -633,7 +577,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 }}
                             >
                                 {this.state.savedRecipeIDs.length === 0 &&
-                                !this.state.loadingSavedRecipes ? (
+                                !this.state.isLoading ? (
                                     <div
                                         style={{
                                             marginLeft: "5%",
@@ -664,28 +608,24 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                 ) : (
                                     <RecipeScroller
                                         title="Your favourite recipes"
-                                        recipes={this.state.savedRecipes}
+                                        recipeNames={savedRecipeNames}
                                         favRecipes={this.state.savedRecipeIDs}
                                         onToggleFavourite={
                                             this.onToggleFavourite
                                         }
                                         maximum={5}
                                         seeMoreLink="/favourite"
-                                        isLoading={
-                                            this.state.loadingSavedRecipes
-                                        }
+                                        isLoading={this.state.isLoading}
                                     />
                                 )}
                                 <RecipeScroller
                                     title="Browse all recipes"
-                                    recipes={this.state.featuredRecipes}
+                                    recipeNames={this.state.allRecipeNames}
                                     favRecipes={this.state.savedRecipeIDs}
                                     onToggleFavourite={this.onToggleFavourite}
                                     maximum={5}
                                     seeMoreLink="/recipes"
-                                    isLoading={
-                                        this.state.loadingFeaturedRecipes
-                                    }
+                                    isLoading={this.state.isLoading}
                                 />
                             </div>
                         )}
@@ -695,7 +635,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         path="/favourite"
                         render={() => (
                             <SavedRecipes
-                                recipes={this.state.savedRecipes}
+                                recipeNames={savedRecipeNames}
                                 onToggleFavourite={this.onToggleFavourite}
                             />
                         )}
