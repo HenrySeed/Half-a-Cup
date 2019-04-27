@@ -1,25 +1,14 @@
 import * as React from "react";
 import {
-    Grid,
     Paper,
     Typography,
     GridList,
     GridListTile,
-    GridListTileBar,
     CircularProgress
 } from "@material-ui/core";
-import { IconButton, Button } from "@material-ui/core";
-import { Favorite } from "@material-ui/icons/";
+import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
-
-interface recipe {
-    title: string;
-    subtitle: string;
-    tags: string[];
-    ingredients: string[];
-    steps: string[];
-}
 
 interface State {
     redirectRecipeKey: string;
@@ -27,10 +16,8 @@ interface State {
 
 export interface Props {
     title: string;
-
     recipeNames: Map<string, string>;
     favRecipes: string[];
-
     onToggleFavourite: Function;
     maximum: number;
     seeMoreLink: string;
@@ -92,8 +79,9 @@ export default class RecipeScroller extends React.Component<
                     onClick={() => this.handleRecipeClick(key)}
                     style={{
                         cursor: "pointer",
-                        minWidth: "180px",
-                        maxWidth: "240px"
+                        minWidth: "240px",
+                        maxWidth: "30%",
+                        height: "auto !important"
                     }}
                 >
                     <Paper
@@ -114,11 +102,13 @@ export default class RecipeScroller extends React.Component<
             <div>
                 <GridList
                     cols={2.5}
-                    style={{
-                        flexWrap: "nowrap",
-                        transform: "translateZ(0)",
-                        height: "120px"
-                    }}
+                    style={
+                        {
+                            // flexWrap: "nowrap",
+                            // transform: "translateZ(0)",
+                            // height: "120px"
+                        }
+                    }
                 >
                     {recipes}
                 </GridList>
@@ -140,19 +130,22 @@ export default class RecipeScroller extends React.Component<
             <div
                 style={{
                     marginLeft: "5%",
-                    flexWrap: "wrap",
-                    justifyContent: "space-around",
-                    overflow: "hidden",
+                    // flexWrap: "wrap",
+                    // justifyContent: "space-around",
+                    // overflow: "hidden",
                     marginTop: "30px"
                 }}
             >
-                <Typography
-                    variant="title"
-                    color="inherit"
-                    style={{ marginBottom: "10px" }}
-                >
-                    {this.props.title}
-                </Typography>
+                <Link to={this.props.seeMoreLink}>
+                    <Typography
+                        variant="title"
+                        color="inherit"
+                        style={{ marginBottom: "10px" }}
+                    >
+                        {this.props.title}
+                    </Typography>
+                </Link>
+
                 {this.props.isLoading ? (
                     <CircularProgress
                         style={{

@@ -623,7 +623,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                     recipeNames={this.state.allRecipeNames}
                                     favRecipes={this.state.savedRecipeIDs}
                                     onToggleFavourite={this.onToggleFavourite}
-                                    maximum={5}
+                                    maximum={15}
                                     seeMoreLink="/recipes"
                                     isLoading={this.state.isLoading}
                                 />
