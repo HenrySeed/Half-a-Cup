@@ -24,6 +24,7 @@
     max-width: 700px;
     margin-left: auto;
     margin-right: auto;
+    max-height: calc(100vh - 152px);
 }
 
 .stepContainer {
@@ -41,4 +42,18 @@
 
 .nextButton {
     float: right;
+}
+
+.readerViewContainer {
+    padding-top: 10vh !important;
+}
+
+@media only screen and (max-height: 800px) {
+    .readerViewContainer {
+        padding-top: 0 !important;
+    }
+
+    .stepText {
+        font-size: 14pt;
+    }
 }

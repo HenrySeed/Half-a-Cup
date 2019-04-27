@@ -38,7 +38,8 @@ const style = (theme: Theme) => ({
     },
     flex: {
         flex: 1,
-        fontFamily: "Chivo"
+        fontFamily: "Chivo",
+        marginLeft: "10px"
     },
     menuButton: {
         marginLeft: -12
@@ -292,7 +293,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     onLogout(): void {
         if (this.state.user) {
-            console.log(`logging out user: ${this.state.user.uid}`);
+            // console.log(`logging out user: ${this.state.user.uid}`);
             firebase
                 .auth()
                 .signOut()
@@ -307,7 +308,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
 
     onToggleFavourite(key: string, val: boolean): void {
         if (this.state.user) {
-            console.log(`Toggling ${key} to ${val}`);
+            // console.log(`Toggling ${key} to ${val}`);
             let savedRecipeIDs: string[] = [];
             if (val === true) {
                 savedRecipeIDs = this.state.savedRecipeIDs.concat([key]);
@@ -336,8 +337,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 
     handleRecipeUpdate(newRecipe: recipe, key: string): void {
-        console.log(`Saving Recipe: ${key} with data:`);
-        console.log(newRecipe);
+        // console.log(`Saving Recipe: ${key} with data:`);
+        // console.log(newRecipe);
 
         if (this.state.user) {
             if (this.state.user.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2") {
@@ -359,10 +360,10 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     console.log("Saving Recipe failed:", e);
                 }
             } else {
-                console.log("You shouldnt be able to do that ...");
+                // console.log("You shouldnt be able to do that ...");
             }
         } else {
-            console.log("You need to be logged in to edit recipes");
+            // console.log("You need to be logged in to edit recipes");
         }
     }
 
@@ -443,6 +444,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             variant="title"
                             color="inherit"
                             className={this.props.classes.flex}
+                            style={{ marginLeft: "10px" }}
                         >
                             Half a Cup
                         </Typography>
@@ -531,6 +533,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         <Typography
                             variant="title"
                             color="inherit"
+                            style={{ marginLeft: "10px" }}
                             className={this.props.classes.flex}
                         >
                             <Link to="/">Half a Cup</Link>

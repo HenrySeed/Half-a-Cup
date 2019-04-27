@@ -291,9 +291,9 @@ export function getIngredientsForStep(
             }
         }
     }
-    console.log(step);
-    console.log(usedIngr);
-    console.log(ingredients);
+    // console.log(step);
+    // console.log(usedIngr);
+    // console.log(ingredients);
 
     return usedIngr;
 }

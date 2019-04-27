@@ -166,7 +166,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
     }
 
     toggleEdit(): void {
-        console.log(`Toggle edit to ${this.state.editMode === false}`);
+        // console.log(`Toggle edit to ${this.state.editMode === false}`);
         this.setState({
             editMode: this.state.editMode === false,
             editedRecipe: this.state.ogRecipe
@@ -187,7 +187,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         section: string,
         key: number
     ): void {
-        console.log(`Change in ${section} line: ${key} to ${value}`);
+        // console.log(`Change in ${section} line: ${key} to ${value}`);
         const newRecipe: recipe = JSON.parse(
             JSON.stringify(this.state.editedRecipe)
         );
@@ -220,12 +220,12 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             editedRecipe: newRecipe
         });
 
-        console.log(newRecipe);
-        console.log(this.state.editedRecipe);
+        // console.log(newRecipe);
+        // console.log(this.state.editedRecipe);
     }
 
     handleRatingChange(newVal: number): void {
-        console.log(`Changing rating to: ${newVal}`);
+        // console.log(`Changing rating to: ${newVal}`);
         const newRecipe = this.state.editedRecipe;
         newRecipe.rating = newVal;
         this.setState({
@@ -233,7 +233,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         });
         this.props.onRecipeSave(newRecipe, this.props.recipeKey);
 
-        console.log(this.state.editedRecipe);
+        // console.log(this.state.editedRecipe);
     }
 
     addInput(section: string): void {

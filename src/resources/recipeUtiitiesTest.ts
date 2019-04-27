@@ -41,8 +41,8 @@ for (const step of testSteps) {
         ingrs += `${ingrObj.num} ${ingrObj.measurement} ${ingrObj.name} \n`;
     }
 
-    console.log(step);
-    console.log("");
-    console.log(ingrs);
-    console.log("-----------------------------\n");
+    // console.log(step);
+    // console.log("");
+    // console.log(ingrs);
+    // console.log("-----------------------------\n");
 }

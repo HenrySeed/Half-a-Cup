@@ -140,7 +140,7 @@ export default class RecipeReaderView extends React.Component<
                         color: "#f44336"
                     }}
                 >
-                    Gather the Ingredients
+                    Ingredients
                 </h3>
                 <ul>{ingredients}</ul>
             </span>
@@ -225,6 +225,7 @@ export default class RecipeReaderView extends React.Component<
 
         return (
             <div
+                className="readerViewContainer"
                 style={{
                     zIndex: 10000,
                     width: "100%",
