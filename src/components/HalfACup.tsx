@@ -71,9 +71,9 @@ export interface Props {
 export interface State {
     savedRecipeIDs: string[];
     allRecipeNames: Map<string, string>;
+    allRecipeTags: Map<string, string[]>;
 
     isLoading: boolean;
-
     drawerOpen: boolean;
     SearchVal: string;
     loginOpen: boolean;
@@ -99,6 +99,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.state = {
             savedRecipeIDs: [],
             allRecipeNames: new Map<string, string>(),
+            allRecipeTags: new Map<string, string[]>(),
 
             isLoading: true,
             drawerOpen: false,
@@ -143,10 +144,20 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
             .get()
             .then(function(querySnapshot: any): void {
                 querySnapshot.forEach(function(doc: any): void {
-                    thisClass.state.allRecipeNames.set(
+                    const recipe = doc.data();
+
+                    // we need to trim whitespace off tags
+                    const tags = [];
+                    for (const tag of recipe.tags) {
+                        tags.push(tag.trim());
+                    }
+
+                    thisClass.state.allRecipeNames.set(doc.id, recipe.title);
+                    thisClass.state.allRecipeTags.set(
                         doc.id,
-                        doc.data().title
+                        recipe.title.split(" ").concat(tags)
                     );
+
                     thisClass.setState({
                         isLoading: false
                     });
@@ -524,11 +535,12 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                         >
                             <Link to="/">Half a Cup</Link>
                         </Typography>
-                        {/* <SearchBar
-              value={this.state.SearchVal}
-              onSearchClear={this.onSearchClear}
-              recipes={this.state.recipes}
-            /> */}
+                        <SearchBar
+                            value={this.state.SearchVal}
+                            onSearchClear={this.onSearchClear}
+                            recipeNames={this.state.allRecipeNames}
+                            allRecipeTags={this.state.allRecipeTags}
+                        />
                     </Toolbar>
                 </AppBar>
                 {loginModal}
@@ -623,7 +635,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                     recipeNames={this.state.allRecipeNames}
                                     favRecipes={this.state.savedRecipeIDs}
                                     onToggleFavourite={this.onToggleFavourite}
-                                    maximum={15}
+                                    maximum={14}
                                     seeMoreLink="/recipes"
                                     isLoading={this.state.isLoading}
                                 />

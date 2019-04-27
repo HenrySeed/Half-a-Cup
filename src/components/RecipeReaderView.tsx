@@ -197,7 +197,8 @@ export default class RecipeReaderView extends React.Component<
                         position: "fixed",
                         top: "0",
                         right: "0",
-                        margin: "10px"
+                        margin: "10px",
+                        backgroundColor: "#f44336"
                     }}
                     onClick={() => window.history.back()}
                 >

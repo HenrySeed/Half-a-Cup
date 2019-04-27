@@ -52,6 +52,8 @@ export interface State {
 }
 
 export default class OpenRecipe extends React.Component<Props, State, object> {
+    oldProps: Props;
+
     constructor(props: Props) {
         super(props);
 
@@ -81,6 +83,8 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             loadingRecipe: true
         };
 
+        this.oldProps = props;
+
         this.toggleFavourite = this.toggleFavourite.bind(this);
         this.toggleEdit = this.toggleEdit.bind(this);
         this.onEditSave = this.onEditSave.bind(this);
@@ -109,6 +113,35 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             editedRecipe: JSON.parse(JSON.stringify(recipeObj)),
             loadingRecipe: false
         });
+    }
+
+    async componentWillUpdate(props: Props): Promise<void> {
+        // check if the selected recipe has changed
+        if (props.recipeKey !== this.oldProps.recipeKey) {
+            this.oldProps = props;
+            this.setState({
+                loadingRecipe: true
+            });
+            const recipeObj: recipe = await firebase
+                .firestore()
+                .collection("recipes")
+                .doc(props.recipeKey)
+                .get()
+                .then(async function(doc: any): Promise<recipe> {
+                    const _tempRecipe: recipe = doc.data();
+                    // set up ratings
+                    if (_tempRecipe.rating === undefined) {
+                        _tempRecipe.rating = 0;
+                    }
+                    return _tempRecipe;
+                });
+
+            this.setState({
+                ogRecipe: JSON.parse(JSON.stringify(recipeObj)),
+                editedRecipe: JSON.parse(JSON.stringify(recipeObj)),
+                loadingRecipe: false
+            });
+        }
     }
 
     handleTagClick(e: any, str: string): void {
@@ -381,14 +414,6 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         // --------------  Top Buttons  ------------ //
         let topButtons: JSX.Element = (
             <div>
-                <IconButton
-                    className="close"
-                    onClick={() => {
-                        window.history.back();
-                    }}
-                >
-                    <Close />
-                </IconButton>
                 <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
                     <IconButton className="close">
                         <ImportContacts />
