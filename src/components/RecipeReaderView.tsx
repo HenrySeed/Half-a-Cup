@@ -29,6 +29,9 @@ export default class RecipeReaderView extends React.Component<
 > {
     reactSwipe: any;
 
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
+
     constructor(props: Props) {
         super(props);
         this.state = {
@@ -37,6 +40,24 @@ export default class RecipeReaderView extends React.Component<
         this.handleNextButton = this.handleNextButton.bind(this);
         this.handlePrevButton = this.handlePrevButton.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
+        this.handleKeypress = this.handleKeypress.bind(this);
+    }
+
+    componentDidMount(): void {
+        document.addEventListener("keydown", this.handleKeypress, false);
+    }
+    componentWillUnmount(): void {
+        document.removeEventListener("keydown", this.handleKeypress, false);
+    }
+
+    handleKeypress(event: any): void {
+        if (event.keyCode === 27) {
+            window.history.back();
+        } else if (event.keyCode === 37 && this.hasPrevPage) {
+            this.handlePrevButton();
+        } else if (event.keyCode === 39 && this.hasNextPage) {
+            this.handleNextButton();
+        }
     }
 
     // handles the press of the next button
@@ -72,7 +93,7 @@ export default class RecipeReaderView extends React.Component<
         const ingredients: JSX.Element[] = this.props.recipe.ingredients.map(
             function(ingredient: any, i: any): any {
                 count++;
-                return <ul key={count}>{ingredient}</ul>;
+                return <li key={count}>{ingredient}</li>;
             }
         );
 
@@ -81,7 +102,8 @@ export default class RecipeReaderView extends React.Component<
                 <h3
                     style={{
                         fontSize: "34pt",
-                        margin: "20px 0px",
+                        marginBottom: "20px",
+                        marginTop: "0px",
                         color: "#f44336"
                     }}
                 >
@@ -95,9 +117,9 @@ export default class RecipeReaderView extends React.Component<
             tempPages.push(<span>{step}</span>);
         }
 
-        const hasNextPage: boolean =
+        this.hasNextPage =
             tempPages[this.state.currentPageNum + 1] !== undefined;
-        const hasPrevPage: boolean =
+        this.hasPrevPage =
             tempPages[this.state.currentPageNum - 1] !== undefined;
 
         const swipeOptions = {
@@ -125,7 +147,7 @@ export default class RecipeReaderView extends React.Component<
                     })}
                 </ReactSwipe>
                 <div className="controlPanel">
-                    {hasPrevPage ? (
+                    {this.hasPrevPage ? (
                         <Button
                             variant="fab"
                             color="default"
@@ -138,7 +160,7 @@ export default class RecipeReaderView extends React.Component<
                     ) : (
                         <span />
                     )}
-                    {hasNextPage ? (
+                    {this.hasNextPage ? (
                         <Button
                             variant="fab"
                             aria-label="Next"
