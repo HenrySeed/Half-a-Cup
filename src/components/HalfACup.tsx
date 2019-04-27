@@ -613,7 +613,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                                             style={{
                                                 marginLeft: "5%",
                                                 marginTop: "20px",
-                                                color: "gray"
+                                                color: "#444"
                                             }}
                                         >
                                             Favourite some recipes to see them

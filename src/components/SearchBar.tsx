@@ -178,7 +178,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
         let dropdown: JSX.Element = <span />;
         if (this.state.searchOpen) {
             dropdown = (
-                <Paper className="searchResultsMenu">
+                <Paper className="searchResultsMenu" id="menu-list-grow">
                     <MenuList>{searchResults}</MenuList>
                 </Paper>
             );
@@ -190,6 +190,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
                     this.setState({ searchOpen: true });
                 }}
                 className="searchicon"
+                aria-label="Search for a Recipe"
             >
                 <Search />
             </IconButton>
@@ -225,7 +226,9 @@ export default class SearchBar extends React.Component<Props, State, object> {
                         ref={(node: any) => {
                             this.anchorEl = node;
                         }}
-                        aria-owns={open ? "menu-list-grow" : undefined}
+                        aria-owns={
+                            this.state.searchOpen ? "menu-list-grow" : ""
+                        }
                         aria-haspopup="true"
                     >
                         {searchBar}

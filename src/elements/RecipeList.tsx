@@ -1,15 +1,7 @@
 import * as React from "react";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Paper } from "@material-ui/core";
 import { IconButton } from "@material-ui/core";
 import { Favorite } from "@material-ui/icons/";
-
-interface recipe {
-    title: string;
-    subtitle: string;
-    tags: string[];
-    ingredients: string[];
-    steps: string[];
-}
 
 export interface Props {
     recipeNames: Map<string, string>;

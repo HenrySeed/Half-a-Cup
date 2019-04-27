@@ -282,6 +282,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                                     realNum
                                 )
                             }
+                            aria-label="Delete this Ingredient"
                         >
                             <Delete />
                         </IconButton>
@@ -297,6 +298,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
             ingredients.push(
                 <IconButton
                     key={count}
+                    aria-label="Add a new Ingredient"
                     onClick={() => this.addInput("ingredients")}
                 >
                     <Add />
@@ -334,6 +336,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                                     realNum
                                 )
                             }
+                            aria-label="Delete this Step"
                         >
                             <Delete />
                         </IconButton>
@@ -347,7 +350,11 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         }
         if (this.state.editMode) {
             steps.push(
-                <IconButton key={count} onClick={() => this.addInput("steps")}>
+                <IconButton
+                    key={count}
+                    onClick={() => this.addInput("steps")}
+                    aria-label="Add a new Step"
+                >
                     <Add />
                 </IconButton>
             );
@@ -380,6 +387,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                                     realNum
                                 )
                             }
+                            aria-label="Delete this Tag"
                         >
                             <Delete />
                         </IconButton>
@@ -395,6 +403,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                         color="primary"
                         variant="outlined"
                         key={count}
+                        aria-label={"Open the " + tag + " tag"}
                     >
                         <Search className="tagIcon" />
                         {tag}
@@ -405,7 +414,11 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         }
         if (this.state.editMode) {
             tags.push(
-                <IconButton key={count} onClick={() => this.addInput("tags")}>
+                <IconButton
+                    key={count}
+                    onClick={() => this.addInput("tags")}
+                    aria-label="Add a new tag"
+                >
                     <Add />
                 </IconButton>
             );
@@ -415,7 +428,10 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         let topButtons: JSX.Element = (
             <div>
                 <Link to={`/recipes/${this.props.recipeKey}/readerView`}>
-                    <IconButton className="close">
+                    <IconButton
+                        className="close"
+                        aria-label="Open in the reader view"
+                    >
                         <ImportContacts />
                     </IconButton>
                 </Link>
@@ -426,6 +442,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                         style={{
                             color: this.state.isFavourite ? "#f44336" : "unset"
                         }}
+                        aria-label="Favourite this Recipe"
                     >
                         <Favorite />
                     </IconButton>
@@ -433,6 +450,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                     <IconButton
                         className="close"
                         onClick={() => this.toggleFavourite()}
+                        aria-label="Favourite this Recipe"
                     >
                         <Favorite />
                     </IconButton>
@@ -441,6 +459,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                     <IconButton
                         className="close"
                         onClick={() => this.toggleEdit()}
+                        aria-label="Edit this Recipe"
                     >
                         <Edit />
                     </IconButton>
@@ -457,6 +476,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                         color="primary"
                         variant="contained"
                         className="saveButton"
+                        aria-label="Save this Edit"
                     >
                         <Save className="tagIcon" />
                         Save
@@ -466,6 +486,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                         color="default"
                         variant="contained"
                         className="saveButton"
+                        aria-label="Close the Edit View"
                     >
                         <Save className="tagIcon" />
                         Close

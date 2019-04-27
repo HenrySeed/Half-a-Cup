@@ -4,6 +4,7 @@ import { IconButton, Button, CircularProgress } from "@material-ui/core";
 import "./RecipeReaderView.css";
 import * as ReactSwipe from "react-swipe";
 import Paper from "@material-ui/core/Paper";
+import { WithTheme, withTheme } from "@material-ui/core";
 import {
     ingredient,
     split_num_ingredient,
@@ -22,16 +23,12 @@ interface State {
     currentPageNum: number;
 }
 
-export interface Props {
+export interface Props extends WithTheme {
     recipe: recipe;
     isLoading: boolean;
 }
 
-export default class RecipeReaderView extends React.Component<
-    Props,
-    State,
-    object
-> {
+class RecipeReaderViewNoStyle extends React.Component<Props, State, object> {
     reactSwipe: any;
 
     hasNextPage: boolean;
@@ -89,10 +86,11 @@ export default class RecipeReaderView extends React.Component<
             currentPageNum: this.reactSwipe.getPos()
         });
         // reset the vertical scroll position on page change
-        const myDiv = document.getElementById("swipeCarousel");
-        if (myDiv !== null) {
-            myDiv.scrollTop = 0;
-        }
+        // const myDiv = document.getElementById("swipeCarousel");
+        // if (myDiv !== null) {
+        //     myDiv.scrollTop = 0;
+        // }
+        window.scrollTo(0, 0);
     }
 
     getIngredientsListForStep(ingr: ingredient[]): JSX.Element {
@@ -137,7 +135,7 @@ export default class RecipeReaderView extends React.Component<
                         fontSize: "34pt",
                         marginBottom: "20px",
                         marginTop: "0px",
-                        color: "#f44336"
+                        color: this.props.theme.palette.primary.main
                     }}
                 >
                     Ingredients
@@ -227,14 +225,14 @@ export default class RecipeReaderView extends React.Component<
             <div
                 className="readerViewContainer"
                 style={{
-                    zIndex: 10000,
+                    zIndex: 1100,
                     width: "100%",
                     height: "auto",
                     minHeight: "calc(100% - 50px)",
                     top: "50px",
                     paddingTop: "20px",
                     margin: "0",
-                    backgroundColor: "#f44336",
+                    backgroundColor: this.props.theme.palette.primary.main,
                     position: "absolute",
                     color: "#333"
                 }}
@@ -246,9 +244,10 @@ export default class RecipeReaderView extends React.Component<
                         top: "0",
                         right: "0",
                         margin: "5px 20px 3px 0px",
-                        backgroundColor: "#f44336"
+                        backgroundColor: this.props.theme.palette.primary.main
                     }}
                     onClick={() => window.history.back()}
+                    aria-label="Close this view"
                 >
                     <Close />
                 </IconButton>
@@ -269,3 +268,6 @@ export default class RecipeReaderView extends React.Component<
         );
     }
 }
+
+const RecipeReaderView = withTheme()(RecipeReaderViewNoStyle); // 3
+export default RecipeReaderView;

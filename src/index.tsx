@@ -8,14 +8,15 @@ import {
     createMuiTheme,
     Theme
 } from "@material-ui/core/styles";
-import { red } from "@material-ui/core/colors";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { BrowserRouter } from "react-router-dom";
 
 // Create a theme instance.
 const theme: Theme = createMuiTheme({
     palette: {
-        primary: red,
+        primary: {
+            main: "#cc2f24"
+        },
         secondary: {
             main: "#FFFFFF"
         }
