@@ -55,13 +55,17 @@ export default class RecipeScroller extends React.Component<
         for (const [key, value] of Array.from(this.props.recipeNames)) {
             if (count === this.props.maximum) {
                 recipes.push(
-                    <Link to={this.props.seeMoreLink} key={key}>
+                    <Link
+                        to={this.props.seeMoreLink}
+                        key={key}
+                        style={{ width: "30%" }}
+                    >
                         <GridListTile
                             key={key}
                             style={{
                                 cursor: "pointer",
-                                minWidth: "180px",
-                                maxWidth: "240px",
+                                minWidth: "240px",
+                                width: "30%",
                                 marginRight: "10px"
                             }}
                         >
