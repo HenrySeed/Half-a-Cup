@@ -4,6 +4,11 @@ import { IconButton, Button, CircularProgress } from "@material-ui/core";
 import "./RecipeReaderView.css";
 import * as ReactSwipe from "react-swipe";
 import Paper from "@material-ui/core/Paper";
+import {
+    ingredient,
+    split_num_ingredient,
+    getIngredientsForStep
+} from "src/resources/recipeUtilities";
 
 interface recipe {
     title: string;
@@ -41,6 +46,9 @@ export default class RecipeReaderView extends React.Component<
         this.handlePrevButton = this.handlePrevButton.bind(this);
         this.handlePageChange = this.handlePageChange.bind(this);
         this.handleKeypress = this.handleKeypress.bind(this);
+        this.getIngredientsListForStep = this.getIngredientsListForStep.bind(
+            this
+        );
     }
 
     componentDidMount(): void {
@@ -87,9 +95,34 @@ export default class RecipeReaderView extends React.Component<
         }
     }
 
+    getIngredientsListForStep(ingr: ingredient[]): JSX.Element {
+        let count = 0;
+        return (
+            <span>
+                <h4
+                    style={{ margin: "40px 0px 0px 0px", fontWeight: "normal" }}
+                >
+                    Related Ingredients
+                </h4>
+                <ul style={{ fontSize: "14pt" }}>
+                    {ingr.map(val => {
+                        count++;
+                        return <li key={count}>{val.originalText}</li>;
+                    })}
+                </ul>
+            </span>
+        );
+    }
+
     render(): JSX.Element {
         const tempPages: JSX.Element[] = [];
         let count: number = 0;
+
+        let ingredientItems: ingredient[] = [];
+        for (const i of this.props.recipe.ingredients) {
+            ingredientItems.push(split_num_ingredient(i));
+        }
+
         const ingredients: JSX.Element[] = this.props.recipe.ingredients.map(
             function(ingredient: any, i: any): any {
                 count++;
@@ -114,7 +147,21 @@ export default class RecipeReaderView extends React.Component<
         );
 
         for (const step of this.props.recipe.steps) {
-            tempPages.push(<span>{step}</span>);
+            const ingr = getIngredientsForStep(step, ingredientItems);
+            ingredientItems = ingredientItems.filter(
+                val => ingr.indexOf(val) < 0
+            );
+
+            tempPages.push(
+                <span>
+                    {step}
+                    {ingr.length !== 0 ? (
+                        this.getIngredientsListForStep(ingr)
+                    ) : (
+                        <span />
+                    )}
+                </span>
+            );
         }
 
         this.hasNextPage =
@@ -197,7 +244,7 @@ export default class RecipeReaderView extends React.Component<
                         position: "fixed",
                         top: "0",
                         right: "0",
-                        margin: "10px",
+                        margin: "5px 20px 3px 0px",
                         backgroundColor: "#f44336"
                     }}
                     onClick={() => window.history.back()}
