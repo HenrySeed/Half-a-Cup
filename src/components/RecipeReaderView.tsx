@@ -78,7 +78,15 @@ export default class RecipeReaderView extends React.Component<
 
         tempPages.push(
             <span>
-                <h3>Gather the Ingredients &nbsp;&nbsp; 🍰</h3>
+                <h3
+                    style={{
+                        fontSize: "34pt",
+                        margin: "20px 0px",
+                        color: "#f44336"
+                    }}
+                >
+                    Gather the Ingredients
+                </h3>
                 <ul>{ingredients}</ul>
             </span>
         );
@@ -99,36 +107,8 @@ export default class RecipeReaderView extends React.Component<
             }
         };
 
-        if (this.props.isLoading) {
-            return (
-                <div className="readerBackground">
-                    <IconButton
-                        style={{ color: "#FFFFFF", float: "right" }}
-                        onClick={() => window.history.back()}
-                    >
-                        <Close />
-                    </IconButton>
-                    <CircularProgress
-                        style={{
-                            marginRight: "auto",
-                            marginLeft: "auto",
-                            display: "block",
-                            marginTop: "10vh"
-                        }}
-                        color="secondary"
-                    />
-                </div>
-            );
-        }
-
-        return (
-            <div className="readerBackground">
-                <IconButton
-                    style={{ color: "#FFFFFF", float: "right" }}
-                    onClick={() => window.history.back()}
-                >
-                    <Close />
-                </IconButton>
+        const swiper = (
+            <span>
                 <ReactSwipe
                     ref={reactSwipe => (this.reactSwipe = reactSwipe)}
                     className="carousel"
@@ -171,6 +151,49 @@ export default class RecipeReaderView extends React.Component<
                         <span />
                     )}
                 </div>
+            </span>
+        );
+
+        return (
+            <div
+                style={{
+                    zIndex: 10000,
+                    width: "100%",
+                    height: "auto",
+                    minHeight: "calc(100% - 50px)",
+                    top: "50px",
+                    paddingTop: "20px",
+                    margin: "0",
+                    backgroundColor: "#f44336",
+                    position: "absolute",
+                    color: "#333"
+                }}
+            >
+                <IconButton
+                    style={{
+                        color: "#FFFFFF",
+                        position: "fixed",
+                        top: "0",
+                        right: "0",
+                        margin: "10px"
+                    }}
+                    onClick={() => window.history.back()}
+                >
+                    <Close />
+                </IconButton>
+                {this.props.isLoading ? (
+                    <CircularProgress
+                        style={{
+                            marginRight: "auto",
+                            marginLeft: "auto",
+                            display: "block",
+                            marginTop: "10vh"
+                        }}
+                        color="secondary"
+                    />
+                ) : (
+                    swiper
+                )}
             </div>
         );
     }

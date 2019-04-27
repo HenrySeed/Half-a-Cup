@@ -1,15 +1,3 @@
-.readerBackground {
-    width: 100%;
-    height: auto;
-    min-height: calc(100% - 50px);
-    top: 50px;
-    padding-top: 20px;
-    margin: 0;
-    background-color: #f44336;
-    position: absolute;
-    padding-bottom: 20px;
-}
-
 .stepText {
     height: 80%;
     width: 90%;
@@ -41,7 +29,7 @@
 
 .controlPanel {
     width: 100%;
-    height: 50px;
+    height: 75px;
     padding: 0px 15%;
 }
 
