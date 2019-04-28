@@ -5,7 +5,6 @@ import RecipeBrowser from "./RecipeBrowser";
 import SavedRecipes from "./SavedRecipes";
 import OpenRecipe from "./OpenRecipe";
 import RecipeScroller from "../elements/RecipeScroller";
-
 import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
 import {
     AppBar,
@@ -22,12 +21,10 @@ import {
     ClickAwayListener
 } from "@material-ui/core";
 import Typography, { TypographyProps } from "@material-ui/core/Typography";
-
 import MenuIcon from "@material-ui/icons/Menu";
 import ListIcon from "@material-ui/icons/List";
 import { Favorite, Close, AccountCircle, Home } from "@material-ui/icons/";
 import { Switch, Route, Link } from "react-router-dom";
-
 import * as firebase from "firebase";
 import "firebase/firestore";
 import * as firebaseui from "firebaseui";
