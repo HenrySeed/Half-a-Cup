@@ -1,4 +1,4 @@
-# Half-a-Cup
+# Half a Cup
 A React Recipe browser, designed to be simple and clean.
 
 ![screen1](https://i.imgur.com/lrP4nIo.png)
