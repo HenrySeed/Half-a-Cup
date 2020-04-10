@@ -1,48 +1,61 @@
 .searchicon {
-    color: #FFFFFF !important;
-    float: right;
+  color: #ffffff !important;
+  float: right;
 }
 
-.searchField{
-    background-color: #FFFFFF;
-    padding: 5px;
-    border-radius: 5px;
-    width: 289px;
-    padding-left: 15px;
+.searchField {
+  background-color: #ffffff;
+  padding: 5px;
+  width: 100%;
+  border-radius: 5px;
+  padding-left: 15px;
 }
 
-.searchResultsMenu{
-    margin-top: 5px;
-    width: 289px;
-    max-height: 417px;
-    overflow-y: scroll;
+.searchFieldInactive {
+  background-color: #a72920;
+}
+
+.searchResultsMenu {
+  margin-top: 5px;
+  width: inherit;
+  max-width: inherit;
+  max-height: 417px;
+  overflow-y: scroll;
+  position: absolute;
+}
+
+.subText {
+  color: grey;
+  margin-left: 15px;
+  font-size: 12pt;
+  outline: none;
+  margin-bottom: 30px;
+}
+
+.popularRecipesTitle {
+  color: #222;
+  margin: 10px 0 5px 15px;
+  font-size: 14pt;
+  font-weight: bold;
+  outline: none;
+}
+
+@media only screen and (max-width: 550px) {
+  .searchWrapper {
     position: absolute;
-}
+  }
 
-.subText{
-    color: grey;
-    margin-left: 15px;
-    font-size: 11pt;
-}
+  .searchField {
+    position: absolute !important;
+    width: 94%;
+    z-index: 1023;
+    left: 3%;
+    top: 7px;
+  }
 
-
-@media only screen and (max-width: 550px){
-    .searchWrapper{
-        position: absolute;
-        
-    }
-
-    .searchField{
-        position: absolute !important;
-        width: 94%;
-        z-index: 1023;
-        left: 3%;
-        top: 7px;
-    }
-
-    .searchResultsMenu {
-        margin-top: 27px;
-        width: 94vw;
-        left: 3vw;
-    }
+  .searchResultsMenu {
+    margin-top: 27px;
+    width: 94vw;
+    left: 3vw;
+  }
 }

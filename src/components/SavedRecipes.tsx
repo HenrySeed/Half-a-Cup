@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Typography } from "@material-ui/core";
+import { Typography, CircularProgress } from "@material-ui/core";
 import { Redirect } from "react-router";
 import RecipeList from "../elements/RecipeList";
 
@@ -21,6 +21,7 @@ interface State {
 export interface Props {
     recipeNames: Map<string, string>;
     onToggleFavourite: Function;
+    isLoading: boolean
 }
 
 export default class SavedRecipes extends React.Component<
@@ -68,7 +69,9 @@ export default class SavedRecipes extends React.Component<
                 onOpenRecipe={this.handleRecipeClick}
             />
         );
-        if (Array.from(this.props.recipeNames.keys()).length === 0) {
+        if(this.props.isLoading){
+            container = <CircularProgress/>
+        } else if (Array.from(this.props.recipeNames.keys()).length === 0) {
             container = (
                 <p className="noneSavedMessage">
                     You don't have any favouite recipes yet, favourite some so

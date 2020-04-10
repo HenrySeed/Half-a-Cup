@@ -5,7 +5,7 @@ import RecipeBrowser from "./RecipeBrowser";
 import SavedRecipes from "./SavedRecipes";
 import OpenRecipe from "./OpenRecipe";
 import RecipeScroller from "../elements/RecipeScroller";
-import { Theme, withStyles, WithStyles } from "@material-ui/core/styles";
+import { Theme, withStyles, WithStyles, withTheme, WithTheme } from "@material-ui/core/styles";
 import {
     AppBar,
     IconButton,
@@ -34,9 +34,9 @@ const style = (theme: Theme) => ({
         width: "100%"
     },
     flex: {
-        flex: 1,
         fontFamily: "Chivo",
-        marginLeft: "10px"
+        marginLeft: "10px",
+        marginRight: "20px"
     },
     menuButton: {
         marginLeft: -12
@@ -62,7 +62,7 @@ interface User {
     uid: string;
 }
 
-export interface Props {
+export interface Props extends WithTheme {
     color?: TypographyProps["color"];
 }
 
@@ -113,6 +113,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         this.handleTagClick = this.handleTagClick.bind(this);
         this.onSearchClear = this.onSearchClear.bind(this);
         this.handleRecipeUpdate = this.handleRecipeUpdate.bind(this);
+        this.handleSearchValChange = this.handleSearchValChange.bind(this);
 
         // Firestpre congif
         const config = {
@@ -130,8 +131,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 
     componentWillMount(): void {
+        this.setState({isLoading: true})
         this.getAllRecipeNames();
         this.setUpFirestoreAuth();
+    }
+
+    handleSearchValChange(str: string): void {
+        this.setState({SearchVal: str})
     }
 
     getAllRecipeNames(): void {
@@ -401,33 +407,40 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     onClickAway={() => this.toggleLoginModal(false)}
                 >
                     <Paper className="loginModal">
-                        <Typography
-                            variant="title"
-                            id="modal-title"
-                            style={{ display: "inline-block" }}
-                        >
-                            Login
-                        </Typography>
-                        <IconButton
-                            className="close"
-                            onClick={() => this.toggleLoginModal(false)}
-                        >
-                            <Close />
-                        </IconButton>
-                        {this.state.loginMessage === "" ? (
-                            <span />
-                        ) : (
-                            <div>
-                                <br />
-                                <em>{this.state.loginMessage}</em>
-                                <br />
-                                <br />
-                            </div>
-                        )}
-                        <div
-                            id="firebaseui-auth-container"
-                            ref="loginModalRef"
-                        />
+                        <div className="modal-header" style={{backgroundColor: this.props.theme.palette.primary.main}}>
+                            <Typography
+                                variant="title"
+                                id="modal-title"
+                                style={{ display: "inline-block", color: "#FFFFFF" }}
+                            >
+                                Login
+                            </Typography>
+                            <IconButton
+                                className="close"
+                                onClick={() => this.toggleLoginModal(false)}
+                                style={{ color: "#FFFFFF" }}
+                            >
+                                <Close />
+                            </IconButton>
+                        </div>
+                        <div className="login-container">
+                            {this.state.loginMessage === "" ? (
+                                <span />
+                            ) : (
+                                <div>
+                                    <br />
+                                    <em>{this.state.loginMessage}</em>
+                                    <br />
+                                    <br />
+                                </div>
+                            )}
+                            <div
+                                id="firebaseui-auth-container"
+                                ref="loginModalRef"
+                            />
+                        </div>
+                       
+                      
                     </Paper>
                 </ClickAwayListener>
             </div>
@@ -536,6 +549,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             <Link to="/">Half a Cup</Link>
                         </Typography>
                         <SearchBar
+                        onSearchValChange={this.handleSearchValChange}
                             value={this.state.SearchVal}
                             onSearchClear={this.onSearchClear}
                             recipeNames={this.state.allRecipeNames}
@@ -649,6 +663,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                             <SavedRecipes
                                 recipeNames={savedRecipeNames}
                                 onToggleFavourite={this.onToggleFavourite}
+                                isLoading={this.state.isLoading}
                             />
                         )}
                     />
@@ -679,4 +694,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     }
 }
 
-export default withStyles(style)<Props>(HalfACup);
+// export default withStyles(style)<Props>(HalfACup);
+
+const HalfACupWTheme = withTheme()(HalfACup); // 3
+export default withStyles(style)<Props>(HalfACupWTheme as any);
