@@ -21,6 +21,7 @@ export interface Props {
 
 export interface State {
   searchResult: string[];
+  lastSearch: string;
   searchOpen: boolean;
 }
 
@@ -33,6 +34,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
     this.state = {
       searchResult: [],
+      lastSearch: "",
       searchOpen: false,
     };
 
@@ -96,16 +98,14 @@ export default class SearchBar extends React.Component<Props, State, object> {
     }
 
     this.setState({
+      lastSearch: str,
       searchResult: foundRecipes,
     });
   }
 
   componentDidUpdate(): void {
-    if (this.props.value !== "" && this.props.value !== this.props.value) {
-      this.setState({
-        searchOpen: true,
-      });
-
+    if (this.props.value !== "" && this.props.value !== this.state.lastSearch) {
+      this.setState({ searchOpen: true });
       this.handleSearch(this.props.value);
     }
   }
@@ -118,9 +118,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
   }
 
   handleClose(): void {
-    this.setState({
-      searchOpen: false,
-    });
+    this.setState({ searchOpen: false });
   }
 
   getResultsList(): JSX.Element[] {
@@ -238,6 +236,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
             display: "block",
             maxWidth: "500px",
             marginLeft: "20px",
+            marginTop: "2px",
           }}
         >
           <div
