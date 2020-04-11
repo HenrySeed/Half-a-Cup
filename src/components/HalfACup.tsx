@@ -45,12 +45,16 @@ const style = (theme: Theme) => ({
     marginRight: "20px",
   },
   menuButton: {
-    marginLeft: -12,
+    marginLeft: "-12px",
     // marginRight: 20,
+  },
+  sideBarClose: {
+    marginLeft: "75px",
   },
 });
 
-type PropsWithStyles = Props & WithStyles<"root" | "flex" | "menuButton">;
+type PropsWithStyles = Props &
+  WithStyles<"root" | "flex" | "menuButton" | "sideBarClose">;
 
 interface recipe {
   title: string;
@@ -448,17 +452,10 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
       <div>
         <List>
           <ListItem>
-            <Typography
-              variant="title"
-              color="inherit"
-              className={this.props.classes.flex}
-              style={{ marginLeft: "10px" }}
-            >
-              Half a Cup
-            </Typography>
+            <img className="logo" src="../../../halfacup_logo.svg" />
             <IconButton
               onClick={() => this.setState({ drawerOpen: false })}
-              className={this.props.classes.menuButton}
+              className={this.props.classes.sideBarClose}
               color="inherit"
               aria-label="Menu"
             >
@@ -528,7 +525,7 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
       <span>
         <div style={{ minHeight: "100vh" }}>
           <AppBar position="sticky">
-            <Toolbar style={{ height: "70px" }}>
+            <Toolbar className="toolbar">
               <IconButton
                 onClick={() => this.toggleDrawer(true)}
                 className={this.props.classes.menuButton}
@@ -537,21 +534,19 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography
-                variant="title"
-                color="inherit"
-                style={{ marginLeft: "10px" }}
-                className={this.props.classes.flex}
-              >
-                <Link to="/">Half a Cup</Link>
-              </Typography>
-              <SearchBar
-                onSearchValChange={this.handleSearchValChange}
-                value={this.state.SearchVal}
-                onSearchClear={this.onSearchClear}
-                recipeNames={this.state.allRecipeNames}
-                allRecipeTags={this.state.allRecipeTags}
-              />
+
+              <Link to="/">
+                <img className="logo" src="../../../halfacup_logo.svg" />
+              </Link>
+              <div style={{ width: "100%" }}>
+                <SearchBar
+                  onSearchValChange={this.handleSearchValChange}
+                  value={this.state.SearchVal}
+                  onSearchClear={this.onSearchClear}
+                  recipeNames={this.state.allRecipeNames}
+                  allRecipeTags={this.state.allRecipeTags}
+                />
+              </div>
             </Toolbar>
           </AppBar>
           {loginModal}
@@ -684,14 +679,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
         </div>
         <footer>
           <div className="footer-container">
-            <Typography
-              variant="title"
-              color="inherit"
-              style={{ fontSize: "16pt", marginBottom: "5px" }}
-            >
-              Half a Cup
-            </Typography>
-            © Henry Seed {new Date().getFullYear()}
+            <img className="logo" src="../../../halfacup_logo.svg" />
+            <br />© Henry Seed {new Date().getFullYear()}
           </div>
         </footer>
       </span>

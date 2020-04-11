@@ -9,6 +9,18 @@ body,
   height: 100%;
 }
 
+.logo {
+  width: 130px;
+  margin-top: 4px;
+}
+
+.toolbar {
+  height: 70px;
+  /* padding-top: 20px;
+  box-sizing: content-box;
+  margin-top: -20px; */
+}
+
 .recipeTile {
   padding: 10px;
   padding-left: 20px;
@@ -127,4 +139,5 @@ footer > .footer-container {
   .sideBar {
     width: 250px;
   }
+  
 }

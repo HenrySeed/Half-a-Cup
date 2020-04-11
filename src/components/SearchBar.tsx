@@ -232,11 +232,11 @@ export default class SearchBar extends React.Component<Props, State, object> {
       <ClickAwayListener onClickAway={this.handleClose}>
         <div
           style={{
-            width: "calc(100% - 200px)",
+            width: "calc(100%)",
             display: "block",
             maxWidth: "500px",
             marginLeft: "20px",
-            marginTop: "2px",
+            marginTop: "0px",
           }}
         >
           <div

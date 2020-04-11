@@ -541,7 +541,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
         );
 
         let recipeView: JSX.Element = (
-            <Paper className="openRecipeTile">
+            <div className="openRecipeTile">
                 {topButtons}
                 {title}
                 {subtitle}
@@ -568,7 +568,7 @@ export default class OpenRecipe extends React.Component<Props, State, object> {
                 {this.state.editMode ? <ul>{tags}</ul> : <span>{tags}</span>}
                 <br />
                 <br />
-            </Paper>
+            </div>
         );
 
         if (this.state.loadingRecipe) {
