@@ -105,7 +105,7 @@ a {
 }
 
 footer {
-  height: 120px;
+  height: 100px;
   width: 100%;
   bottom: 0;
   background-color: #f44336;
@@ -119,14 +119,22 @@ footer > .footer-container {
   max-width: 1200px;
   width: 90%;
   color: #ffffff;
-  padding-top: 30px;
+  padding-top: 10px;
+}
+
+.footer-container .logo {
+  margin-bottom: 5px;
 }
 
 @media only screen and (max-width: 550px) {
-  .sideBar {
-    width: 250px;
+  .toolbar .logo {
+    margin-left: calc(50% - 105px);
   }
-  /* .toolbar {
-    height: 130px;
-  } */
+}
+
+@supports (-webkit-touch-callout: none) {
+  .toolbar {
+    padding-top: 10px !important;
+    height: 80px !important;
+  }
 }

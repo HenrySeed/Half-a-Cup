@@ -71,6 +71,10 @@
     /* top: 65px; */
   }
 
+  .searchWrapper {
+    width: 30px;
+  }
+
   .searchResultsMenu {
     /* margin-top: 88px; */
     width: 94vw;

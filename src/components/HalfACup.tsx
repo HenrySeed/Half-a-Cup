@@ -50,7 +50,7 @@ const style = (theme: Theme) => ({
     // marginRight: 20,
   },
   sideBarClose: {
-    marginLeft: "75px",
+    marginLeft: "80px",
   },
 });
 
