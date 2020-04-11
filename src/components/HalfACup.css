@@ -11,14 +11,14 @@ body,
 
 .logo {
   width: 130px;
-  margin-top: 4px;
+  margin-top: 19px;
+  vertical-align: top;
+  display: inline-block;
 }
 
 .toolbar {
   height: 70px;
-  /* padding-top: 20px;
-  box-sizing: content-box;
-  margin-top: -20px; */
+  display: block !important;
 }
 
 .recipeTile {
@@ -40,19 +40,6 @@ body,
 a {
   text-decoration: none;
   color: inherit;
-}
-
-#statusbar {
-  background: red;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  opacity: 0.95;
-  z-index: 1030;
-}
-
-.navbar {
-  margin-top: 15pt;
 }
 
 .sideBar {
@@ -139,5 +126,7 @@ footer > .footer-container {
   .sideBar {
     width: 250px;
   }
-  
+  /* .toolbar {
+    height: 130px;
+  } */
 }

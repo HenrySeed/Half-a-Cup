@@ -46,6 +46,7 @@ const style = (theme: Theme) => ({
   },
   menuButton: {
     marginLeft: "-12px",
+    marginTop: "8px",
     // marginRight: 20,
   },
   sideBarClose: {
@@ -538,15 +539,13 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
               <Link to="/">
                 <img className="logo" src="../../../halfacup_logo.svg" />
               </Link>
-              <div style={{ width: "100%" }}>
-                <SearchBar
-                  onSearchValChange={this.handleSearchValChange}
-                  value={this.state.SearchVal}
-                  onSearchClear={this.onSearchClear}
-                  recipeNames={this.state.allRecipeNames}
-                  allRecipeTags={this.state.allRecipeTags}
-                />
-              </div>
+              <SearchBar
+                onSearchValChange={this.handleSearchValChange}
+                value={this.state.SearchVal}
+                onSearchClear={this.onSearchClear}
+                recipeNames={this.state.allRecipeNames}
+                allRecipeTags={this.state.allRecipeTags}
+              />
             </Toolbar>
           </AppBar>
           {loginModal}

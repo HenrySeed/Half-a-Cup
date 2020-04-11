@@ -197,7 +197,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
         onClick={() => this.setState({ searchOpen: true })}
         endAdornment={
           <InputAdornment position="start">
-            <IconButton aria-label="Search">
+            <IconButton aria-label="Search" className="searchIcon">
               <Search />
             </IconButton>
           </InputAdornment>
@@ -230,15 +230,7 @@ export default class SearchBar extends React.Component<Props, State, object> {
 
     return (
       <ClickAwayListener onClickAway={this.handleClose}>
-        <div
-          style={{
-            width: "calc(100%)",
-            display: "block",
-            maxWidth: "500px",
-            marginLeft: "20px",
-            marginTop: "0px",
-          }}
-        >
+        <div className="searchWrapper">
           <div
             ref={(node: any) => {
               this.anchorEl = node;
