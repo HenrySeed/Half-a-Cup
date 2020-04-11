@@ -1,114 +1,130 @@
-
-
-
-.recipeGridTile{
-    padding: 10px !important;
+.recipeGridTile {
+  padding: 10px !important;
 }
 
-html, body, #app, #app > div {
-    height: 100%
+html,
+body,
+#app,
+#app > div {
+  height: 100%;
 }
 
-.recipeTile{
-    padding: 10px;
-    padding-left: 20px;
-    cursor: pointer;
+.recipeTile {
+  padding: 10px;
+  padding-left: 20px;
+  cursor: pointer;
 }
 
 .recipeTile > p {
-    display: inline-block;
-    width: calc(100% - 48px);
+  display: inline-block;
+  width: calc(100% - 48px);
 }
 
 .recipeTile > .favButton {
-    display: inline-block;
-    vertical-align: top;
+  display: inline-block;
+  vertical-align: top;
 }
 
-a{
-    text-decoration: none;
-    color: inherit;
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
-#statusbar{ 
-    background: red; 
-    width:100%; 
-    position: fixed; 
-    top:0; 
-    opacity: 0.95; 
-    z-index: 1030;
+#statusbar {
+  background: red;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  opacity: 0.95;
+  z-index: 1030;
 }
 
 .navbar {
-    margin-top: 15pt;
+  margin-top: 15pt;
 }
 
 .sideBar {
-    width: 300px;
-    color: #FFFFFF !important;
-    background-color: #272727;
-    height: 100%;
+  width: 300px;
+  color: #ffffff !important;
+  background-color: #272727;
+  height: 100%;
 }
 
 .whiteText {
-    color: #FFFFFF !important;
+  color: #ffffff !important;
 }
 
 .null {
-    color: unset
+  color: unset;
 }
 
-.noneSavedMessage{
-    text-align: center;
-    color: grey;
-    margin-right: auto;
-    margin-left: auto;
-    width: 70%;
-    min-width: 250px;
+.noneSavedMessage {
+  text-align: center;
+  color: grey;
+  margin-right: auto;
+  margin-left: auto;
+  width: 70%;
+  min-width: 250px;
 }
 
-.modalContainer{
-    position: fixed;
-    overflow: hidden;
-    top:0;
-    bottom: 0;
-    left:0;
-    right:0;
-    background-color: rgba(0,0,0,0.6);
-    z-index: 2000;
+.modalContainer {
+  position: fixed;
+  overflow: hidden;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
 }
 
-.loginModal{
-    width: 50%;
-    min-width: 300px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20%;
-    outline: none;
-    max-width: 400px;
-    border-radius: 6px !important;
-
+.loginModal {
+  width: 50%;
+  min-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20%;
+  outline: none;
+  max-width: 400px;
+  border-radius: 6px !important;
 }
 
-.loginModal > .login-container{
-    padding: 20px;
-    color: #444;
+.loginModal > .login-container {
+  padding: 20px;
+  color: #444;
 }
 
-.loginModal > .modal-header{
-    width: 100%;
-    height: 60px;
-    padding: 20px;
-    color:#FFFFFF !important;
-    border-radius: 6px 6px 0px 0px;
+.loginModal > .modal-header {
+  width: 100%;
+  height: 60px;
+  padding: 20px;
+  color: #ffffff !important;
+  border-radius: 6px 6px 0px 0px;
 }
 .loginModal > .modal-header > .close {
-    margin-top: -14px;
+  margin-top: -14px;
 }
 
+footer {
+  height: 120px;
+  width: 100%;
+  bottom: 0;
+  background-color: #f44336;
+}
 
-@media only screen and (max-width: 550px){
-    .sideBar {
-        width: 250px;
-    }
+footer > .footer-container {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 25px;
+  margin-bottom: 30px;
+  max-width: 1200px;
+  width: 90%;
+  color: #ffffff;
+  padding-top: 30px;
+}
+
+@media only screen and (max-width: 550px) {
+  .sideBar {
+    width: 250px;
+  }
 }

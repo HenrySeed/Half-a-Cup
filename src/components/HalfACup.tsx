@@ -525,162 +525,176 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
     );
 
     return (
-      <div>
-        <AppBar position="sticky">
-          <Toolbar style={{ height: "70px" }}>
-            <IconButton
-              onClick={() => this.toggleDrawer(true)}
-              className={this.props.classes.menuButton}
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
-            </IconButton>
-            <Typography
-              variant="title"
-              color="inherit"
-              style={{ marginLeft: "10px" }}
-              className={this.props.classes.flex}
-            >
-              <Link to="/">Half a Cup</Link>
-            </Typography>
-            <SearchBar
-              onSearchValChange={this.handleSearchValChange}
-              value={this.state.SearchVal}
-              onSearchClear={this.onSearchClear}
-              recipeNames={this.state.allRecipeNames}
-              allRecipeTags={this.state.allRecipeTags}
-            />
-          </Toolbar>
-        </AppBar>
-        {loginModal}
-        <SwipeableDrawer
-          open={this.state.drawerOpen}
-          onClose={() => this.toggleDrawer(false)}
-          onOpen={() => this.toggleDrawer(true)}
-        >
-          <div
-            className="sideBar"
-            tabIndex={0}
-            role="button"
-            onClick={() => this.toggleDrawer(false)}
-            onKeyDown={() => this.toggleDrawer(false)}
-          >
-            {sideList}
-          </div>
-        </SwipeableDrawer>
-
-        <Switch>
-          <Route
-            exact
-            path="/recipes"
-            render={() => (
-              <RecipeBrowser
-                title="All Recipes"
-                favRecipes={this.state.savedRecipeIDs}
-                allRecipeNames={this.state.allRecipeNames}
-                onToggleFavourite={this.onToggleFavourite}
-                isLoading={this.state.isLoading}
-              />
-            )}
-          />
-          <Route
-            exact
-            path="/"
-            render={() => (
-              <div
-                style={{
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  marginTop: "25px",
-                  marginBottom: "30px",
-                  maxWidth: "1200px",
-                  width: "90%",
-                }}
+      <span>
+        <div style={{ minHeight: "100vh" }}>
+          <AppBar position="sticky">
+            <Toolbar style={{ height: "70px" }}>
+              <IconButton
+                onClick={() => this.toggleDrawer(true)}
+                className={this.props.classes.menuButton}
+                color="inherit"
+                aria-label="Menu"
               >
-                {this.state.savedRecipeIDs.length === 0 &&
-                !this.state.isLoading ? (
-                  <div
-                    style={{
-                      marginLeft: "5%",
-                      flexWrap: "wrap",
-                      justifyContent: "space-around",
-                      overflow: "hidden",
-                      marginTop: "30px",
-                    }}
-                  >
-                    <Typography
-                      variant="title"
-                      color="inherit"
-                      style={{ marginBottom: "10px" }}
-                    >
-                      Your favourite recipes
-                    </Typography>
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                variant="title"
+                color="inherit"
+                style={{ marginLeft: "10px" }}
+                className={this.props.classes.flex}
+              >
+                <Link to="/">Half a Cup</Link>
+              </Typography>
+              <SearchBar
+                onSearchValChange={this.handleSearchValChange}
+                value={this.state.SearchVal}
+                onSearchClear={this.onSearchClear}
+                recipeNames={this.state.allRecipeNames}
+                allRecipeTags={this.state.allRecipeTags}
+              />
+            </Toolbar>
+          </AppBar>
+          {loginModal}
+          <SwipeableDrawer
+            open={this.state.drawerOpen}
+            onClose={() => this.toggleDrawer(false)}
+            onOpen={() => this.toggleDrawer(true)}
+          >
+            <div
+              className="sideBar"
+              tabIndex={0}
+              role="button"
+              onClick={() => this.toggleDrawer(false)}
+              onKeyDown={() => this.toggleDrawer(false)}
+            >
+              {sideList}
+            </div>
+          </SwipeableDrawer>
+
+          <Switch>
+            <Route
+              exact
+              path="/recipes"
+              render={() => (
+                <RecipeBrowser
+                  title="All Recipes"
+                  favRecipes={this.state.savedRecipeIDs}
+                  allRecipeNames={this.state.allRecipeNames}
+                  onToggleFavourite={this.onToggleFavourite}
+                  isLoading={this.state.isLoading}
+                />
+              )}
+            />
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <div
+                  style={{
+                    marginLeft: "auto",
+                    marginRight: "auto",
+                    marginTop: "25px",
+                    marginBottom: "30px",
+                    maxWidth: "1200px",
+                    width: "90%",
+                  }}
+                >
+                  {this.state.savedRecipeIDs.length === 0 &&
+                  !this.state.isLoading ? (
                     <div
                       style={{
                         marginLeft: "5%",
-                        marginTop: "20px",
-                        color: "#444",
+                        flexWrap: "wrap",
+                        justifyContent: "space-around",
+                        overflow: "hidden",
+                        marginTop: "30px",
                       }}
                     >
-                      Favourite some recipes to see them here.
+                      <Typography
+                        variant="title"
+                        color="inherit"
+                        style={{ marginBottom: "10px" }}
+                      >
+                        Your favourite recipes
+                      </Typography>
+                      <div
+                        style={{
+                          marginLeft: "5%",
+                          marginTop: "20px",
+                          color: "#444",
+                        }}
+                      >
+                        Favourite some recipes to see them here.
+                      </div>
                     </div>
-                  </div>
-                ) : (
+                  ) : (
+                    <RecipeScroller
+                      title="Your favourite recipes"
+                      recipeNames={savedRecipeNames}
+                      favRecipes={this.state.savedRecipeIDs}
+                      onToggleFavourite={this.onToggleFavourite}
+                      maximum={5}
+                      seeMoreLink="/favourite"
+                      isLoading={this.state.isLoading}
+                    />
+                  )}
                   <RecipeScroller
-                    title="Your favourite recipes"
-                    recipeNames={savedRecipeNames}
+                    title="Browse all recipes"
+                    recipeNames={this.state.allRecipeNames}
                     favRecipes={this.state.savedRecipeIDs}
                     onToggleFavourite={this.onToggleFavourite}
-                    maximum={5}
-                    seeMoreLink="/favourite"
+                    maximum={14}
+                    seeMoreLink="/recipes"
                     isLoading={this.state.isLoading}
                   />
-                )}
-                <RecipeScroller
-                  title="Browse all recipes"
-                  recipeNames={this.state.allRecipeNames}
-                  favRecipes={this.state.savedRecipeIDs}
+                </div>
+              )}
+            />
+            <Route
+              exact
+              path="/favourite"
+              render={() => (
+                <SavedRecipes
+                  recipeNames={savedRecipeNames}
                   onToggleFavourite={this.onToggleFavourite}
-                  maximum={14}
-                  seeMoreLink="/recipes"
                   isLoading={this.state.isLoading}
                 />
-              </div>
-            )}
-          />
-          <Route
-            exact
-            path="/favourite"
-            render={() => (
-              <SavedRecipes
-                recipeNames={savedRecipeNames}
-                onToggleFavourite={this.onToggleFavourite}
-                isLoading={this.state.isLoading}
-              />
-            )}
-          />
-          <Route
-            path="/recipes/:key"
-            render={({ match }) => {
-              if (match.params.key !== undefined) {
-                return (
-                  <OpenRecipe
-                    user={this.state.user}
-                    onRecipeSave={this.handleRecipeUpdate}
-                    onToggleFavourite={this.onToggleFavourite}
-                    recipeKey={match.params.key}
-                    favRecipes={this.state.savedRecipeIDs}
-                    onTagClick={this.handleTagClick}
-                  />
-                );
-              } else {
-                return <span />;
-              }
-            }}
-          />
-        </Switch>
-      </div>
+              )}
+            />
+            <Route
+              path="/recipes/:key"
+              render={({ match }) => {
+                if (match.params.key !== undefined) {
+                  return (
+                    <OpenRecipe
+                      user={this.state.user}
+                      onRecipeSave={this.handleRecipeUpdate}
+                      onToggleFavourite={this.onToggleFavourite}
+                      recipeKey={match.params.key}
+                      favRecipes={this.state.savedRecipeIDs}
+                      onTagClick={this.handleTagClick}
+                    />
+                  );
+                } else {
+                  return <span />;
+                }
+              }}
+            />
+          </Switch>
+        </div>
+        <footer>
+          <div className="footer-container">
+            <Typography
+              variant="title"
+              color="inherit"
+              style={{ fontSize: "16pt", marginBottom: "5px" }}
+            >
+              Half a Cup
+            </Typography>
+            © Henry Seed {new Date().getFullYear()}
+          </div>
+        </footer>
+      </span>
     );
   }
 }
