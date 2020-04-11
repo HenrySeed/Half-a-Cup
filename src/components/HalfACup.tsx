@@ -588,8 +588,8 @@ class HalfACup extends React.Component<Props & PropsWithStyles, State> {
                     marginLeft: "auto",
                     marginRight: "auto",
                     marginTop: "25px",
-                    marginBottom: "30px",
-                    maxWidth: "1200px",
+                    marginBottom: "80px",
+                    maxWidth: "1600px",
                     width: "90%",
                   }}
                 >

@@ -1,169 +1,124 @@
 import * as React from "react";
-import {
-    Paper,
-    Typography,
-    GridList,
-    GridListTile,
-    CircularProgress
-} from "@material-ui/core";
+import { Paper, Typography, CircularProgress } from "@material-ui/core";
 import { Button } from "@material-ui/core";
+import Grid from "@material-ui/core/Grid";
 import { Link } from "react-router-dom";
 import { Redirect } from "react-router";
 
 interface State {
-    redirectRecipeKey: string;
+  redirectRecipeKey: string;
 }
 
 export interface Props {
-    title: string;
-    recipeNames: Map<string, string>;
-    favRecipes: string[];
-    onToggleFavourite: Function;
-    maximum: number;
-    seeMoreLink: string;
-    isLoading: boolean;
+  title: string;
+  recipeNames: Map<string, string>;
+  favRecipes: string[];
+  onToggleFavourite: Function;
+  maximum: number;
+  seeMoreLink: string;
+  isLoading: boolean;
 }
 
 export default class RecipeScroller extends React.Component<
-    Props,
-    State,
-    object
+  Props,
+  State,
+  object
 > {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            redirectRecipeKey: ""
-        };
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      redirectRecipeKey: "",
+    };
+  }
+
+  handleRecipeClick(key: string): void {
+    // location.href = '/recipes/' + key;
+    this.setState({
+      redirectRecipeKey: key,
+    });
+  }
+
+  render(): JSX.Element {
+    // if we should redirect to the selected recipe redirect
+    if (this.state.redirectRecipeKey !== "") {
+      const key: string = this.state.redirectRecipeKey;
+      return <Redirect push to={"/recipes/" + key} />;
     }
 
-    handleRecipeClick(key: string): void {
-        // location.href = '/recipes/' + key;
-        this.setState({
-            redirectRecipeKey: key
-        });
-    }
-
-    render(): JSX.Element {
-        // if we should redirect to the selected recipe redirect
-        if (this.state.redirectRecipeKey !== "") {
-            const key: string = this.state.redirectRecipeKey;
-            return <Redirect push to={"/recipes/" + key} />;
-        }
-
-        const recipes: JSX.Element[] = [];
-        let count: number = 0;
-        for (const [key, value] of Array.from(this.props.recipeNames)) {
-            if (count === this.props.maximum) {
-                recipes.push(
-                    <Link
-                        to={this.props.seeMoreLink}
-                        key={key}
-                        style={{ width: "30%" }}
-                    >
-                        <GridListTile
-                            key={key}
-                            style={{
-                                cursor: "pointer",
-                                minWidth: "240px",
-                                width: "30%",
-                                marginRight: "10px"
-                            }}
-                        >
-                            <Button style={{ marginTop: "33px" }}>
-                                See More...
-                            </Button>
-                        </GridListTile>
-                    </Link>
-                );
-                break;
-            }
-            recipes.push(
-                <GridListTile
-                    key={key}
-                    onClick={() => this.handleRecipeClick(key)}
-                    style={{
-                        cursor: "pointer",
-                        minWidth: "240px",
-                        maxWidth: "30%",
-                        height: "auto !important"
-                    }}
-                >
-                    <Paper
-                        style={{
-                            padding: "20px",
-                            margin: "5px",
-                            minHeight: "100px"
-                        }}
-                    >
-                        {value}
-                    </Paper>
-                </GridListTile>
-            );
-            count++;
-        }
-
-        let container = (
-            <div>
-                <GridList
-                    cols={2.5}
-                    style={
-                        {
-                            // flexWrap: "nowrap",
-                            // transform: "translateZ(0)",
-                            // height: "120px"
-                        }
-                    }
-                >
-                    {recipes}
-                </GridList>
-                <div
-                    style={{
-                        width: "20px",
-                        height: "100%",
-                        backgroundColor: "#333"
-                    }}
-                />
-            </div>
+    const recipes: JSX.Element[] = [];
+    let index = 0;
+    for (const [key, value] of Array.from(this.props.recipeNames)) {
+      if (index === this.props.maximum) {
+        recipes.push(
+          <Link to={this.props.seeMoreLink} key={key}>
+            <Grid item xs={12} sm={6} md={4} lg={3} key={key}>
+              <Button style={{ marginTop: "33px", width: "120px" }}>
+                See More...
+              </Button>
+            </Grid>
+          </Link>
         );
-
-        // if(this.props.isLoading){
-        //     container =
-        // }
-
-        return (
-            <div
-                style={{
-                    marginLeft: "5%",
-                    // flexWrap: "wrap",
-                    // justifyContent: "space-around",
-                    // overflow: "hidden",
-                    marginTop: "30px"
-                }}
-            >
-                <Link to={this.props.seeMoreLink}>
-                    <Typography
-                        variant="title"
-                        color="inherit"
-                        style={{ marginBottom: "10px" }}
-                    >
-                        {this.props.title}
-                    </Typography>
-                </Link>
-
-                {this.props.isLoading ? (
-                    <CircularProgress
-                        style={{
-                            marginRight: "auto",
-                            marginLeft: "auto",
-                            display: "block",
-                            marginTop: "20px"
-                        }}
-                    />
-                ) : (
-                    <span />
-                )}
-                {container}
-            </div>
-        );
+        break;
+      }
+      recipes.push(
+        <Grid
+          item
+          xs={12}
+          sm={6}
+          md={4}
+          lg={3}
+          key={key}
+          onClick={() => this.handleRecipeClick(key)}
+        >
+          <Paper
+            style={{
+              padding: "20px",
+              margin: "5px",
+              minHeight: "100px",
+            }}
+          >
+            {value}
+          </Paper>
+        </Grid>
+      );
+      index++;
     }
+
+    return (
+      <div
+        style={{
+          marginLeft: "5%",
+          marginTop: "30px",
+        }}
+      >
+        <Link to={this.props.seeMoreLink}>
+          <Typography
+            variant="title"
+            color="inherit"
+            style={{ marginBottom: "10px" }}
+          >
+            {this.props.title}
+          </Typography>
+        </Link>
+
+        {this.props.isLoading ? (
+          <CircularProgress
+            style={{
+              marginRight: "auto",
+              marginLeft: "auto",
+              display: "block",
+              marginTop: "20px",
+            }}
+          />
+        ) : (
+          <span />
+        )}
+        <div style={{ flexGrow: 1 }}>
+          <Grid container spacing={8}>
+            {recipes}
+          </Grid>
+        </div>
+      </div>
+    );
+  }
 }

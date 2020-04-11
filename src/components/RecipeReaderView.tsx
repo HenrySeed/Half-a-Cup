@@ -234,6 +234,7 @@ class RecipeReaderViewNoStyle extends React.Component<Props, State, object> {
             margin: "5px 20px 3px 0px",
             backgroundColor: this.props.theme.palette.primary.main,
           }}
+          className="readerCloseButton"
           onClick={() => window.history.back()}
           aria-label="Close this view"
         >
