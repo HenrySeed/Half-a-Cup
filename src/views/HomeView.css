@@ -1,0 +1,69 @@
+.dashBanner {
+    height: 580px;
+    width: 100vw;
+    position: relative;
+    padding: 0 5%;
+    box-sizing: border-box;
+    color: white;
+    text-align: right;
+    padding-bottom: 60px;
+    margin-bottom: -120px;
+}
+
+.dashBanner .dashBannerContainer {
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    position: relative;
+    height: 100%;
+}
+
+.dashBannerContainer .bannerText {
+    padding-top: 20px;
+}
+
+.dashBanner img {
+    position: absolute;
+    bottom: -30px;
+    left: 0;
+    width: 70vw;
+    max-width: 650px;
+    margin-right: -20%;
+    float: left;
+}
+
+@media screen and (max-width: 800px) {
+    .dashBanner img {
+        width: 75%;
+        bottom: 0;
+    }
+}
+@media screen and (max-width: 700px) {
+    .dashBanner img {
+        width: 85%;
+    }
+}
+@media screen and (max-width: 530px) {
+    .dashBanner img {
+        width: 100%;
+        margin: 0;
+    }
+}
+
+/* Small height screens */
+@media screen and (max-height: 700px) {
+    .dashBanner {
+        height: 300px;
+    }
+
+    .dashBanner img {
+        width: 50%;
+        max-width: 415px;
+    }
+}
+
+@media screen and (max-height: 700px) and (max-width: 620px) {
+    .dashBanner img {
+        display: none;
+    }
+}

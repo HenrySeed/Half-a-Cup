@@ -1,0 +1,24 @@
+.App {
+    min-height: calc(100vh - 100px);
+}
+
+.logo {
+    /* font-family: "Urbanist", sans-serif !important; */
+    font-family: "Poppins", sans-serif !important;
+}
+
+footer {
+    margin-top: 150px;
+    background-color: #222;
+    padding: 60px 0;
+    color: #ffffff;
+}
+
+.footerContainer {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.footerContainer h6 {
+    line-height: 1.1;
+}

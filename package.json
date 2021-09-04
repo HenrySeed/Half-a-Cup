@@ -1,39 +1,54 @@
 {
-  "name": "whole_cup",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@material-ui/core": "^1.5.0",
-    "@material-ui/icons": "^2.0.2",
-    "@types/detect-browser": "^2.0.1",
-    "@types/pluralize": "^0.0.29",
-    "@types/react-router-dom": "^4.3.0",
-    "@types/react-swipe": "^5.0.3",
-    "detect-browser": "^3.0.0",
-    "file-system": "^2.2.2",
-    "firebase": "^5.4.0",
-    "firebase-admin": "^6.0.0",
-    "firebaseui": "^3.4.0",
-    "pluralize": "^7.0.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
-    "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "2.13.0",
-    "react-swipe": "^5.1.1",
-    "swipe-js-iso": "^2.0.4"
-  },
-  "scripts": {
-    "start": "react-scripts-ts start",
-    "build": "react-scripts-ts build",
-    "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject",
-    "deploy": "clear && echo '----  Building and Deploying Half a Cup  ---' && tsc && react-scripts-ts build && firebase deploy && osascript -e 'display notification \"Half a Cup is now updated\" with title \"Deployment Finished\"'"
-  },
-  "devDependencies": {
-    "@types/jest": "^22.1.0",
-    "@types/node": "^9.4.0",
-    "@types/react": "^16.0.35",
-    "@types/react-dom": "^16.0.3",
-    "typescript": "^2.6.2"
-  }
+    "name": "half-a-cup",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "@material-ui/core": "^4.12.3",
+        "@material-ui/icons": "^4.11.2",
+        "@material-ui/lab": "^4.0.0-alpha.60",
+        "@testing-library/jest-dom": "^5.11.4",
+        "@testing-library/react": "^11.1.0",
+        "@testing-library/user-event": "^12.1.10",
+        "@types/firebase": "^3.2.1",
+        "@types/node": "^16.7.4",
+        "@types/react-dom": "^17.0.9",
+        "@types/react-router-dom": "^5.1.8",
+        "@types/react-swipe": "^6.0.1",
+        "firebase": "^9.0.0",
+        "firebase-admin": "^9.11.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-lines-ellipsis": "^0.15.0",
+        "react-router-dom": "^5.2.1",
+        "react-scripts": "4.0.3",
+        "react-swipe": "^5.1.1",
+        "typescript": "^4.4.2",
+        "web-vitals": "^1.0.1"
+    },
+    "scripts": {
+        "compile": "tsc",
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "deploy": "clear && echo '----  Building and Deploying Half a Cup  ---' && yarn && yarn compile && yarn build && firebase deploy"
+    },
+    "eslintConfig": {
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
 }
