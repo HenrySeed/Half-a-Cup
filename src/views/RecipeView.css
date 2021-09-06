@@ -1,9 +1,3 @@
-.bgBanner {
-    height: 50vh;
-    width: 100vw;
-    position: absolute;
-}
-
 .recipeContainer {
     position: relative;
     z-index: 3;

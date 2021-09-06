@@ -24,10 +24,11 @@ export function useFeaturedRecipes(max: number = 10): [Recipe[], boolean] {
                         doc.id,
                         data.title,
                         data.subtitle,
+                        data.notes,
+                        data.rating,
                         data.tags,
                         data.ingredients,
-                        data.steps,
-                        data.rating
+                        data.steps
                     )
                 );
             });

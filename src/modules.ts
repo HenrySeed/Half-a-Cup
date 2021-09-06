@@ -6,32 +6,31 @@ export class Recipe {
     id: string;
     title: string;
     subtitle: string;
+    notes: string;
+
+    rating: number;
     tags: string[];
+
     ingredients: string[];
     steps: string[];
-    rating: number;
 
     constructor(
         id: string,
         title: string,
         subtitle: string,
+        notes: string,
+        rating: number,
         tags: string[],
         ingredients: string[],
-        steps: string[],
-        rating: number
+        steps: string[]
     ) {
-        // we need to trim whitespace off tags
-        const cleanTags = [];
-        for (const tag of tags) {
-            cleanTags.push(tag.trim());
-        }
-
-        this.id = toID(id).replace(/_/g, "-");
+        this.id = toID(id);
         this.title = title;
         this.subtitle = subtitle;
-        this.rating = rating;
+        this.notes = notes;
 
-        this.tags = cleanTags;
+        this.rating = rating;
+        this.tags = tags.map((tag) => toID(tag));
         this.ingredients = ingredients;
         this.steps = steps;
     }
@@ -41,9 +40,9 @@ export class Recipe {
             id: this.id,
             title: this.title,
             subtitle: this.subtitle,
-            tags: JSON.stringify(this.tags),
-            ingredients: JSON.stringify(this.ingredients),
-            steps: JSON.stringify(this.steps),
+            tags: this.tags,
+            ingredients: this.ingredients,
+            steps: this.steps,
             rating: this.rating,
         };
     }
@@ -54,26 +53,28 @@ export class HACUser {
     email: string;
     displayName: string;
     savedRecipes: { id: string; date: number }[];
+    accountCreated: number;
 
-    constructor(
-        uid: string,
-        savedRecipes: { id: string; date: number }[],
-        email: string = "",
-        displayName: string = ""
-    ) {
-        this.savedRecipes = savedRecipes;
+    constructor(uid: string, data: any) {
         this.uid = uid;
-        this.email = email;
-        this.displayName = displayName;
+
+        this.savedRecipes = data.savedRecipes || [];
+        this.email = data.email || "";
+        this.displayName = data.displayName || "";
+        this.accountCreated = data.accountCreated || Date.now();
+    }
+
+    public isAdmin() {
+        return this.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2";
     }
 
     public clone() {
-        return new HACUser(
-            this.uid,
-            [...this.savedRecipes],
-            this.email,
-            this.displayName
-        );
+        return new HACUser(this.uid, {
+            savedRecipes: this.savedRecipes,
+            email: this.email,
+            displayName: this.displayName,
+            accountCreated: this.accountCreated,
+        });
     }
 
     public favRecipe(id: string) {
@@ -103,7 +104,9 @@ export class HACUser {
     public toPlain() {
         return {
             uid: this.uid,
-            savedRecipes: JSON.stringify(this.savedRecipes),
+            savedRecipes: this.savedRecipes,
+            email: this.email,
+            displayName: this.displayName,
         };
     }
 }

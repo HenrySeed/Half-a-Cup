@@ -53,6 +53,7 @@ async function main() {
                 toID(data.title),
                 data.title || "",
                 data.subtitle || "",
+                data.notes || "",
                 data.tags || [],
                 data.ingredients || [],
                 data.steps || [],

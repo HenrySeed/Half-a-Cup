@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
+import { getRecipe } from "../firebase";
 import { Recipe } from "../modules";
 import { toID } from "../utils";
-import { getRecipe } from "./useRecipe";
 
 export function useRecipes(ids: string[]): [Recipe[], boolean] {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -18,13 +18,15 @@ export function useRecipes(ids: string[]): [Recipe[], boolean] {
                 (id) => !recipes.find((recipe) => recipe.id === id)
             );
 
-            console.log(`[useRecipes] Loading ${toDownloadIDs}`);
+            if (toDownloadIDs.length === 0) {
+                return;
+            }
 
-            Promise.all(
-                toDownloadIDs.map((id: string) =>
-                    getRecipe(toID(id).replace(/_/g, "-"))
-                )
-            )
+            console.log(
+                `[useRecipes] Loading ${toDownloadIDs.length} recipes(s)`
+            );
+
+            Promise.all(toDownloadIDs.map((id: string) => getRecipe(toID(id))))
                 .then((recipes) => {
                     newRecipes.push(
                         ...recipes

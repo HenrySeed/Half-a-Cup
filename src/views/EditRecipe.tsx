@@ -4,11 +4,15 @@ import {
     Card,
     CardContent,
     CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
     Grid,
     IconButton,
     Snackbar,
     TextField,
     Typography,
+    useTheme,
 } from "@material-ui/core";
 import { Add, ArrowDownward, ArrowUpward, Delete } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
@@ -18,7 +22,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
 import { RecipeNotFound } from "../components/RecipeNotFound";
 import { StarRating } from "../components/StarRating";
-import { db } from "../firebase";
+import { archiveRecipe, db } from "../firebase";
 import { useRecipe } from "../hooks/useRecipe";
 import { HACUser } from "../modules";
 
@@ -29,6 +33,7 @@ function ArrayEditor({
     vals: string[];
     onChange: (vals: string[]) => void;
 }) {
+    const [focusIdx, setFocusIdx] = useState(-1);
     return (
         <Grid container spacing={1}>
             {vals.map((val, i) => (
@@ -61,14 +66,28 @@ function ArrayEditor({
                         </IconButton>
                     </ButtonGroup>
                     <TextField
+                        autoFocus={i === focusIdx}
+                        onFocus={() => setFocusIdx(i)}
                         style={{
                             width: "calc(100% - 96px)",
                             verticalAlign: "middle",
                         }}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                if (vals[i + 1] === undefined) {
+                                    onChange([...vals, ""]);
+                                }
+                                setFocusIdx(i + 1);
+                            }
+                        }}
                         value={val}
                         variant="outlined"
                         onChange={(e) => {
-                            vals[i] = e.target.value;
+                            const val = e.target.value;
+                            if (val[val.length - 1] === "\n") {
+                                return;
+                            }
+                            vals[i] = val;
                             onChange(vals);
                         }}
                         multiline
@@ -104,6 +123,7 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
     let { id } = useParams<{ id: string }>();
     const [recipe, loadingRecipe] = useRecipe(id);
     const history = useHistory();
+    const theme = useTheme();
 
     const [title, setTitle] = useState("");
     const [subtitle, setSubtitle] = useState("");
@@ -117,6 +137,8 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
         alert: string;
         status: "error" | "success";
     } | null>(null);
+    const [confirmDialog, setConfirmDialog] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (recipe) {
@@ -149,6 +171,9 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
                         alert: "Successfully saved recipe",
                         status: "success",
                     });
+                    setTimeout(() => {
+                        history.goBack();
+                    }, 1500);
                 })
                 .catch((error) => {
                     setIsSaving(false);
@@ -161,7 +186,17 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
     }
 
     if (loadingRecipe) {
-        return <CenteredProgress style={{ marginTop: "10vh" }} />;
+        return (
+            <>
+                <div
+                    style={{ backgroundColor: theme.palette.primary.main }}
+                    className="bgBanner"
+                />
+                <CenteredProgress
+                    style={{ marginTop: "10vh", color: "white" }}
+                />
+            </>
+        );
     }
 
     if (!recipe) {
@@ -180,9 +215,15 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
                     {alert?.alert}
                 </Alert>
             </Snackbar>
+            <div
+                style={{ backgroundColor: theme.palette.primary.main }}
+                className="bgBanner"
+            />
             <Card
                 style={{
+                    position: "relative",
                     maxWidth: "1200px",
+                    width: "95%",
                     margin: "50px auto",
                 }}
             >
@@ -212,7 +253,6 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
                             </Grid>
                             <Grid item>
                                 <Button
-                                    color="primary"
                                     variant="outlined"
                                     onClick={() => saveRecipe()}
                                 >
@@ -287,6 +327,67 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
                                 vals={steps}
                                 onChange={(vals) => setSteps([...vals])}
                             />
+                        </Grid>
+                        <Grid
+                            item
+                            container
+                            xs={12}
+                            justifyContent="center"
+                            style={{ marginTop: "200px" }}
+                        >
+                            <Grid item>
+                                <Button
+                                    onClick={() => setConfirmDialog(true)}
+                                    color="primary"
+                                >
+                                    <Delete />
+                                    Delete Recipe
+                                </Button>
+                            </Grid>
+                            <Dialog
+                                open={confirmDialog}
+                                onClose={() => setConfirmDialog(false)}
+                            >
+                                <DialogContent>
+                                    Are you sure you want to delete the recipe:
+                                    <br />
+                                    <br /> "{id}"
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button
+                                        color="secondary"
+                                        onClick={() => setConfirmDialog(false)}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
+                                        color="primary"
+                                        onClick={() => {
+                                            setIsDeleting(true);
+                                            archiveRecipe(id).then(() => {
+                                                setConfirmDialog(false);
+                                                setIsDeleting(false);
+                                                history.goBack();
+                                                history.goBack();
+                                            });
+                                        }}
+                                        disabled={isDeleting}
+                                    >
+                                        {isDeleting ? (
+                                            <CircularProgress
+                                                style={{
+                                                    height: "17px",
+                                                    width: "17px",
+                                                    marginRight: "11px",
+                                                }}
+                                            />
+                                        ) : (
+                                            <Delete />
+                                        )}
+                                        Delete
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
                         </Grid>
                     </Grid>
                 </CardContent>

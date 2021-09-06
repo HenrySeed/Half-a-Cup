@@ -1,9 +1,8 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
+import { db, getRecipe } from "../firebase";
 import { Recipe } from "../modules";
 import { toID } from "../utils";
-import { getRecipe } from "./useRecipe";
 
 export function useSearchRecipes(search: string[]): [Recipe[], boolean] {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -16,7 +15,7 @@ export function useSearchRecipes(search: string[]): [Recipe[], boolean] {
             return;
         }
 
-        console.log(`[ useSearchRecipes ] loading`);
+        console.log(`[useSearchRecipes] loading`);
 
         setLoading(true);
         const docRef = doc(db, "tags", toID(searchVal));
@@ -36,7 +35,7 @@ export function useSearchRecipes(search: string[]): [Recipe[], boolean] {
                 });
             } else {
                 console.error(
-                    `[ useSearchRecipes ] Failed to load Search phrase "${searchVal}"`
+                    `[useSearchRecipes] Failed to load Search phrase "${searchVal}"`
                 );
             }
         });

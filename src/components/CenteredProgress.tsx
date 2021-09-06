@@ -6,6 +6,7 @@ export function CenteredProgress({ style }: { style: React.CSSProperties }) {
         <div style={{ width: "100%", ...style }}>
             <CircularProgress
                 style={{
+                    color: style.color || "inherit",
                     marginLeft: "auto",
                     marginRight: "auto",
                     display: "block",

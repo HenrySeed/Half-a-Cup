@@ -109,23 +109,14 @@ export function LoginDialog({
             const auth = getAuth();
             signOut(auth)
                 .then(() => {
-                    notify(`[ logout ] Logged out successfully`);
+                    notify(`[logout] Logged out successfully`);
                     onUserChange(null);
                 })
                 .catch((error) => {
-                    notify(`[ logout ] Error: ${error.message}`, "error");
+                    notify(`[logout] Error: ${error.message}`, "error");
                 });
         }
     }, [loggedIn]);
-
-    function getUserData(data: any) {
-        return new HACUser(
-            data.uid,
-            JSON.parse(data.savedRecipes) || [],
-            data.email,
-            data.displayName
-        );
-    }
 
     // load the hacUser
     useEffect(() => {
@@ -138,22 +129,24 @@ export function LoginDialog({
                 getDoc(docRef)
                     .catch((e) => {
                         console.error(
-                            `[ getUserData ] ERROR: (${e.code}) - ${e.message}`
+                            `[getUserData] ERROR: (${e.code}) - ${e.message}`
                         );
                     })
                     .then((docSnap) => {
                         // if this user has data, return it
                         if (docSnap && docSnap.exists()) {
                             const data = docSnap.data();
-                            onUserChange(getUserData(data));
+                            onUserChange(new HACUser(data.uid, data));
                         }
                         // if the user has no data, generate a blank one
                         else {
-                            const newData = new HACUser(
-                                fbuser.uid,
-                                [],
-                                fbuser.email || "",
-                                fbuser.displayName || ""
+                            const newData = new HACUser(fbuser.uid, {
+                                email: fbuser.email,
+                                displayName: fbuser.displayName,
+                            });
+                            console.log(
+                                `new user found, saving profile`,
+                                newData
                             );
                             onUserChange(newData);
                             setDoc(docRef, newData.toPlain());
@@ -163,11 +156,11 @@ export function LoginDialog({
                 // assign a listener to the user object for changes
                 const unsub = onSnapshot(docRef, (docSnap) => {
                     console.log(
-                        `[ getUserData ] Loading update from User profile`
+                        `[getUserData] Loading update from User profile`
                     );
                     const data = docSnap.data();
                     if (data) {
-                        onUserChange(getUserData(data));
+                        onUserChange(new HACUser(data.uid, data));
                     }
                 });
 
@@ -194,12 +187,12 @@ export function LoginDialog({
             .then((result) => {
                 const user = result.user;
                 onClose();
-                notify(`[ loginWithGoogle ] Logged in successfully`, "success");
+                notify(`[loginWithGoogle] Logged in successfully`, "success");
                 setIsLoadingGoogle(false);
             })
             .catch((error) => {
                 notify(
-                    `[ loginWithGoogle ] Failed to sign in with Google`,
+                    `[loginWithGoogle] Failed to sign in with Google`,
                     "error"
                 );
                 setIsLoadingGoogle(false);
@@ -212,7 +205,7 @@ export function LoginDialog({
         function admitUser(userCredential: UserCredential) {
             const user = userCredential.user;
             onClose();
-            notify(`[ loginWithEmail ] Logged in successfully`, "success");
+            notify(`[loginWithEmail] Logged in successfully`, "success");
             setIsLoadingEmail(false);
         }
 
@@ -227,7 +220,7 @@ export function LoginDialog({
                         setEmailError("There is no account with that email.");
                     }
                     // notify(
-                    //     `[ loginWithEmail ] Failed to log in ${email}\nError (${error.code}) - ${error.message}`,
+                    //     `[loginWithEmail] Failed to log in ${email}\nError (${error.code}) - ${error.message}`,
                     //     "error"
                     // );
                     setIsLoadingEmail(false);
@@ -240,7 +233,7 @@ export function LoginDialog({
                         setEmailError("That email address is already in use");
                     }
                     // notify(
-                    //     `[ loginWithEmail ] Failed to create account: ${email}\nError (${error.code}) - ${error.message}`,
+                    //     `[loginWithEmail] Failed to create account: ${email}\nError (${error.code}) - ${error.message}`,
                     //     "error"
                     // );
                     setIsLoadingEmail(false);
@@ -253,12 +246,12 @@ export function LoginDialog({
         sendPasswordResetEmail(auth, email)
             .then(() => {
                 notify(
-                    `[ sendResetEmail ] Password reset email sent to: ${email}`
+                    `[sendResetEmail] Password reset email sent to: ${email}`
                 );
             })
             .catch((error) => {
                 notify(
-                    `[ sendResetEmail ] Failed to send password reset email to: ${email}`,
+                    `[sendResetEmail] Failed to send password reset email to: ${email}`,
                     "error"
                 );
             });

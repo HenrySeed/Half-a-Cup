@@ -1,6 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import {
+    deleteDoc,
+    doc,
+    getDoc,
+    getFirestore,
+    setDoc,
+} from "firebase/firestore";
+import { Recipe } from "./modules";
 
 // Firebase setup =======================================
 const config = {
@@ -18,3 +25,41 @@ export const db = getFirestore();
 
 // Authentication setup =================================
 export const googleAUthProvider = new GoogleAuthProvider();
+
+// Useful functions
+export async function getRecipe(id: string) {
+    return getDoc(doc(db, "recipes", id)).then((docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            return new Recipe(
+                docSnap.id,
+                data.title,
+                data.subtitle,
+                data.notes || "",
+                data.rating,
+                data.tags,
+                data.ingredients,
+                data.steps
+            );
+        } else {
+            console.error(`[getRecipe] Failed to load recipe "${id}"`);
+        }
+    });
+}
+
+export async function archiveRecipe(id: string) {
+    // first download it
+    const recipe = await getRecipe(id);
+    if (!recipe) {
+        return;
+    }
+
+    // now remove it from the recipes collection
+    await deleteDoc(doc(db, "recipes", id));
+
+    // now add it to the archivedRecipes collection
+    await setDoc(
+        doc(db, "archivedRecipes", id + "-" + Date.now().toString()),
+        recipe.toPlain()
+    );
+}

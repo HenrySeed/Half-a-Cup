@@ -1,7 +1,11 @@
 .App {
     min-height: calc(100vh - 100px);
 }
-
+.bgBanner {
+    height: 50vh;
+    width: 100vw;
+    position: absolute;
+}
 .logo {
     /* font-family: "Urbanist", sans-serif !important; */
     font-family: "Poppins", sans-serif !important;

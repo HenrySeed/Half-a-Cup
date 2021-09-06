@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link, Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import { LoginButton } from "./components/LoginButton";
+import { NewRecipeButton } from "./components/NewRecipeButton";
 import { useTagline } from "./hooks/useTagline";
 import { HACUser } from "./modules";
 import nzMap from "./res/SVG/nz.svg";
@@ -41,6 +42,7 @@ function App() {
                 variant: "outlined",
             },
             MuiTextField: {
+                color: "secondary",
                 variant: "outlined",
             },
         },
@@ -67,6 +69,10 @@ function App() {
         window.scrollTo(0, 0);
     }, [location]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     function handleUserChange(user: HACUser | null) {
         setUser(user);
     }
@@ -89,6 +95,7 @@ function App() {
                                 {location?.pathname !== "/" && "Half a Cup"}
                             </Typography>
                         </Link>
+                        <NewRecipeButton user={user} />
                         <LoginButton
                             user={user}
                             onUserChange={handleUserChange}
@@ -116,7 +123,7 @@ function App() {
                     className="footerContainer"
                     justifyContent="space-around"
                 >
-                    <Grid item style={{ padding: "10px" }}>
+                    <Grid item style={{ padding: "10px", width: "311px" }}>
                         <Typography variant="h3">Half a Cup</Typography>
                         <Typography
                             variant="body1"

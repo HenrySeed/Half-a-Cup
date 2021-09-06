@@ -32,9 +32,10 @@ export function RecipeCard({
         <Card
             style={{
                 position: "relative",
+                minHeight: "225px",
             }}
         >
-            <CardActionArea onClick={handleOnClick}>
+            <CardActionArea onClick={handleOnClick} style={{ height: "130px" }}>
                 <CardContent>
                     <Typography gutterBottom variant="h5">
                         {recipe.title}
@@ -46,7 +47,7 @@ export function RecipeCard({
                         gutterBottom
                         style={{
                             overflowY: "hidden",
-                            height: "57px",
+                            height: "44px",
                         }}
                     >
                         {recipe.subtitle}
@@ -56,6 +57,10 @@ export function RecipeCard({
             <CardActions
                 style={{
                     padding: "0 14px 14px 14px",
+                    position: "absolute",
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
                 }}
             >
                 <Grid container justifyContent="flex-end" spacing={2}>
@@ -74,7 +79,7 @@ export function RecipeCard({
                     <Grid item>
                         {user?.uid === "bWcWTtHgkJaw0RK2EPqIV9KKUfw2" && (
                             <Tooltip title={"Edit Recipe"}>
-                                <Link to={`edit/${recipe.id}`}>
+                                <Link to={`/edit/${recipe.id}`}>
                                     <IconButton size="small" color="primary">
                                         <Edit />
                                     </IconButton>

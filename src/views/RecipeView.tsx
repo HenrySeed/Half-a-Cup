@@ -62,7 +62,9 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                 <CardContent>
                     <Grid container className="recipeHeader" spacing={3}>
                         <Grid item xs={12} sm={9} md={10}>
-                            <Typography variant="h1">{recipe.title}</Typography>
+                            <Typography variant="h1" gutterBottom>
+                                {recipe.title}
+                            </Typography>
                             {recipe.subtitle && (
                                 <Typography variant="subtitle1">
                                     {recipe.subtitle}
@@ -79,21 +81,17 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                             style={{ textAlign: "right" }}
                         >
                             <Grid item style={{ padding: "0 3px" }}>
-                                {user &&
-                                    user.uid ===
-                                        "bWcWTtHgkJaw0RK2EPqIV9KKUfw2" && (
-                                        <IconButton
-                                            size="small"
-                                            onClick={() =>
-                                                history &&
-                                                history.push(
-                                                    `/edit/${recipe.id}`
-                                                )
-                                            }
-                                        >
-                                            <Edit />
-                                        </IconButton>
-                                    )}
+                                {user && user?.isAdmin() && (
+                                    <IconButton
+                                        size="small"
+                                        onClick={() =>
+                                            history &&
+                                            history.push(`/edit/${recipe.id}`)
+                                        }
+                                    >
+                                        <Edit />
+                                    </IconButton>
+                                )}
                             </Grid>
                             <Grid item style={{ padding: "0 3px" }}>
                                 <FavButton user={user} recipeID={recipe.id} />
@@ -152,9 +150,16 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                     </Typography>
                                     <ul>
                                         {recipe.ingredients.map(
-                                            (ingredient, i) => (
-                                                <li key={i}>{ingredient}</li>
-                                            )
+                                            (ingredient, i) =>
+                                                ingredient[0] === "#" ? (
+                                                    <h3 key={i}>
+                                                        {ingredient.slice(2)}
+                                                    </h3>
+                                                ) : (
+                                                    <li key={i}>
+                                                        {ingredient}
+                                                    </li>
+                                                )
                                         )}
                                     </ul>
                                 </div>

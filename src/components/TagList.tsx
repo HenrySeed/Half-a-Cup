@@ -2,6 +2,7 @@ import { Chip, Grid } from "@material-ui/core";
 import { Search } from "@material-ui/icons";
 import React, { useCallback } from "react";
 import { useHistory } from "react-router-dom";
+import { fromID } from "../utils";
 
 export function Tag({ tag }: { tag: string }) {
     const history = useHistory();
@@ -10,10 +11,11 @@ export function Tag({ tag }: { tag: string }) {
         (val: string) => history.push(`/search/${encodeURIComponent(val)}`),
         [history]
     );
+
     return (
         <Chip
             onClick={() => chipOnClick(tag)}
-            label={tag}
+            label={fromID(tag)}
             icon={<Search />}
             color="primary"
             variant="outlined"
