@@ -8,7 +8,7 @@ In the future I would like to add recipe uploading and user profiles, but we sha
 ![The Homepage](https://imgur.com/d5ntSki.jpg)
 
 
-![No nonesense](https://imgur.com/UYsOpK9.jpg)
+![No nonsense](https://imgur.com/UYsOpK9.jpg)
 
 
 ![It can even search!](https://imgur.com/9sy4tbr.jpg)
