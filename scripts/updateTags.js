@@ -1,29 +1,114 @@
 var admin = require("firebase-admin");
 const serviceAccount = require("../keys/service-key.json");
 
+const units = [
+    { name: "teaspoon", alias: ["t", "tsp", "teaspoon", "teaspoons"] },
+    { name: "tablespoon", alias: ["tb", "Tbsp", "tablespoon", "tablespoons"] },
+    { name: "cup", alias: ["C", "c", "cup", "cups"] },
+    { name: "ounce", alias: ["ounce", "ounces", "oz"] },
+    { name: "pound", alias: ["pound", "pounds", "lb"] },
+    { name: "gram", alias: ["g", "gram", "grams"] },
+    { name: "Kilogram", alias: ["Kg", "Kilogram", "Kilograms"] },
+];
+
+const ingrModifiers = ["standard", "large", "chopped", "allpurpose", "pkg"];
+
+function toID(val) {
+    return val
+        .trim()
+        .toLowerCase()
+        .replace(/ /g, "-")
+        .replace(/_/g, "-")
+        .replace(/[^A-z-]|\^/g, "")
+        .replace(/[^A-z-]/g, "");
+}
+
+/**
+ * The ingredient string has a number, then a unit, then an ingredient name, this returns the ingredient name
+ * @export
+ * @param {string} val
+ */
+function getIngredientName(val) {
+    let trimmed = val.split(/,|\./g)[0];
+
+    // remove anything in brackets
+    trimmed = trimmed.replace(/\([^)]*\)/g, "");
+
+    // replace double spaces
+    trimmed = trimmed.replace(/ {2}/g, " ");
+
+    let words = trimmed.split(" ");
+
+    // remove leading numbers
+    while (/^((\d+\/\d+[A-z]*)|(\d+[A-z]*)|a|one)$/g.test(words[0])) {
+        words.splice(0, 1);
+    }
+
+    // if word is unit, remove it
+    const allUnitNames = units
+        .map((unit) => unit.alias)
+        .flat()
+        .map((val) => val.toLowerCase());
+    words = words.filter((word) => !allUnitNames.includes(word.toLowerCase()));
+
+    // if word is modifier, remove it
+    words = words.filter((word) => !ingrModifiers.includes(word.toLowerCase()));
+
+    // remove any hyphens
+    words = words.map((val) => val.replace(/-/g, ""));
+
+    return words
+        .map((val) => val.trim())
+        .filter((val) => val !== "")
+        .join(" ");
+}
+
 class Recipe {
     id;
     title;
     subtitle;
+    coverImg;
+    notes;
+    rating;
     tags;
     ingredients;
     steps;
-    rating;
 
-    constructor(id, title, subtitle, tags, ingredients, steps, rating) {
-        // we need to trim whitespace off tags
-        const cleanTags = [];
-        for (const tag of tags) {
-            cleanTags.push(tag.trim());
-        }
+    constructor(
+        id,
+        title,
+        subtitle,
+        coverImg,
+        notes,
+        rating,
+        tags,
+        ingredients,
+        steps
+    ) {
+        this.id = toID(id);
+        this.title = title || "";
+        this.subtitle = subtitle || "";
+        this.coverImg = coverImg || "";
+        this.notes = notes || "";
 
-        this.id = id;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.tags = cleanTags;
-        this.ingredients = ingredients;
-        this.steps = steps;
-        this.rating = rating;
+        this.rating = rating || 0;
+        this.tags = tags.map((tag) => toID(tag));
+        this.ingredients = ingredients || [];
+        this.steps = steps || [];
+    }
+
+    toPlain() {
+        return {
+            id: this.id,
+            title: this.title,
+            subtitle: this.subtitle,
+            notes: this.notes,
+            coverImg: this.coverImg,
+            tags: this.tags,
+            ingredients: this.ingredients,
+            steps: this.steps,
+            rating: this.rating,
+        };
     }
 }
 
@@ -34,58 +119,69 @@ admin.initializeApp({
 
 const db = admin.firestore();
 
-function toID(val) {
-    return val
-        .toLowerCase()
-        .replace(/ /g, "-")
-        .replace(/[^A-z-]|\^/g, "");
-}
-
-async function main() {
-    const allRecipes = [];
-    // downlaod all recipes
-    const recipeSnaps = await db.collection("recipes2").get();
+/**
+ * Copies recipes from recipes collection to recipedBackup collection
+ */
+async function backupRecipes() {
+    console.log("[backupRecipes] Backing up recipes...");
+    const recipeSnaps = await db.collection("recipes").get();
     recipeSnaps.forEach((doc) => {
         // doc.data() is never undefined for query doc snapshots
         const data = doc.data();
-        allRecipes.push(
-            new Recipe(
-                toID(data.title),
-                data.title || "",
-                data.subtitle || "",
-                data.notes || "",
-                data.tags || [],
-                data.ingredients || [],
-                data.steps || [],
-                data.rating || 0
-            )
-        );
+        if (data.id) {
+            db.collection("recipesBackup").doc(data.id).set(data);
+        }
     });
+    console.log("[backupRecipes] Done");
+}
 
-    console.log(allRecipes);
-    for (const recipe of allRecipes) {
-        db.collection("recipes").doc(recipe.id).set({
-            id: recipe.id,
-            title: recipe.title,
-            subtitle: recipe.subtitle,
-            tags: recipe.tags,
-            ingredients: recipe.ingredients,
-            steps: recipe.steps,
-            rating: recipe.rating,
-        });
+function updateTags(recipe) {
+    const newTags = recipe.tags;
+    for (const ingr of recipe.ingredients) {
+        const name = getIngredientName(ingr);
+        newTags.push(name.toLowerCase());
     }
+    recipe.tags = newTags
+        .filter((val) => !!val)
+        .filter((val) => val.split(" ").length === 1);
+    return recipe;
+}
 
-    // const tagMap = new Map();
-    // for (const recipe of allRecipes) {
-    //     for (const recipeTag of recipe.tags) {
-    //         const tag = toID(recipeTag);
-    //         tagMap.set(tag, [recipe.id, ...(tagMap.get(tag) || [])]);
-    //     }
-    // }
+async function main() {
+    // start by backing up the recipes
+    await backupRecipes();
 
-    // for (const [key, value] of Array.from(tagMap.entries())) {
-    //     db.collection("tags").doc(key).set({ recipesIDs: value });
-    // }
+    console.log("[updateRecipes] Loading Recipes...");
+    // modify the data in recipes
+    const recipeSnaps = await db.collection("recipes").get();
+    console.log("[updateRecipes] Done");
+
+    console.log("[updateRecipes] Updating Recipes..");
+
+    recipeSnaps.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        const data = doc.data();
+        if (data.id) {
+            const recipe = new Recipe(
+                data.id,
+                data.title,
+                data.subtitle,
+                data.coverImg,
+                data.notes,
+                data.rating,
+                data.tags,
+                data.ingredients,
+                data.steps
+            );
+
+            // run the update function over the recipe
+            const updatedRecipe = updateTags(recipe);
+
+            // save to recipes collection
+            db.collection("recipes").doc(data.id).set(updatedRecipe.toPlain());
+        }
+    });
+    console.log("[updateRecipes] Done");
 }
 
 main();

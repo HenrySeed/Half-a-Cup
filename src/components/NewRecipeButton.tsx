@@ -5,8 +5,10 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
+    IconButton,
     TextField,
 } from "@material-ui/core";
+import { Add } from "@material-ui/icons";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -40,7 +42,7 @@ export function NewRecipeButton({ user }: { user: HACUser | null }) {
         }
 
         // first make a blank recipe
-        const recipe = new Recipe(id, recipeName, "", "", 0, [], [], []);
+        const recipe = new Recipe(id, recipeName, "", "", "", 0, [], [], []);
 
         // save it to the DB
         await setDoc(docRef, recipe.toPlain());
@@ -104,16 +106,15 @@ export function NewRecipeButton({ user }: { user: HACUser | null }) {
                 </DialogActions>
             </Dialog>
             {user?.isAdmin() && (
-                <Button
+                <IconButton
                     style={{
                         color: "white",
-                        borderColor: "white",
                         marginRight: "10px",
                     }}
                     onClick={() => setDialogOpen(true)}
                 >
-                    Create
-                </Button>
+                    <Add />
+                </IconButton>
             )}
         </>
     );

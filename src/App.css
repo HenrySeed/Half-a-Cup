@@ -2,7 +2,7 @@
     min-height: calc(100vh - 100px);
 }
 .bgBanner {
-    height: 50vh;
+    height: 60vh;
     width: 100vw;
     position: absolute;
 }

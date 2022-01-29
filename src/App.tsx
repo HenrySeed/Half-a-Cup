@@ -5,9 +5,11 @@ import { Link, Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import { LoginButton } from "./components/LoginButton";
 import { NewRecipeButton } from "./components/NewRecipeButton";
+import { SearchBox } from "./components/SearchBox";
 import { useTagline } from "./hooks/useTagline";
 import { HACUser } from "./modules";
 import nzMap from "./res/SVG/nz.svg";
+import knifeLogo from "./res/SVG/logo_knife.svg";
 import { EditRecipe } from "./views/EditRecipe";
 import { HomeView } from "./views/HomeView";
 import { RecipeView } from "./views/RecipeView";
@@ -29,7 +31,7 @@ function App() {
                 fontWeight: 600,
             },
             h2: {
-                fontSize: "3rem",
+                fontSize: "2.5rem",
                 fontWeight: 500,
             },
             h3: {
@@ -82,19 +84,21 @@ function App() {
             <div className="App">
                 <AppBar position="static">
                     <Toolbar>
-                        {/* <IconButton
-                            edge="start"
-                            color="inherit"
-                            aria-label="menu"
-                            style={{ marginRight: "10px" }}
-                        >
-                            <Menu />
-                        </IconButton> */}
                         <Link to="/" style={{ flexGrow: 1 }}>
-                            <Typography variant="h6">
-                                {location?.pathname !== "/" && "Half a Cup"}
-                            </Typography>
+                            {location?.pathname !== "/" && (
+                                <span>
+                                    <img
+                                        alt="logo"
+                                        src={knifeLogo}
+                                        style={{
+                                            width: "120px",
+                                            marginTop: "15px",
+                                        }}
+                                    />
+                                </span>
+                            )}
                         </Link>
+                        <SearchBox />
                         <NewRecipeButton user={user} />
                         <LoginButton
                             user={user}
@@ -109,7 +113,7 @@ function App() {
                     <Route path="/recipe/:id">
                         <RecipeView user={user} />
                     </Route>
-                    <Route path="/search/:searchPhrase">
+                    <Route path="/search/:searchVal">
                         <SearchView user={user} />
                     </Route>
                     <Route path="/">

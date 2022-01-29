@@ -22,9 +22,9 @@ export function useRecipes(ids: string[]): [Recipe[], boolean] {
                 return;
             }
 
-            console.log(
-                `[useRecipes] Loading ${toDownloadIDs.length} recipes(s)`
-            );
+            // console.log(
+            //     `[useRecipes] Loading ${toDownloadIDs.length} recipes(s)`
+            // );
 
             Promise.all(toDownloadIDs.map((id: string) => getRecipe(toID(id))))
                 .then((recipes) => {
@@ -41,7 +41,7 @@ export function useRecipes(ids: string[]): [Recipe[], boolean] {
                     setLoading(false);
                 });
         }
-    }, [ids]);
+    }, [ids, recipes]);
 
     return [recipes, loading];
 }

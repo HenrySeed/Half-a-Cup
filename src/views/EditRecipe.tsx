@@ -17,14 +17,14 @@ import {
 import { Add, ArrowDownward, ArrowUpward, Delete } from "@material-ui/icons";
 import { Alert } from "@material-ui/lab";
 import { doc, setDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
 import { RecipeNotFound } from "../components/RecipeNotFound";
 import { StarRating } from "../components/StarRating";
 import { archiveRecipe, db } from "../firebase";
 import { useRecipe } from "../hooks/useRecipe";
-import { HACUser } from "../modules";
+import { HACUser, Recipe } from "../modules";
 
 function ArrayEditor({
     vals,
@@ -127,6 +127,8 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
 
     const [title, setTitle] = useState("");
     const [subtitle, setSubtitle] = useState("");
+    const [coverImg, setCoverImg] = useState("");
+    const [notes, setNotes] = useState("");
     const [tags, setTags] = useState<string[]>([]);
     const [ingredients, setIngredients] = useState<string[]>([]);
     const [steps, setSteps] = useState<string[]>([]);
@@ -145,6 +147,8 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
             setTitle(recipe.title);
             setSubtitle(recipe.subtitle);
             setTags(recipe.tags);
+            setCoverImg(recipe.coverImg);
+            setNotes(recipe.notes);
             setIngredients(recipe.ingredients);
             setSteps(recipe.steps);
             setRating(recipe.rating);
@@ -154,26 +158,27 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
     function saveRecipe() {
         if (recipe) {
             const docRef = doc(db, "recipes", id);
-            const newRecipe = {
+            const newRecipe = new Recipe(
+                id,
                 title,
                 subtitle,
+                coverImg,
+                notes,
+                rating,
                 tags,
                 ingredients,
-                steps,
-                rating,
-            };
+                steps
+            );
             setIsSaving(true);
-            console.log(`[EditRecipe] Saving`, newRecipe);
-            setDoc(docRef, newRecipe)
+            console.log(`[EditRecipe] Saving`, newRecipe.toPlain());
+            setDoc(docRef, newRecipe.toPlain())
                 .then(() => {
                     setIsSaving(false);
                     setAlert({
                         alert: "Successfully saved recipe",
                         status: "success",
                     });
-                    setTimeout(() => {
-                        history.goBack();
-                    }, 1500);
+                    history.push(`/recipe/${id}`);
                 })
                 .catch((error) => {
                     setIsSaving(false);
@@ -286,6 +291,26 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
                                 value={subtitle}
                                 onChange={(e) => setSubtitle(e.target.value)}
                             />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                fullWidth
+                                variant="outlined"
+                                label="Cover Image URL"
+                                value={coverImg}
+                                onChange={(e) => setCoverImg(e.target.value)}
+                            />
+                            {coverImg && (
+                                <img
+                                    alt="Cover Preview"
+                                    src={coverImg}
+                                    style={{
+                                        maxWidth: "80%",
+                                        margin: "20px auto",
+                                        display: "block",
+                                    }}
+                                />
+                            )}
                         </Grid>
                         <Grid item xs={12} container>
                             <Grid item xs={12} md={6}>

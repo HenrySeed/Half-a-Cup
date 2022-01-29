@@ -1,5 +1,4 @@
 import {
-    Card,
     CardContent,
     Grid,
     IconButton,
@@ -13,7 +12,6 @@ import { CenteredProgress } from "../components/CenteredProgress";
 import { FavButton } from "../components/FavButton";
 import { ReaderMode } from "../components/ReaderMode";
 import { RecipeNotFound } from "../components/RecipeNotFound";
-import { StarRating } from "../components/StarRating";
 import { TagList } from "../components/TagList";
 import { useRecipe } from "../hooks/useRecipe";
 import { HACUser } from "../modules";
@@ -30,12 +28,15 @@ export function RecipeView({ user }: { user: HACUser | null }) {
         return (
             <>
                 <div
-                    style={{ backgroundColor: theme.palette.primary.main }}
                     className="bgBanner"
+                    style={{
+                        backgroundColor: theme.palette.primary.main,
+                        height: "300px",
+                    }}
                 ></div>
-                <Card className="recipeContainer">
+                <div className="recipeContainer">
                     <CenteredProgress style={{ marginTop: "10vh" }} />
-                </Card>
+                </div>
             </>
         );
     }
@@ -50,15 +51,24 @@ export function RecipeView({ user }: { user: HACUser | null }) {
         );
     }
 
-    console.log(user);
-
     return (
         <>
             <div
-                style={{ backgroundColor: theme.palette.primary.main }}
+                style={{
+                    backgroundColor: theme.palette.primary.main,
+                    height: "300px",
+                }}
                 className="bgBanner"
             ></div>
-            <Card className="recipeContainer">
+            <div className="recipeContainer">
+                {recipe.coverImg && (
+                    <div
+                        className="recipeCoverImg"
+                        style={{
+                            backgroundImage: `url(${recipe.coverImg})`,
+                        }}
+                    />
+                )}
                 <CardContent>
                     <Grid container className="recipeHeader" spacing={3}>
                         <Grid item xs={12} sm={9} md={10}>
@@ -105,35 +115,8 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                 </IconButton>
                             </Grid>
                         </Grid>
-                        <Grid
-                            item
-                            xs={12}
-                            container
-                            spacing={3}
-                            style={{ marginBottom: "20px" }}
-                        >
-                            <Grid item xs={12} sm={4} container spacing={1}>
-                                <span style={{ marginTop: "9px" }}>
-                                    <StarRating
-                                        value={recipe.rating}
-                                        onChange={(val) =>
-                                            console.log(
-                                                "Changed rating to",
-                                                val
-                                            )
-                                        }
-                                    />
-                                </span>
-                            </Grid>
-                            <Grid
-                                item
-                                xs={12}
-                                sm={8}
-                                container
-                                justifyContent="flex-end"
-                            >
-                                <TagList tags={recipe.tags} />
-                            </Grid>
+                        <Grid item xs={12} style={{ marginBottom: "20px" }}>
+                            <TagList tags={recipe.tags} />
                         </Grid>
 
                         <Grid item xs={12} container spacing={3}>
@@ -177,7 +160,7 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                         </Grid>
                     </Grid>
                 </CardContent>
-            </Card>
+            </div>
         </>
     );
 }

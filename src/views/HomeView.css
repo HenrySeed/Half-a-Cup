@@ -7,7 +7,7 @@
     color: white;
     text-align: right;
     padding-bottom: 60px;
-    margin-bottom: -120px;
+    margin-bottom: 20px;
 }
 
 .dashBanner .dashBannerContainer {
@@ -22,29 +22,29 @@
     padding-top: 20px;
 }
 
-.dashBanner img {
+.dashBanner .coverImg {
     position: absolute;
     bottom: -30px;
     left: 0;
-    width: 70vw;
+    width: 60vw;
     max-width: 650px;
     margin-right: -20%;
     float: left;
 }
 
 @media screen and (max-width: 800px) {
-    .dashBanner img {
+    .dashBanner .coverImg {
         width: 75%;
         bottom: 0;
     }
 }
 @media screen and (max-width: 700px) {
-    .dashBanner img {
+    .dashBanner .coverImg {
         width: 85%;
     }
 }
 @media screen and (max-width: 530px) {
-    .dashBanner img {
+    .dashBanner .coverImg {
         width: 100%;
         margin: 0;
     }
@@ -56,14 +56,14 @@
         height: 300px;
     }
 
-    .dashBanner img {
+    .dashBanner .coverImg {
         width: 50%;
         max-width: 415px;
     }
 }
 
 @media screen and (max-height: 700px) and (max-width: 620px) {
-    .dashBanner img {
+    .dashBanner .coverImg {
         display: none;
     }
 }

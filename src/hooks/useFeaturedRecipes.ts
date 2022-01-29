@@ -1,29 +1,59 @@
-import { collection, getDocs, limit, query, where } from "firebase/firestore";
+import {
+    collection,
+    DocumentSnapshot,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    startAfter,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
 import { Recipe } from "../modules";
 
-export function useFeaturedRecipes(max: number = 10): [Recipe[], boolean] {
+export function useFeaturedRecipes(): [Recipe[], boolean, () => void] {
     const [recipes, setRecipes] = useState<Recipe[]>([]);
     const [loading, setLoading] = useState(true);
+    const [lastDocSnap, setLastDocSnap] = useState<
+        DocumentSnapshot | undefined
+    >(undefined);
 
     useEffect(() => {
-        const q = query(
+        handleLoadMore();
+    }, []);
+
+    function handleLoadMore() {
+        setLoading(true);
+        let q = query(
             collection(db, "recipes"),
-            where("subtitle", "!=", ""),
-            limit(max)
+            orderBy("coverImg", "desc"),
+            orderBy("subtitle", "desc"),
+            limit(12)
         );
+
+        if (lastDocSnap) {
+            q = query(
+                collection(db, "recipes"),
+                orderBy("coverImg", "desc"),
+                orderBy("subtitle", "desc"),
+                startAfter(lastDocSnap),
+                limit(12)
+            );
+        }
 
         getDocs(q).then((querySnapshot) => {
             const dbRecipes: Recipe[] = [];
+            let thisDocSnap: DocumentSnapshot | undefined = undefined;
 
             querySnapshot.forEach((doc) => {
+                thisDocSnap = doc;
                 const data = doc.data();
                 dbRecipes.push(
                     new Recipe(
                         doc.id,
                         data.title,
                         data.subtitle,
+                        data.coverImg,
                         data.notes,
                         data.rating,
                         data.tags,
@@ -33,10 +63,11 @@ export function useFeaturedRecipes(max: number = 10): [Recipe[], boolean] {
                 );
             });
 
-            setRecipes(dbRecipes);
+            setLastDocSnap(thisDocSnap);
+            setRecipes([...recipes, ...dbRecipes]);
             setLoading(false);
         });
-    }, [max]);
+    }
 
-    return [recipes, loading];
+    return [recipes, loading, handleLoadMore];
 }

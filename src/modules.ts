@@ -2,10 +2,21 @@ import { doc, setDoc } from "firebase/firestore";
 import { db } from "./firebase";
 import { toID } from "./utils";
 
+export const units = [
+    { name: "teaspoon", alias: ["tsp", "teaspoon", "teaspoons"] },
+    { name: "tablespoon", alias: ["Tbsp", "tablespoon", "tablespoons"] },
+    { name: "cup", alias: ["C", "cup", "cups"] },
+    { name: "gram", alias: ["g", "gram", "grams"] },
+    { name: "Kilogram", alias: ["Kg", "Kilogram", "Kilograms"] },
+];
+
+export const ingrModifiers = ["standard", "large", "chopped"];
+
 export class Recipe {
     id: string;
     title: string;
     subtitle: string;
+    coverImg: string;
     notes: string;
 
     rating: number;
@@ -18,6 +29,7 @@ export class Recipe {
         id: string,
         title: string,
         subtitle: string,
+        coverImg: string,
         notes: string,
         rating: number,
         tags: string[],
@@ -27,6 +39,7 @@ export class Recipe {
         this.id = toID(id);
         this.title = title;
         this.subtitle = subtitle;
+        this.coverImg = coverImg || "";
         this.notes = notes;
 
         this.rating = rating;
@@ -40,6 +53,8 @@ export class Recipe {
             id: this.id,
             title: this.title,
             subtitle: this.subtitle,
+            notes: this.notes,
+            coverImg: this.coverImg,
             tags: this.tags,
             ingredients: this.ingredients,
             steps: this.steps,

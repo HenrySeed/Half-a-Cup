@@ -35,6 +35,7 @@ export async function getRecipe(id: string) {
                 docSnap.id,
                 data.title,
                 data.subtitle,
+                data.coverImg,
                 data.notes || "",
                 data.rating,
                 data.tags,

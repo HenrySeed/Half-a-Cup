@@ -16,10 +16,11 @@ export function FavButton({
                 <IconButton
                     size="small"
                     color="primary"
-                    onClick={() => {
+                    onClick={(e) => {
                         isFav
                             ? user.unFavRecipe(recipeID)
                             : user.favRecipe(recipeID);
+                        e.stopPropagation();
                     }}
                 >
                     {isFav ? <Favorite /> : <FavoriteBorder />}

@@ -185,7 +185,7 @@ export function LoginDialog({
         const auth = getAuth();
         signInWithPopup(auth, googleAUthProvider)
             .then((result) => {
-                const user = result.user;
+                // const user = result.user;
                 onClose();
                 notify(`[loginWithGoogle] Logged in successfully`, "success");
                 setIsLoadingGoogle(false);
@@ -203,7 +203,6 @@ export function LoginDialog({
         setIsLoadingEmail(true);
 
         function admitUser(userCredential: UserCredential) {
-            const user = userCredential.user;
             onClose();
             notify(`[loginWithEmail] Logged in successfully`, "success");
             setIsLoadingEmail(false);
@@ -269,9 +268,24 @@ export function LoginDialog({
                     {alert?.alert}
                 </Alert>
             </Snackbar>
-            <Dialog open={open} onClose={() => onClose()}>
-                <DialogContent style={{ padding: "20px", width: "300px" }}>
-                    <Typography variant="h3" gutterBottom>
+            <Dialog
+                open={open}
+                onClose={() => onClose()}
+                PaperProps={{
+                    style: {
+                        margin: 0,
+                        height: "100%",
+                        maxHeight: "460px",
+                        maxWidth: "400px",
+                    },
+                }}
+            >
+                <DialogContent style={{ minWidth: "280px", padding: "20px" }}>
+                    <Typography
+                        variant="h3"
+                        gutterBottom
+                        style={{ textAlign: "center" }}
+                    >
                         Login
                     </Typography>
                     <Grid container spacing={2} style={{ marginTop: "10px" }}>

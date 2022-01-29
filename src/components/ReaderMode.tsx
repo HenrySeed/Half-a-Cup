@@ -9,6 +9,7 @@ import { Close, NavigateBefore, NavigateNext } from "@material-ui/icons";
 import { useEffect, useRef, useState } from "react";
 import ReactSwipe from "react-swipe";
 import { Recipe } from "../modules";
+import { getIngredientName } from "../utils";
 import "./ReaderMode.css";
 
 export function ReaderMode({
@@ -23,15 +24,43 @@ export function ReaderMode({
     const theme = useTheme();
 
     useEffect(() => {
-        document.addEventListener("keydown", (e) => {
+        const arrowListener = (e: any) => {
             if (e.key === "ArrowLeft") {
                 swiper.current.prev();
             }
             if (e.key === "ArrowRight") {
                 swiper.current.next();
             }
-        });
+        };
+
+        document.addEventListener("keydown", arrowListener);
+        return () => document.removeEventListener("keydown", arrowListener);
     }, [swiper]);
+
+    let ingredientNames = recipe.ingredients.map((ingr) =>
+        getIngredientName(ingr)
+    );
+
+    console.log(ingredientNames);
+
+    const recipeSteps: { step: string; ingredients: string[] }[] = [];
+    for (const step of recipe.steps) {
+        const usedIngredients: string[] = [];
+        const remaining: string[] = [];
+
+        ingredientNames.forEach((val, i) => {
+            // find any ingredients in step
+            if (step.includes(val)) {
+                usedIngredients.push(val);
+            } else {
+                remaining.push(val);
+            }
+        });
+        ingredientNames = remaining;
+        recipeSteps.push({ step: step, ingredients: usedIngredients });
+    }
+
+    console.log(recipeSteps);
 
     return (
         <div>
@@ -56,10 +85,17 @@ export function ReaderMode({
                     disableScroll: false,
                 }}
             >
-                {recipe.steps.map((page, i) => (
+                {recipeSteps.map((page, i) => (
                     <span className="swipePanelContainer">
                         <Card key={i} className="swipePanel">
-                            <CardContent>{page}</CardContent>
+                            <CardContent>
+                                {page.step}
+                                <ul>
+                                    {page.ingredients.map((val) => (
+                                        <li>{val}</li>
+                                    ))}
+                                </ul>
+                            </CardContent>
                         </Card>
                     </span>
                 ))}
