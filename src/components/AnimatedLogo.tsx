@@ -33,8 +33,12 @@ export function AnimatedLogo() {
     }, [index, logos.length]);
 
     return (
-        <span>
-            <Typography className="logo" variant="h1">
+        <div style={{ width: "330px" }}>
+            <Typography
+                className="logo"
+                variant="h1"
+                style={{ width: "330px" }}
+            >
                 Half a Cup
             </Typography>
             <div
@@ -43,7 +47,7 @@ export function AnimatedLogo() {
                     maxWidth: "318px",
                     height: "80px",
                     overflow: "hidden",
-                    float: "right",
+                    marginLeft: "5%",
                     position: "relative",
                 }}
             >
@@ -62,6 +66,6 @@ export function AnimatedLogo() {
                     />
                 ))}
             </div>
-        </span>
+        </div>
     );
 }

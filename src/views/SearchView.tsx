@@ -1,11 +1,5 @@
-import {
-    getDocs,
-    query,
-    collection,
-    DocumentSnapshot,
-} from "@firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Button, Typography, useTheme } from "@material-ui/core";
-import { where } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
@@ -13,55 +7,58 @@ import { RecipeGrid } from "../components/RecipeGrid";
 import { db } from "../firebase";
 import { HACUser, Recipe } from "../modules";
 
-export function SearchView({ user }: { user: HACUser | null }) {
+export function SearchView({
+    user,
+    searchData,
+}: {
+    user: HACUser | null;
+    searchData: Map<string, string> | null;
+}) {
     let { searchVal } = useParams<{ searchVal: string }>();
     const theme = useTheme();
-    const [recipes, setRecipes] = useState<Recipe[]>([]);
-    const [loading, setLoading] = useState(false);
-
+    const [recipes, setRecipes] = useState<Recipe[] | null>(null);
+    const [loading, setLoading] = useState(true);
     const decodedSearchVal = decodeURIComponent(searchVal);
 
-    async function searchRecipes() {
+    async function searchRecipes(validSearchData: Map<string, string>) {
         setLoading(true);
         const words = decodedSearchVal.split(" ").slice(0, 10);
-        const output = (
-            await Promise.all(
-                words.map((val) =>
-                    getDocs(
-                        query(
-                            collection(db, "recipes"),
-                            where("tags", "array-contains", val)
-                        )
-                    ).then((querySnapshot) => {
-                        const dbRecipes: Recipe[] = [];
-                        querySnapshot.forEach((doc) => {
-                            const data = doc.data();
-                            dbRecipes.push(
-                                new Recipe(
-                                    doc.id,
-                                    data.title,
-                                    data.subtitle,
-                                    data.coverImg,
-                                    data.notes,
-                                    data.rating,
-                                    data.tags,
-                                    data.ingredients,
-                                    data.steps
-                                )
-                            );
-                        });
-                        return dbRecipes;
-                    })
+        const validIDs = Array.from(validSearchData)
+            .filter(([_, val]) =>
+                words.some((word) =>
+                    val.toLowerCase().includes(word.toLowerCase())
                 )
             )
-        ).flat();
+            .map(([key]) => key);
+
+        const output = await Promise.all(
+            validIDs.map((id) =>
+                getDoc(doc(db, "recipes", id)).then((docSnap) => {
+                    const data = docSnap.data();
+                    return new Recipe(
+                        data?.id || "",
+                        data?.title || "",
+                        data?.subtitle || "",
+                        data?.coverImg || "",
+                        data?.notes || "",
+                        data?.rating || "",
+                        data?.tags || [],
+                        data?.ingredients || [],
+                        data?.steps || []
+                    );
+                })
+            )
+        );
+
         setLoading(false);
         setRecipes(output);
     }
 
     useEffect(() => {
-        searchRecipes();
-    }, [searchVal]);
+        if (searchData !== null && searchVal.trim() !== "") {
+            searchRecipes(searchData);
+        }
+    }, [searchVal, searchData]);
 
     return (
         <>
@@ -69,7 +66,7 @@ export function SearchView({ user }: { user: HACUser | null }) {
                 className="bgBanner"
                 style={{
                     backgroundColor: theme.palette.primary.main,
-                    height: "150px",
+                    height: "200px",
                 }}
             ></div>
             <div
@@ -77,22 +74,30 @@ export function SearchView({ user }: { user: HACUser | null }) {
                     position: "relative",
                     maxWidth: "1400px",
                     width: "90%",
-                    margin: "5vh auto 5vh auto",
+                    margin: "100px auto 5vh auto",
                 }}
             >
                 <Typography
-                    variant="h2"
+                    variant="h1"
                     gutterBottom
-                    style={{ color: "white" }}
+                    color="textPrimary"
+                    style={{ color: "white", textAlign: "center" }}
                 >
-                    Results for "{decodedSearchVal}"
+                    "{decodedSearchVal}" Recipes
                 </Typography>
                 {loading ? (
-                    <CenteredProgress style={{ marginTop: "10vh" }} />
+                    <CenteredProgress
+                        style={{
+                            marginTop: "10vh",
+                            color: theme.palette.primary.main,
+                        }}
+                    />
                 ) : (
                     <div style={{ marginTop: "100px" }}>
-                        <RecipeGrid recipes={recipes} user={user} ordered />
-                        {recipes.length === 0 && (
+                        {recipes && (
+                            <RecipeGrid recipes={recipes} user={user} ordered />
+                        )}
+                        {recipes && recipes.length === 0 && (
                             <Typography
                                 variant="body1"
                                 style={{
@@ -100,6 +105,7 @@ export function SearchView({ user }: { user: HACUser | null }) {
                                     textAlign: "center",
                                     margin: "10vh auto",
                                 }}
+                                color="textPrimary"
                             >
                                 I'm sorry, we couldnt find any recipes matching{" "}
                                 "{searchVal}". You can see all our recipes on

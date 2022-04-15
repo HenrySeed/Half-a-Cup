@@ -33,11 +33,12 @@ export function HomeView({ user }: { user: HACUser | null }) {
                 style={{ backgroundColor: theme.palette.primary.main }}
                 className="dashBanner"
             >
-                <div className="dashBannerContainer">
-                    <img src={cookImg} alt="" className="coverImg" />
-                    <div className="bannerText">
+                <div className="dashContainer">
+                    <div className="rollingLogo">
                         <AnimatedLogo />
                     </div>
+
+                    <img src={cookImg} alt="" className="coverImg" />
                 </div>
             </div>
             {user && user.savedRecipes.length > 0 && (

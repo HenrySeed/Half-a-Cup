@@ -171,6 +171,15 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
             );
             setIsSaving(true);
             console.log(`[EditRecipe] Saving`, newRecipe.toPlain());
+
+            // update the search Ref collection
+            setDoc(doc(db, "searchData", id), {
+                data:
+                    newRecipe.ingredients.join(";") +
+                    newRecipe.title +
+                    newRecipe.subtitle,
+            });
+
             setDoc(docRef, newRecipe.toPlain())
                 .then(() => {
                     setIsSaving(false);

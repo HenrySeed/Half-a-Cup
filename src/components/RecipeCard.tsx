@@ -71,6 +71,7 @@ export function RecipeCard({
                             <Grid item xs={12}>
                                 <Link to={`/recipe/${recipe.id}`}>
                                     <Typography
+                                        color="textPrimary"
                                         variant={"h2"}
                                         className={classes.title}
                                     >
@@ -138,7 +139,11 @@ export function RecipeCard({
                                         )}
                                     </ul>
                                 </div>
-                                <div style={{ textAlign: "center" }}>...</div>
+                                {recipe.subtitle && (
+                                    <div style={{ textAlign: "center" }}>
+                                        ...
+                                    </div>
+                                )}
                             </>
                         )}
                     </Grid>

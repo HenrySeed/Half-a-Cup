@@ -10,60 +10,47 @@
     margin-bottom: 20px;
 }
 
-.dashBanner .dashBannerContainer {
-    max-width: 1000px;
+.dashBanner .dashContainer {
+    max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
-    position: relative;
-    height: 100%;
 }
 
-.dashBannerContainer .bannerText {
-    padding-top: 20px;
+.dashBanner .rollingLogo {
+    margin-left: 100px;
+    padding-top: 30px;
 }
 
 .dashBanner .coverImg {
-    position: absolute;
-    bottom: -30px;
-    left: 0;
-    width: 60vw;
-    max-width: 650px;
-    margin-right: -20%;
-    float: left;
+    width: 900px;
+    margin-top: -180px;
+}
+
+@media screen and (max-width: 1200px) {
+    .dashBanner .coverImg {
+        margin-top: -60px;
+        width: 700px;
+    }
+    .dashBanner .rollingLogo {
+        margin-left: 5vw;
+        padding-top: 3vw;
+    }
 }
 
 @media screen and (max-width: 800px) {
-    .dashBanner .coverImg {
-        width: 75%;
-        bottom: 0;
+    .dashBanner .rollingLogo {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
     }
-}
-@media screen and (max-width: 700px) {
-    .dashBanner .coverImg {
-        width: 85%;
-    }
-}
-@media screen and (max-width: 530px) {
-    .dashBanner .coverImg {
-        width: 100%;
-        margin: 0;
-    }
-}
 
-/* Small height screens */
-@media screen and (max-height: 700px) {
     .dashBanner {
-        height: 300px;
+        height: calc(60vw + 100px);
     }
 
     .dashBanner .coverImg {
-        width: 50%;
-        max-width: 415px;
-    }
-}
-
-@media screen and (max-height: 700px) and (max-width: 620px) {
-    .dashBanner .coverImg {
-        display: none;
+        max-width: 900px;
+        margin-top: -10vw;
+        width: calc(100vw - 50px);
     }
 }

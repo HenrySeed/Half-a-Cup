@@ -1,6 +1,14 @@
-import { AppBar, Grid, Toolbar, Typography } from "@material-ui/core";
+import {
+    AppBar,
+    Grid,
+    IconButton,
+    Toolbar,
+    Tooltip,
+    Typography,
+    useMediaQuery,
+} from "@material-ui/core";
 import { createTheme, ThemeProvider } from "@material-ui/core/styles";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, Route, Switch, useLocation } from "react-router-dom";
 import "./App.css";
 import { LoginButton } from "./components/LoginButton";
@@ -14,58 +22,94 @@ import { EditRecipe } from "./views/EditRecipe";
 import { HomeView } from "./views/HomeView";
 import { RecipeView } from "./views/RecipeView";
 import { SearchView } from "./views/SearchView";
+import { getDocs, collection } from "firebase/firestore";
+import { db } from "./firebase";
+import { Brightness2, WbSunny } from "@material-ui/icons";
 
 function App() {
-    const theme = createTheme({
-        palette: {
-            primary: {
-                main: "#f44336",
-            },
-            secondary: {
-                main: "#222222",
-            },
-        },
-        typography: {
-            h1: {
-                fontSize: "4rem",
-                fontWeight: 600,
-            },
-            h2: {
-                fontSize: "2.5rem",
-                fontWeight: 500,
-            },
-            h3: {
-                fontSize: "1.7rem",
-                fontWeight: 500,
-            },
-        },
-        props: {
-            MuiButton: {
-                variant: "outlined",
-            },
-            MuiTextField: {
-                color: "secondary",
-                variant: "outlined",
-            },
-        },
-        overrides: {
-            MuiPaper: {
-                rounded: {
-                    borderRadius: "10px",
-                },
-            },
-            MuiCardActions: {
-                root: {
-                    padding: "16px",
-                },
-            },
-        },
-    });
-
+    const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+    const [darkMode, setDarkMode] = useState(false);
     const tagLine = useTagline();
     const [user, setUser] = useState<HACUser | null>(null);
-
+    const [searchData, setSearchData] = useState<Map<string, string> | null>(
+        null
+    );
     let location = useLocation();
+
+    useEffect(() => {
+        if (user?.darkMode) {
+            setDarkMode(true);
+        } else if (prefersDarkMode) {
+            setDarkMode(true);
+        } else {
+            setDarkMode(false);
+        }
+    }, [prefersDarkMode, user]);
+
+    const theme = useMemo(
+        () =>
+            createTheme({
+                palette: {
+                    type: darkMode ? "dark" : "light",
+                    primary: {
+                        main: "#f44336",
+                    },
+                    secondary: {
+                        main: "#222222",
+                    },
+                    background: {
+                        default: darkMode ? "#111" : "#FFF",
+                        paper: darkMode ? "#111" : "#FFF",
+                    },
+                },
+                typography: {
+                    h1: {
+                        fontSize: "4rem",
+                        fontWeight: 600,
+                    },
+                    h2: {
+                        fontSize: "2.5rem",
+                        fontWeight: 500,
+                    },
+                    h3: {
+                        fontSize: "1.7rem",
+                        fontWeight: 500,
+                    },
+                },
+                props: {
+                    MuiButton: {
+                        variant: "outlined",
+                    },
+                    MuiTextField: {
+                        color: "secondary",
+                        variant: "outlined",
+                    },
+                },
+                overrides: {
+                    MuiPaper: {
+                        rounded: {
+                            borderRadius: "10px",
+                        },
+                    },
+                    MuiCardActions: {
+                        root: {
+                            padding: "16px",
+                        },
+                    },
+                },
+            }),
+        [darkMode]
+    );
+
+    useEffect(() => {
+        getDocs(collection(db, "searchData")).then((querySnapshot) => {
+            const newMap = new Map<string, string>();
+            querySnapshot.forEach((doc) => {
+                newMap.set(doc.id, doc.data().data);
+            });
+            setSearchData(newMap);
+        });
+    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -81,7 +125,10 @@ function App() {
 
     return (
         <ThemeProvider theme={theme}>
-            <div className="App">
+            <div
+                className="App"
+                style={{ backgroundColor: theme.palette.background.default }}
+            >
                 <AppBar position="static">
                     <Toolbar>
                         <Link to="/" style={{ flexGrow: 1 }}>
@@ -99,6 +146,23 @@ function App() {
                             )}
                         </Link>
                         <SearchBox />
+                        {user && (
+                            <Tooltip
+                                title={darkMode ? "Light Mode" : "Dark Mode"}
+                            >
+                                <IconButton
+                                    onClick={() => {
+                                        user?.saveTheme(
+                                            darkMode ? "LIGHT" : "DARK"
+                                        );
+                                        setDarkMode(!darkMode);
+                                    }}
+                                    style={{ color: "white" }}
+                                >
+                                    {darkMode ? <WbSunny /> : <Brightness2 />}
+                                </IconButton>
+                            </Tooltip>
+                        )}
                         <NewRecipeButton user={user} />
                         <LoginButton
                             user={user}
@@ -114,13 +178,14 @@ function App() {
                         <RecipeView user={user} />
                     </Route>
                     <Route path="/search/:searchVal">
-                        <SearchView user={user} />
+                        <SearchView user={user} searchData={searchData} />
                     </Route>
                     <Route path="/">
                         <HomeView user={user} />
                     </Route>
                 </Switch>
             </div>
+
             <footer>
                 <Grid
                     container

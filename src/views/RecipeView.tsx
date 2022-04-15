@@ -34,7 +34,10 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                         height: "300px",
                     }}
                 ></div>
-                <div className="recipeContainer">
+                <div
+                    className="recipeContainer"
+                    style={{ backgroundColor: theme.palette.background.paper }}
+                >
                     <CenteredProgress style={{ marginTop: "10vh" }} />
                 </div>
             </>
@@ -60,7 +63,10 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                 }}
                 className="bgBanner"
             ></div>
-            <div className="recipeContainer">
+            <div
+                className="recipeContainer"
+                style={{ backgroundColor: theme.palette.background.paper }}
+            >
                 {recipe.coverImg && (
                     <div
                         className="recipeCoverImg"
@@ -72,11 +78,18 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                 <CardContent>
                     <Grid container className="recipeHeader" spacing={3}>
                         <Grid item xs={12} sm={9} md={10}>
-                            <Typography variant="h1" gutterBottom>
+                            <Typography
+                                variant="h1"
+                                gutterBottom
+                                color="textPrimary"
+                            >
                                 {recipe.title}
                             </Typography>
                             {recipe.subtitle && (
-                                <Typography variant="subtitle1">
+                                <Typography
+                                    variant="subtitle1"
+                                    color="textSecondary"
+                                >
                                     {recipe.subtitle}
                                 </Typography>
                             )}
@@ -128,19 +141,30 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                         height: "fit-content",
                                     }}
                                 >
-                                    <Typography variant="h3">
+                                    <Typography
+                                        variant="h3"
+                                        color="textPrimary"
+                                    >
                                         Ingredients
                                     </Typography>
                                     <ul>
                                         {recipe.ingredients.map(
                                             (ingredient, i) =>
                                                 ingredient[0] === "#" ? (
-                                                    <h3 key={i}>
+                                                    <Typography
+                                                        variant="h4"
+                                                        color="textPrimary"
+                                                    >
                                                         {ingredient.slice(2)}
-                                                    </h3>
+                                                    </Typography>
                                                 ) : (
                                                     <li key={i}>
-                                                        {ingredient}
+                                                        <Typography
+                                                            variant="body1"
+                                                            color="textPrimary"
+                                                        >
+                                                            {ingredient}
+                                                        </Typography>
                                                     </li>
                                                 )
                                         )}
@@ -148,12 +172,19 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                 </div>
                             </Grid>
                             <Grid item xs={12} md={8} lg={9}>
-                                <Typography variant="h3">
+                                <Typography variant="h3" color="textPrimary">
                                     Instructions
                                 </Typography>
                                 <ul className="instructionList">
                                     {recipe.steps.map((step, i) => (
-                                        <li key={i}>{step}</li>
+                                        <li key={i}>
+                                            <Typography
+                                                variant="body1"
+                                                color="textPrimary"
+                                            >
+                                                {step}
+                                            </Typography>
+                                        </li>
                                     ))}
                                 </ul>
                             </Grid>

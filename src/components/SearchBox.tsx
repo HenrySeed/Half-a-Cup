@@ -45,7 +45,7 @@ const useStyles = makeStyles({
         position: "absolute",
         top: "6px",
         left: "3%",
-        width: "91%",
+        width: "90%",
         zIndex: 1000,
     },
 });

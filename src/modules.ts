@@ -69,14 +69,15 @@ export class HACUser {
     displayName: string;
     savedRecipes: { id: string; date: number }[];
     accountCreated: number;
+    darkMode: boolean;
 
     constructor(uid: string, data: any) {
         this.uid = uid;
-
         this.savedRecipes = data.savedRecipes || [];
         this.email = data.email || "";
         this.displayName = data.displayName || "";
         this.accountCreated = data.accountCreated || Date.now();
+        this.darkMode = data.darkMode || false;
     }
 
     public isAdmin() {
@@ -92,13 +93,17 @@ export class HACUser {
         });
     }
 
+    public saveTheme(mode: "LIGHT" | "DARK") {
+        console.log(`[saveTheme] Saving Theme ${mode}`);
+        this.darkMode = mode === "DARK";
+        this.save();
+    }
+
     public favRecipe(id: string) {
         console.log(`[favRecipe] Favouriting ${id}`);
         if (!this.hasSaved(id)) {
             this.savedRecipes.push({ id: id, date: Date.now() });
-
-            const docRef = doc(db, "Users", this.uid);
-            setDoc(docRef, this.toPlain());
+            this.save();
         }
     }
 
@@ -107,9 +112,14 @@ export class HACUser {
         const index = this.savedRecipes.findIndex((val) => val.id === id);
         if (index > -1) {
             this.savedRecipes.splice(index, 1);
-            const docRef = doc(db, "Users", this.uid);
-            setDoc(docRef, this.toPlain());
+            this.save();
         }
+    }
+
+    private save() {
+        console.log(`Saving`, this.toPlain());
+        const docRef = doc(db, "Users", this.uid);
+        setDoc(docRef, this.toPlain());
     }
 
     public hasSaved(id: string) {
@@ -122,6 +132,7 @@ export class HACUser {
             savedRecipes: this.savedRecipes,
             email: this.email,
             displayName: this.displayName,
+            darkMode: this.darkMode,
         };
     }
 }

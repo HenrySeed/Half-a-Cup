@@ -1,5 +1,6 @@
 .App {
     min-height: calc(100vh - 100px);
+    padding-bottom: 150px;
 }
 .bgBanner {
     height: 60vh;
@@ -12,7 +13,6 @@
 }
 
 footer {
-    margin-top: 150px;
     background-color: #222;
     padding: 60px 0;
     color: #ffffff;
