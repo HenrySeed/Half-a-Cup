@@ -36,3 +36,14 @@ li {
     margin-bottom: 30px;
     line-height: 1.5;
 }
+
+.ingredientsList {
+    columns: 1;
+}
+
+@media screen and (max-width: 959px) {
+    .ingredientsList {
+        margin-bottom: 40px;
+        columns: 2;
+    }
+}

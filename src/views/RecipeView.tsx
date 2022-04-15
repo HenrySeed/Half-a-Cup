@@ -147,7 +147,7 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                     >
                                         Ingredients
                                     </Typography>
-                                    <ul>
+                                    <ul className="ingredientsList">
                                         {recipe.ingredients.map(
                                             (ingredient, i) =>
                                                 ingredient[0] === "#" ? (
