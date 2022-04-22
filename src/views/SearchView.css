@@ -1,0 +1,41 @@
+.searchTitleContainer {
+    display: inline-block;
+    vertical-align: top;
+    max-width: calc(100% - 400px);
+}
+
+.searchTitle {
+    color: white !important;
+    height: 280px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+}
+
+.searchImg {
+    height: 400px;
+    margin-top: 0px;
+    vertical-align: top;
+    transform: scaleX(-1);
+    float: right;
+}
+
+.searchRecipeContainer {
+    margin-top: 150px;
+}
+
+@media screen and (max-width: 900px) {
+    .searchImg {
+        display: none !important;
+    }
+    .searchTitle {
+        text-align: center;
+    }
+    .searchTitleContainer {
+        max-width: none;
+        width: 100%;
+    }
+    .searchRecipeContainer {
+        margin-top: 100px;
+    }
+}

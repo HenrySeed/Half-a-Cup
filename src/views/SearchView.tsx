@@ -1,12 +1,13 @@
 import { doc, getDoc } from "firebase/firestore";
-import { Button, Typography, useTheme } from "@material-ui/core";
+import { Button, Grid, Typography, useTheme } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
 import { RecipeGrid } from "../components/RecipeGrid";
 import { db } from "../firebase";
 import { HACUser, Recipe } from "../modules";
-import cake from "../res/SVG/cake.svg";
+import cake from "../res/SVG/cooking_4.svg";
+import "./SearchView.css";
 
 export function SearchView({
     user,
@@ -66,25 +67,29 @@ export function SearchView({
             <div
                 style={{
                     backgroundColor: theme.palette.primary.main,
-                    height: "200px",
-                    display: "flex",
-                    alignItems: "flex-end",
-                    justifyContent: "center",
+                    height: "300px",
                 }}
             >
-                <Typography
-                    variant="h1"
-                    gutterBottom
-                    color="textPrimary"
+                <div
                     style={{
-                        color: "white",
-                        textAlign: "center",
-                        padding: "0 20px",
-                        paddingTop: "5vw",
+                        marginLeft: "auto",
+                        marginRight: "auto",
+                        maxWidth: "1000px",
+                        width: "90%",
                     }}
                 >
-                    "{decodedSearchVal}" Recipes
-                </Typography>
+                    <div className="searchTitleContainer">
+                        <Typography
+                            variant="h1"
+                            gutterBottom
+                            color="textPrimary"
+                            className="searchTitle"
+                        >
+                            "{decodedSearchVal}" Recipes
+                        </Typography>
+                    </div>
+                    <img src={cake} alt="" className="searchImg" />
+                </div>
             </div>
             <div
                 style={{
@@ -102,7 +107,7 @@ export function SearchView({
                         }}
                     />
                 ) : (
-                    <div style={{ marginTop: "100px" }}>
+                    <div className="searchRecipeContainer">
                         {recipes && (
                             <RecipeGrid recipes={recipes} user={user} ordered />
                         )}
@@ -113,38 +118,25 @@ export function SearchView({
                                     maxWidth: "600px",
                                     textAlign: "center",
                                     margin: "1vh auto",
+                                    fontSize: "16pt",
                                 }}
                                 color="textPrimary"
                             >
-                                <div
-                                    style={{
-                                        backgroundColor:
-                                            theme.palette.primary.main,
-                                        width: "60vw",
-                                        height: "60vw",
-                                        maxWidth: "400px",
-                                        maxHeight: "400px",
-                                        margin: "0 auto",
-                                        borderRadius: "500px",
-                                    }}
-                                >
-                                    <img
-                                        src={cake}
-                                        alt=""
-                                        style={{
-                                            marginTop: "-6px",
-                                            marginLeft: "4px",
-                                            width: "60vw",
-                                            maxWidth: "400px",
-                                        }}
-                                    />
-                                </div>
-                                I'm sorry, we couldnt find any recipes matching{" "}
-                                "{searchVal}". You can see all our recipes on
-                                our home page <br />
+                                I'm sorry, I couldnt find "{searchVal}" in any
+                                of our recipes. You can browse all recipes on
+                                the home page <br />
                                 <br />
                                 <Link to="/">
-                                    <Button>Home</Button>
+                                    <Button
+                                        style={{
+                                            borderColor:
+                                                theme.palette.text.primary,
+                                            fontSize: "12pt",
+                                            padding: "8px 18px",
+                                        }}
+                                    >
+                                        Home
+                                    </Button>
                                 </Link>
                             </Typography>
                         )}
