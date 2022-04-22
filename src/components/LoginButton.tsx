@@ -9,6 +9,7 @@ import {
     InputAdornment,
     Snackbar,
     TextField,
+    useTheme,
     Tooltip,
     Typography,
 } from "@material-ui/core";
@@ -94,6 +95,7 @@ export function LoginDialog({
         alert: string;
         status: "error" | "success";
     } | null>(null);
+    const theme = useTheme();
 
     const [emailLogin, setEmailLogin] = useState(true);
     const [password, setPassword] = useState("");
@@ -461,8 +463,9 @@ export function LoginDialog({
                                                     height: "17px",
                                                     width: "17px",
                                                     marginRight: "11px",
+                                                    color: theme.palette.text
+                                                        .primary,
                                                 }}
-                                                color="secondary"
                                             />
                                         )}
                                         {emailLogin ? "Login" : "Sign Up"}

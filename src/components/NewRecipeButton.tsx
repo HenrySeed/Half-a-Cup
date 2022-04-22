@@ -98,7 +98,6 @@ export function NewRecipeButton({ user }: { user: HACUser | null }) {
                                     width: "17px",
                                     marginRight: "11px",
                                 }}
-                                color="secondary"
                             />
                         )}
                         Create

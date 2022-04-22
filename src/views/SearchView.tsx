@@ -6,6 +6,7 @@ import { CenteredProgress } from "../components/CenteredProgress";
 import { RecipeGrid } from "../components/RecipeGrid";
 import { db } from "../firebase";
 import { HACUser, Recipe } from "../modules";
+import cake from "../res/SVG/cake.svg";
 
 export function SearchView({
     user,
@@ -63,12 +64,28 @@ export function SearchView({
     return (
         <>
             <div
-                className="bgBanner"
                 style={{
                     backgroundColor: theme.palette.primary.main,
                     height: "200px",
+                    display: "flex",
+                    alignItems: "flex-end",
+                    justifyContent: "center",
                 }}
-            ></div>
+            >
+                <Typography
+                    variant="h1"
+                    gutterBottom
+                    color="textPrimary"
+                    style={{
+                        color: "white",
+                        textAlign: "center",
+                        padding: "0 20px",
+                        paddingTop: "5vw",
+                    }}
+                >
+                    "{decodedSearchVal}" Recipes
+                </Typography>
+            </div>
             <div
                 style={{
                     position: "relative",
@@ -77,14 +94,6 @@ export function SearchView({
                     margin: "100px auto 5vh auto",
                 }}
             >
-                <Typography
-                    variant="h1"
-                    gutterBottom
-                    color="textPrimary"
-                    style={{ color: "white", textAlign: "center" }}
-                >
-                    "{decodedSearchVal}" Recipes
-                </Typography>
                 {loading ? (
                     <CenteredProgress
                         style={{
@@ -101,12 +110,35 @@ export function SearchView({
                             <Typography
                                 variant="body1"
                                 style={{
-                                    width: "400px",
+                                    maxWidth: "600px",
                                     textAlign: "center",
-                                    margin: "10vh auto",
+                                    margin: "1vh auto",
                                 }}
                                 color="textPrimary"
                             >
+                                <div
+                                    style={{
+                                        backgroundColor:
+                                            theme.palette.primary.main,
+                                        width: "60vw",
+                                        height: "60vw",
+                                        maxWidth: "400px",
+                                        maxHeight: "400px",
+                                        margin: "0 auto",
+                                        borderRadius: "500px",
+                                    }}
+                                >
+                                    <img
+                                        src={cake}
+                                        alt=""
+                                        style={{
+                                            marginTop: "-6px",
+                                            marginLeft: "4px",
+                                            width: "60vw",
+                                            maxWidth: "400px",
+                                        }}
+                                    />
+                                </div>
                                 I'm sorry, we couldnt find any recipes matching{" "}
                                 "{searchVal}". You can see all our recipes on
                                 our home page <br />

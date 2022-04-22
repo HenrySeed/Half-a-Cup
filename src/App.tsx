@@ -37,12 +37,10 @@ function App() {
     let location = useLocation();
 
     useEffect(() => {
-        if (user?.darkMode) {
-            setDarkMode(true);
-        } else if (prefersDarkMode) {
-            setDarkMode(true);
+        if (user) {
+            setDarkMode(user.darkMode);
         } else {
-            setDarkMode(false);
+            setDarkMode(prefersDarkMode);
         }
     }, [prefersDarkMode, user]);
 
@@ -207,7 +205,7 @@ function App() {
                             gutterBottom
                             style={{ opacity: 0.5 }}
                         >
-                            © Henry Seed 2021
+                            © Henry Seed 2022
                         </Typography>
                     </Grid>
                     <Grid item style={{ padding: "10px" }}>

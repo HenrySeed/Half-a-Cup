@@ -47,3 +47,9 @@ li {
         columns: 2;
     }
 }
+@media screen and (max-width: 600px) {
+    .ingredientsList {
+        columns: 1;
+        margin-bottom: 40px;
+    }
+}

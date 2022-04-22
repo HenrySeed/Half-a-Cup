@@ -236,7 +236,7 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
             <Card
                 style={{
                     position: "relative",
-                    maxWidth: "1200px",
+                    maxWidth: "2000px",
                     width: "95%",
                     margin: "50px auto",
                 }}

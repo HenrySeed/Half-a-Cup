@@ -28,8 +28,8 @@
 
 @media screen and (max-width: 1200px) {
     .dashBanner .coverImg {
-        margin-top: -60px;
-        width: 700px;
+        margin-top: -120px;
+        width: 800px;
     }
     .dashBanner .rollingLogo {
         margin-left: 5vw;
@@ -37,7 +37,7 @@
     }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 900px) {
     .dashBanner .rollingLogo {
         width: fit-content;
         margin-left: auto;
