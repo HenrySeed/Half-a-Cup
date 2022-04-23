@@ -153,6 +153,7 @@ export function RecipeView({ user }: { user: HACUser | null }) {
                                                 ingredient[0] === "#" ? (
                                                     <Typography
                                                         variant="h4"
+                                                        className="ingredientHeading"
                                                         color="textPrimary"
                                                     >
                                                         {ingredient.slice(2)}

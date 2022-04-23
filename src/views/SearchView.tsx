@@ -24,17 +24,25 @@ export function SearchView({
 
     async function searchRecipes(validSearchData: Map<string, string>) {
         setLoading(true);
-        const words = decodedSearchVal.split(" ").slice(0, 10);
-        const validIDs = Array.from(validSearchData)
-            .filter(([_, val]) =>
-                words.some((word) =>
-                    val.toLowerCase().includes(word.toLowerCase())
-                )
-            )
-            .map(([key]) => key);
 
+        // make a priority queue for recipes matching words
+        const validIDMap: Map<string, number> = new Map();
+        for (const word of decodedSearchVal.split(" ")) {
+            for (const [id, val] of Array.from(validSearchData)) {
+                if (val.toLowerCase().includes(word.toLowerCase())) {
+                    validIDMap.set(id, validIDMap.get(id) || 1);
+                }
+            }
+        }
+
+        // sort recipes by how many times they match the search
+        const sortedIDs = Array.from(validIDMap).sort(
+            ([_a, aCount], [_b, bCount]) => bCount - aCount
+        );
+
+        // load each matching recipe
         const output = await Promise.all(
-            validIDs.map((id) =>
+            sortedIDs.map(([id]) =>
                 getDoc(doc(db, "recipes", id)).then((docSnap) => {
                     const data = docSnap.data();
                     return new Recipe(
