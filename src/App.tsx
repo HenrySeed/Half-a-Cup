@@ -25,6 +25,7 @@ import { SearchView } from "./views/SearchView";
 import { getDocs, collection } from "firebase/firestore";
 import { db } from "./firebase";
 import { Brightness2, WbSunny } from "@material-ui/icons";
+import { PageMissing } from "./components/PageMissing";
 
 function App() {
     const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -178,8 +179,11 @@ function App() {
                     <Route path="/search/:searchVal">
                         <SearchView user={user} searchData={searchData} />
                     </Route>
-                    <Route path="/">
+                    <Route exact path="/">
                         <HomeView user={user} />
+                    </Route>
+                    <Route>
+                        <PageMissing />
                     </Route>
                 </Switch>
             </div>

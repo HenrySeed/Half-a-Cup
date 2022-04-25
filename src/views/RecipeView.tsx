@@ -11,7 +11,7 @@ import { useHistory, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
 import { FavButton } from "../components/FavButton";
 import { ReaderMode } from "../components/ReaderMode";
-import { RecipeNotFound } from "../components/RecipeNotFound";
+import { PageMissing } from "../components/PageMissing";
 import { TagList } from "../components/TagList";
 import { useRecipe } from "../hooks/useRecipe";
 import { HACUser } from "../modules";
@@ -45,7 +45,7 @@ export function RecipeView({ user }: { user: HACUser | null }) {
     }
 
     if (recipe === null) {
-        return <RecipeNotFound id={id} />;
+        return <PageMissing id={id} />;
     }
 
     if (focusMode) {

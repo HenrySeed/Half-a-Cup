@@ -1,5 +1,5 @@
 import { doc, getDoc } from "firebase/firestore";
-import { Button, Grid, Typography, useTheme } from "@material-ui/core";
+import { Button, Typography, useTheme } from "@material-ui/core";
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";

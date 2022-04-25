@@ -20,7 +20,7 @@ import { doc, setDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { CenteredProgress } from "../components/CenteredProgress";
-import { RecipeNotFound } from "../components/RecipeNotFound";
+import { PageMissing } from "../components/PageMissing";
 import { StarRating } from "../components/StarRating";
 import { archiveRecipe, db } from "../firebase";
 import { useRecipe } from "../hooks/useRecipe";
@@ -214,7 +214,7 @@ export function EditRecipe({ user }: { user: HACUser | null }) {
     }
 
     if (!recipe) {
-        return <RecipeNotFound id={id} />;
+        return <PageMissing id={id} />;
     }
 
     return (
