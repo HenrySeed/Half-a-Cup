@@ -11,6 +11,7 @@ import { getRandFromArray } from "../utils";
 import "./HomeView.css";
 import { useFeaturedRecipes } from "../hooks/useFeaturedRecipes";
 import { AnimatedLogo } from "../components/AnimatedLogo";
+import { Link } from "react-router-dom";
 
 export function HomeView({ user }: { user: HACUser | null }) {
     const [recipes, loadingRecipes, handleLoadMore] = useFeaturedRecipes();
@@ -36,6 +37,18 @@ export function HomeView({ user }: { user: HACUser | null }) {
                 <div className="dashContainer">
                     <div className="rollingLogo">
                         <AnimatedLogo />
+                        <Typography variant="body1" className="openSourceText">
+                            The Open Source Recipe Book
+                            <br />
+                            Check out our{" "}
+                            <a
+                                href="https://github.com/HenrySeed/Half-a-Cup"
+                                rel="noopener noreferrer"
+                                target="_blank"
+                            >
+                                GitHub
+                            </a>
+                        </Typography>
                     </div>
 
                     <img src={cookImg} alt="" className="coverImg" />
