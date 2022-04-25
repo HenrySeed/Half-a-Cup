@@ -26,19 +26,21 @@ export function SearchView({
         setLoading(true);
 
         // make a priority queue for recipes matching words
-        const validIDMap: Map<string, number> = new Map();
+        const validIDMap: Map<string, string[]> = new Map();
         for (const word of decodedSearchVal.split(" ")) {
             for (const [id, val] of Array.from(validSearchData)) {
                 if (val.toLowerCase().includes(word.toLowerCase())) {
-                    validIDMap.set(id, validIDMap.get(id) || 1);
+                    validIDMap.set(id, [...(validIDMap.get(id) || []), word]);
                 }
             }
         }
 
         // sort recipes by how many times they match the search
         const sortedIDs = Array.from(validIDMap).sort(
-            ([_a, aCount], [_b, bCount]) => bCount - aCount
+            ([_a, awords], [_b, bwords]) => bwords.length - awords.length
         );
+
+        console.log(sortedIDs);
 
         // load each matching recipe
         const output = await Promise.all(
