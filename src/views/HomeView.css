@@ -8,15 +8,13 @@
     text-align: right;
     padding-bottom: 60px;
     margin-bottom: 20px;
+    min-height: 450px;
 }
 
 .dashBanner .dashContainer {
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
-}
-.dashBanner a:hover {
-    text-decoration: underline;
 }
 
 .dashBanner .rollingLogo {
@@ -35,12 +33,12 @@
 
 .dashBanner .coverImg {
     width: 900px;
-    margin-top: -230px;
+    margin-top: -260px;
 }
 
 @media screen and (max-width: 1300px) {
     .dashBanner .coverImg {
-        margin-top: -100px;
+        margin-top: -130px;
         width: 700px;
     }
     .dashBanner .rollingLogo {
@@ -57,12 +55,15 @@
     }
 
     .dashBanner {
-        height: calc(60vw + 170px);
+        height: calc(60vw + 190px);
     }
 
     .dashBanner .coverImg {
-        max-width: 850px;
-        margin-top: -8vw;
-        width: calc(100vw - 50px);
+        margin-top: calc(-8vw + 50px);
+        width: calc(100vw - 130px);
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        min-width: 300px;
     }
 }

@@ -1,5 +1,5 @@
 import { Button, Divider, Grid, Typography, useTheme } from "@material-ui/core";
-import { Favorite, Star } from "@material-ui/icons";
+import { Favorite, GitHub, Star } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { CenteredProgress } from "../components/CenteredProgress";
 import { RecipeGrid } from "../components/RecipeGrid";
@@ -37,16 +37,28 @@ export function HomeView({ user }: { user: HACUser | null }) {
                 <div className="dashContainer">
                     <div className="rollingLogo">
                         <AnimatedLogo />
-                        <Typography variant="body1" className="openSourceText">
+                        <Typography
+                            variant="body1"
+                            className="openSourceText"
+                            style={{ fontWeight: 500 }}
+                        >
                             The Open Source Recipe Book
                             <br />
-                            Check out our{" "}
                             <a
                                 href="https://github.com/HenrySeed/Half-a-Cup"
                                 rel="noopener noreferrer"
                                 target="_blank"
                             >
-                                GitHub
+                                <Button
+                                    startIcon={<GitHub />}
+                                    style={{
+                                        borderColor: "white",
+                                        marginTop: "10px",
+                                        color: "white",
+                                    }}
+                                >
+                                    View on GitHub
+                                </Button>
                             </a>
                         </Typography>
                     </div>
