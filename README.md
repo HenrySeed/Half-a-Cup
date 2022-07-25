@@ -4,8 +4,16 @@ Why do recipe blogs need to have 45 paragraphs about how their mother taught the
 
 In the future I would like to add recipe uploading and user profiles, but we shall see.
 
-![The Homepage](https://imgur.com/d5ntSki.jpg)
+![Dark Mode](https://i.imgur.com/Igmk1Hu.png)
 
-![No nonsense](https://imgur.com/UYsOpK9.jpg)
+It has Light and Dark Modes
 
-![It can even search!](https://imgur.com/9sy4tbr.jpg)
+![Light Mode](https://i.imgur.com/ZSG5nJc.png)
+
+There is no mucking about, straight to the recipe
+
+![No nonsense](https://i.imgur.com/jTeAV8U.jpg)
+
+The searching isnt half bad either
+
+![It can even search!](https://i.imgur.com/mveYb1B.png)
